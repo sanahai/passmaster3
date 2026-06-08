@@ -106,9 +106,31 @@ export default async function AdminQuestionsPage({
                   {!q.isActive && <span className="font-bold text-beauty-danger">비활성</span>}
                 </div>
                 <p className="text-sm font-semibold text-beauty-neutral">{q.content}</p>
-                <p className="mt-1 text-xs text-beauty-gray">
-                  정답 {q.answer}번 · {[q.option1, q.option2, q.option3, q.option4][q.answer - 1]}
-                </p>
+                <ul className="mt-2 space-y-1">
+                  {[q.option1, q.option2, q.option3, q.option4].map((opt, i) => {
+                    const isAnswer = q.answer === i + 1;
+                    return (
+                      <li
+                        key={i}
+                        className={`flex items-center gap-2 text-sm ${
+                          isAnswer ? "font-semibold text-beauty-success" : "text-beauty-neutral"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs ${
+                            isAnswer
+                              ? "border-beauty-success bg-[#E8F5E9]"
+                              : "border-gray-300 text-beauty-gray"
+                          }`}
+                        >
+                          {i + 1}
+                        </span>
+                        <span>{opt}</span>
+                        {isAnswer && <span className="text-xs">✓ 정답</span>}
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
               <form action={toggleQuestionAction}>
                 <input type="hidden" name="id" value={q.id} />

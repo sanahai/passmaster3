@@ -100,3 +100,99 @@ export async function bulkUploadAction(formData: FormData): Promise<void> {
   }
   revalidatePath("/admin/questions");
 }
+
+// JSON 파일 일괄 업로드
+// 허용 형식: 객체 배열. snake_case / camelCase 키 모두 지원.
+// [{ subject, content, option_1~4 (또는 option1~4 / options:[]), answer, explanation, difficulty, is_free }]
+export type JsonUploadState = { error?: string; count?: number } | undefined;
+
+export async function bulkUploadJsonAction(
+  _prev: JsonUploadState,
+  formData: FormData
+): Promise<JsonUploadState> {
+  await requireAdmin();
+  const courseId = Number(formData.get("courseId"));
+  const file = formData.get("file") as File | null;
+
+  if (!courseId) return { error: "대상 과정을 선택해 주세요." };
+  if (!file || file.size === 0) return { error: "JSON 파일을 선택해 주세요." };
+
+  let parsed: unknown;
+  try {
+    const text = await file.text();
+    parsed = JSON.parse(text);
+  } catch {
+    return { error: "JSON 파싱에 실패했습니다. 올바른 JSON 파일인지 확인해 주세요." };
+  }
+
+  // 배열 또는 { questions: [...] } 형태 모두 허용
+  const container = parsed as { questions?: unknown };
+  const list: unknown[] = Array.isArray(parsed)
+    ? parsed
+    : Array.isArray(container?.questions)
+    ? (container.questions as unknown[])
+    : [];
+
+  if (list.length === 0) {
+    return { error: "등록할 문제가 없습니다. JSON은 문제 객체 배열이어야 합니다." };
+  }
+
+  const pick = (o: Record<string, unknown>, ...keys: string[]): unknown => {
+    for (const k of keys) {
+      if (o[k] !== undefined && o[k] !== null && o[k] !== "") return o[k];
+    }
+    return undefined;
+  };
+
+  type QuestionInput = {
+    courseId: number;
+    subject: string | null;
+    content: string;
+    option1: string;
+    option2: string;
+    option3: string;
+    option4: string;
+    answer: number;
+    explanation: string | null;
+    difficulty: number;
+    isFree: boolean;
+  };
+
+  const data: QuestionInput[] = [];
+  for (const item of list) {
+    if (!item || typeof item !== "object") continue;
+    const raw = item as Record<string, unknown>;
+    const opts = Array.isArray(raw.options) ? (raw.options as unknown[]) : null;
+    const option1 = opts ? opts[0] : pick(raw, "option_1", "option1");
+    const option2 = opts ? opts[1] : pick(raw, "option_2", "option2");
+    const option3 = opts ? opts[2] : pick(raw, "option_3", "option3");
+    const option4 = opts ? opts[3] : pick(raw, "option_4", "option4");
+    const content = pick(raw, "content", "question", "지문");
+    const answer = Number(pick(raw, "answer", "정답") ?? 1);
+
+    if (!content || !option1 || !option2 || !option3 || !option4) continue;
+
+    const isFreeRaw = pick(raw, "is_free", "isFree", "free");
+    data.push({
+      courseId,
+      subject: String(pick(raw, "subject", "과목", "키워드") ?? "") || null,
+      content: String(content),
+      option1: String(option1),
+      option2: String(option2),
+      option3: String(option3),
+      option4: String(option4),
+      answer: answer >= 1 && answer <= 4 ? answer : 1,
+      explanation: String(pick(raw, "explanation", "해설") ?? "") || null,
+      difficulty: Number(pick(raw, "difficulty", "난이도") ?? 2) || 2,
+      isFree: isFreeRaw === true || String(isFreeRaw).toUpperCase() === "TRUE",
+    });
+  }
+
+  if (data.length === 0) {
+    return { error: "유효한 문제가 없습니다. content/option_1~4 필수 항목을 확인해 주세요." };
+  }
+
+  await prisma.question.createMany({ data });
+  revalidatePath("/admin/questions");
+  return { count: data.length };
+}
