@@ -1,5 +1,7 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { approveEnrollmentAction, cancelEnrollmentAction } from "@/app/actions/admin";
+import EnrollmentFilter from "@/components/admin/EnrollmentFilter";
 
 const STATUS: Record<string, string> = {
   pending: "입금대기",
@@ -9,15 +11,45 @@ const STATUS: Record<string, string> = {
   cancelled: "취소",
 };
 
-export default async function AdminEnrollmentsPage() {
-  const enrollments = await prisma.enrollment.findMany({
-    include: { user: true, course: true },
-    orderBy: [{ status: "asc" }, { createdAt: "desc" }],
-  });
+export default async function AdminEnrollmentsPage({
+  searchParams,
+}: {
+  searchParams: { user?: string; course?: string; status?: string };
+}) {
+  const userId = searchParams.user ? Number(searchParams.user) : undefined;
+  const courseId = searchParams.course ? Number(searchParams.course) : undefined;
+  const status = searchParams.status || undefined;
+
+  const where: Prisma.EnrollmentWhereInput = {};
+  if (userId) where.userId = userId;
+  if (courseId) where.courseId = courseId;
+  if (status) where.status = status;
+
+  const [enrollments, courses, applicants] = await Promise.all([
+    prisma.enrollment.findMany({
+      where,
+      include: { user: true, course: true },
+      orderBy: [{ status: "asc" }, { createdAt: "desc" }],
+    }),
+    prisma.course.findMany({ orderBy: { id: "asc" } }),
+    prisma.user.findMany({
+      where: { enrollments: { some: {} } },
+      orderBy: { name: "asc" },
+    }),
+  ]);
+
+  const userOptions = applicants.map((u) => ({
+    value: String(u.id),
+    label: `${u.name} (${u.email})`,
+  }));
+  const courseOptions = courses.map((c) => ({ value: String(c.id), label: c.name }));
+  const statusOptions = Object.entries(STATUS).map(([value, label]) => ({ value, label }));
 
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold text-beauty-neutral">수강신청 & 결제 관리</h1>
+
+      <EnrollmentFilter users={userOptions} courses={courseOptions} statuses={statusOptions} />
 
       <div className="overflow-x-auto rounded-card bg-white shadow-card">
         <table className="w-full text-sm">
