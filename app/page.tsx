@@ -112,20 +112,26 @@ export default async function LandingPage() {
 
         {/* 자격증 목록 */}
         <section className="mx-auto max-w-6xl px-4 py-16">
-          <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">자격증 4종</h2>
+          <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">미용기능사 자격증</h2>
           <p className="mb-10 text-center text-beauty-gray">준비 중인 자격증을 선택하세요.</p>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {COURSES.map((c) => (
-              <div key={c.slug} className="card group transition-shadow hover:shadow-cardHover">
+              <div
+                key={c.slug}
+                className="card group flex flex-col transition-shadow hover:shadow-cardHover"
+              >
                 <div className="mb-3 text-5xl">{c.icon}</div>
                 <h3 className="mb-1 text-lg font-bold text-beauty-neutral">{c.name}</h3>
                 <p className="mb-4 text-sm text-beauty-gray">{c.description}</p>
-                <div className="flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between">
                   <span className="text-lg font-bold text-primary">
                     {c.price.toLocaleString()}원
                   </span>
                   <span className="text-xs text-beauty-gray">3개월</span>
                 </div>
+                <Link href={`/enroll/${c.slug}`} className="btn-primary mt-auto w-full">
+                  수강신청
+                </Link>
               </div>
             ))}
           </div>
@@ -171,7 +177,7 @@ export default async function LandingPage() {
               <h3 className="text-lg font-bold text-beauty-neutral">단일 자격증</h3>
               <div className="my-4 text-4xl font-extrabold text-primary">39,000원</div>
               <p className="mb-6 text-sm text-beauty-gray">1종 전체 문제 · 3개월</p>
-              <Link href="/enroll" className="btn-primary w-full">신청하기</Link>
+              <Link href="/enroll" className="btn-primary w-full">수강신청하기</Link>
             </div>
             <div className="card text-center">
               <h3 className="text-lg font-bold text-beauty-neutral">미용사 패키지</h3>
@@ -179,7 +185,7 @@ export default async function LandingPage() {
                 {PACKAGE_PRICE.toLocaleString()}원
               </div>
               <p className="mb-6 text-sm text-beauty-gray">4종 전체 · 약 50% 할인</p>
-              <Link href="/enroll" className="btn-outline w-full">신청하기</Link>
+              <Link href="/enroll" className="btn-outline w-full">수강신청하기</Link>
             </div>
           </div>
         </section>
