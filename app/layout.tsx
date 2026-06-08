@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+// 모든 라우트를 요청 시 렌더링(동적)으로 강제 → 빌드 단계에서 DB 접속/프리렌더 방지
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "BEAUTYmaster · 미용사 자격증 필기 문제은행",
   description:
