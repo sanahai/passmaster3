@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Header from "@/components/Header";
+import HeroCarousel from "@/components/HeroCarousel";
 import { COURSES, PACKAGE_PRICE } from "@/lib/courses";
 import { prisma } from "@/lib/prisma";
 
@@ -19,6 +20,34 @@ export default async function LandingPage() {
     { name: "이○○", course: "미용사 일반", text: "선택지가 매번 섞여서 정답 위치를 외우는 습관이 사라졌어요. 3회차 돌고 나니 진짜 외워졌습니다." },
     { name: "박○○", course: "피부 미용사", text: "오답복습 기능이 최고예요. 틀린 문제만 모아서 다시 푸니 시간이 확 줄었어요. 한 번에 합격!" },
     { name: "최○○", course: "네일 미용사", text: "모의고사 난이도가 실제 시험이랑 비슷해서 실전 감각 잡는 데 큰 도움이 됐습니다." },
+    { name: "정○○", course: "메이크업 미용사", text: "직장 다니면서 출퇴근 시간에 폰으로 풀었어요. 짧게 자주 푸는 구조라 부담 없이 합격했습니다." },
+    { name: "김○○", course: "미용사 일반", text: "해설이 자세해서 따로 책을 볼 필요가 없었어요. 틀린 이유를 바로 이해하니 같은 실수를 안 하게 됐습니다." },
+    { name: "한○○", course: "피부 미용사", text: "모의고사 6회를 다 풀고 나니 실제 시험이 오히려 쉽게 느껴졌어요. 84점으로 합격했습니다!" },
+    { name: "윤○○", course: "네일 미용사", text: "단계별로 잠금이 풀려서 뭘 해야 할지 헷갈리지 않았어요. 시키는 대로만 했더니 합격이네요." },
+    { name: "장○○", course: "메이크업 미용사", text: "두 번 떨어졌다가 여기서 3주 공부하고 붙었어요. 반복학습 알고리즘이 진짜 효과 있습니다." },
+  ];
+
+  const faqs = [
+    {
+      q: "결제 후 바로 학습할 수 있나요?",
+      a: "무료체험은 회원가입 즉시 100문제를 풀 수 있습니다. 유료 과정은 입금 확인(또는 데모 자동승인) 후 바로 전체 문제와 모의고사가 열립니다.",
+    },
+    {
+      q: "수강 기간은 얼마나 되나요?",
+      a: "단일 자격증·패키지 모두 결제일 기준 3개월간 무제한으로 이용할 수 있습니다. 기간 내에는 반복학습과 모의고사를 횟수 제한 없이 풀 수 있습니다.",
+    },
+    {
+      q: "반복학습 3회차는 어떻게 진행되나요?",
+      a: "1회차는 정답·해설을 보며 읽고, 2회차는 50초, 3회차는 40초 제한으로 풀이합니다. 선택지가 매번 섞여 정답 위치 암기를 방지하고 실제 이해도를 높입니다.",
+    },
+    {
+      q: "오답복습은 무엇인가요?",
+      a: "반복학습과 모의고사에서 틀린 문제만 자동으로 모아 다시 풀게 해주는 기능입니다. 취약한 부분만 집중 공략해 학습 시간을 크게 줄일 수 있습니다.",
+    },
+    {
+      q: "환불은 가능한가요?",
+      a: "학습 이력이 없는 경우 결제일로부터 7일 이내 전액 환불이 가능합니다. 자세한 사항은 support@beautymaster.kr로 문의해 주세요.",
+    },
   ];
 
   return (
@@ -27,26 +56,39 @@ export default async function LandingPage() {
       <main>
         {/* Hero */}
         <section className="relative overflow-hidden bg-gradient-to-b from-primary-pale to-beauty-bg">
-          <div className="mx-auto max-w-6xl px-4 py-20 text-center sm:py-28">
-            <span className="mb-5 inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-primary shadow-card">
-              미용사 자격증 필기 합격 플랫폼
-            </span>
-            <h1 className="mb-5 text-4xl font-extrabold leading-tight text-beauty-neutral sm:text-5xl">
-              선택지가 매번 섞이는
-              <br />
-              <span className="text-primary">3배수 반복학습</span>으로 합격까지
-            </h1>
-            <p className="mx-auto mb-9 max-w-2xl text-lg text-beauty-gray">
-              미용사 일반·피부·네일·메이크업 4종. {totalQuestions.toLocaleString()}개 이상의
-              기출·예상 문제를 반복학습 알고리즘과 6회 모의고사로 완벽 대비하세요.
-            </p>
-            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="/signup" className="btn-accent w-full px-8 py-4 text-lg sm:w-auto">
-                무료체험 시작하기
-              </Link>
-              <Link href="/login" className="btn-outline w-full px-8 py-4 text-lg sm:w-auto">
-                로그인
-              </Link>
+          {/* 움직이는 배경 장식 */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+            <div className="absolute -left-16 top-10 h-64 w-64 animate-pulse rounded-full bg-primary/20 blur-3xl" />
+            <div className="absolute right-0 top-1/3 h-72 w-72 animate-pulse rounded-full bg-primary-accent/20 blur-3xl [animation-delay:1s]" />
+            <div className="absolute bottom-0 left-1/3 h-56 w-56 animate-pulse rounded-full bg-rose-300/20 blur-3xl [animation-delay:2s]" />
+          </div>
+
+          <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:py-20 lg:grid-cols-2">
+            <div className="text-center lg:text-left">
+              <span className="mb-5 inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-primary shadow-card">
+                미용사 자격증 필기 합격 플랫폼
+              </span>
+              <h1 className="mb-5 text-4xl font-extrabold leading-tight text-beauty-neutral sm:text-5xl">
+                선택지가 매번 섞이는
+                <br />
+                <span className="text-primary">3배수 반복학습</span>으로 합격까지
+              </h1>
+              <p className="mb-9 max-w-2xl text-lg text-beauty-gray lg:mx-0">
+                미용사 일반·피부·네일·메이크업 4종. {totalQuestions.toLocaleString()}개 이상의
+                기출·예상 문제를 반복학습 알고리즘과 6회 모의고사로 완벽 대비하세요.
+              </p>
+              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+                <Link href="/signup" className="btn-accent w-full px-8 py-4 text-lg sm:w-auto">
+                  무료체험 시작하기
+                </Link>
+                <Link href="/login" className="btn-outline w-full px-8 py-4 text-lg sm:w-auto">
+                  로그인
+                </Link>
+              </div>
+            </div>
+
+            <div className="h-72 w-full sm:h-96 lg:h-[26rem]">
+              <HeroCarousel />
             </div>
           </div>
         </section>
@@ -145,8 +187,9 @@ export default async function LandingPage() {
         {/* 후기 */}
         <section className="bg-primary-pale/50">
           <div className="mx-auto max-w-6xl px-4 py-16">
-            <h2 className="mb-10 text-center text-3xl font-bold text-beauty-neutral">합격 후기</h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">합격 후기</h2>
+            <p className="mb-10 text-center text-beauty-gray">먼저 합격한 수강생들의 생생한 후기입니다.</p>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {reviews.map((r) => (
                 <div key={r.name} className="card">
                   <div className="mb-3 text-primary-accent">★★★★★</div>
@@ -157,6 +200,26 @@ export default async function LandingPage() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="mx-auto max-w-3xl px-4 py-16">
+          <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">자주 묻는 질문</h2>
+          <p className="mb-10 text-center text-beauty-gray">궁금한 점을 빠르게 확인하세요.</p>
+          <div className="space-y-3">
+            {faqs.map((f) => (
+              <details key={f.q} className="card group">
+                <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-beauty-neutral">
+                  <span>
+                    <span className="mr-2 text-primary">Q.</span>
+                    {f.q}
+                  </span>
+                  <span className="text-primary transition-transform group-open:rotate-180">▾</span>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-beauty-gray">{f.a}</p>
+              </details>
+            ))}
           </div>
         </section>
 
