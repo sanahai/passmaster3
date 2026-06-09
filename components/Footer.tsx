@@ -22,7 +22,7 @@ export default function Footer() {
 
         <div className="mt-6 space-y-1 text-xs text-white/60">
           <p>
-            <span className="font-semibold text-white/80">골든웨이브</span> · 대표이사 이동길 ·
+            <span className="font-semibold text-white/80">골든웨이브</span> · 대표 이동길 ·
             사업자등록번호 326-58-00636
           </p>
           <p>통신판매업 신고 제2022-인천서구-1321호 · 인천광역시 서구 가재울로 20</p>
