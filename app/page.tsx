@@ -231,7 +231,7 @@ export default async function LandingPage() {
         </section>
 
         {/* FAQ */}
-        <section className="mx-auto max-w-3xl px-4 py-16">
+        <section id="faq" className="mx-auto max-w-3xl scroll-mt-24 px-4 py-16">
           <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">자주 묻는 질문</h2>
           <p className="mb-10 text-center text-beauty-gray">궁금한 점을 빠르게 확인하세요.</p>
           <div className="space-y-3">
@@ -301,11 +301,11 @@ export default async function LandingPage() {
                 </p>
               </div>
               <nav className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/80">
-                <a href="#" className="hover:text-primary-accent">회사정보</a>
-                <a href="#" className="hover:text-primary-accent">이용약관</a>
-                <a href="#" className="hover:text-primary-accent">개인정보처리방침</a>
-                <a href="#" className="hover:text-primary-accent">환불정책</a>
-                <a href="#" className="hover:text-primary-accent">고객센터</a>
+                <Link href="/company#company" className="hover:text-primary-accent">회사정보</Link>
+                <Link href="/policy#terms" className="hover:text-primary-accent">이용약관</Link>
+                <Link href="/policy#privacy" className="hover:text-primary-accent">개인정보처리방침</Link>
+                <Link href="/policy#refund" className="hover:text-primary-accent">환불정책</Link>
+                <Link href="/company#support" className="hover:text-primary-accent">고객센터</Link>
               </nav>
             </div>
 
