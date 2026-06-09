@@ -29,6 +29,7 @@ model User {
   wrongNotes       WrongNote[]
   learningProgress LearningProgress[]
   consents         UserConsent[]
+  reports          QuestionReport[]
 }
 
 model Course {
@@ -64,11 +65,29 @@ model Question {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
 
-  course     Course       @relation(fields: [courseId], references: [id])
+  course     Course           @relation(fields: [courseId], references: [id])
   answers    UserAnswer[]
   wrongNotes WrongNote[]
+  reports    QuestionReport[]
 
   @@index([courseId])
+}
+
+// 수강생 오류 신고 (문제/선택지/정답/해설 등)
+model QuestionReport {
+  id         Int       @id @default(autoincrement())
+  questionId Int
+  userId     Int
+  category   String // question | option | answer | explanation | other
+  detail     String
+  status     String    @default("open") // open | resolved
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+
+  question Question @relation(fields: [questionId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([status])
 }
 
 model Enrollment {

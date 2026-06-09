@@ -1,8 +1,15 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import Header from "@/components/Header";
+import CopyButton from "@/components/CopyButton";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { approveDemoEnrollmentAction } from "@/app/actions/enroll";
+
+const BANK = {
+  name: "카카오뱅크",
+  account: "3333-37-436928",
+  holder: "이동길",
+};
 
 export default async function PaymentPage({
   params,
@@ -21,60 +28,85 @@ export default async function PaymentPage({
       <Header />
       <main className="mx-auto max-w-2xl px-4 py-10">
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">결제 안내 (계좌이체)</h1>
-        <p className="mb-8 text-beauty-gray">아래 계좌로 입금하시면 관리자 확인 후 승인됩니다.</p>
+        <p className="mb-8 text-beauty-gray">
+          아래 계좌로 입금해 주세요. <strong className="text-beauty-neutral">관리자 입금 확인 후 승인</strong>되면
+          학습을 시작할 수 있습니다.
+        </p>
 
-        <div className="card space-y-4">
-          <Row label="과정" value={course.name} />
-          <Row label="결제 금액" value={`${course.price.toLocaleString()}원`} highlight />
-          <Row label="입금 은행" value="국민은행" />
-          <Row label="계좌번호" value="123456-78-901234" />
-          <Row label="예금주" value="(주)뷰티마스터" />
-          <Row label="입금자명" value={`${session.name} (가입자명과 동일하게)`} />
-          <Row
-            label="입금 기한"
-            value={`${deadline.toLocaleString("ko-KR")}까지 (24시간)`}
-          />
+        {/* 결제 금액 */}
+        <div className="mb-5 rounded-card bg-white p-6 text-center shadow-card">
+          <p className="text-sm text-beauty-gray">결제 금액</p>
+          <p className="mt-1 text-4xl font-extrabold text-primary">
+            {course.price.toLocaleString()}
+            <span className="ml-1 text-2xl">원</span>
+          </p>
+          <p className="mt-2 text-sm text-beauty-neutral">{course.name} · {course.durationDays}일</p>
         </div>
 
-        <div className="mt-6 rounded-card bg-primary-pale/50 p-5 text-sm text-beauty-neutral">
-          <p className="font-semibold">📌 안내</p>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-beauty-gray">
-            <li>입금 확인 후 카카오/이메일로 승인 알림이 발송됩니다.</li>
-            <li>입금 기한 내 미입금 시 신청이 자동 취소됩니다.</li>
+        {/* 입금 계좌 카드 (이미지 카드 형식) */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary-light p-6 text-white shadow-cardHover">
+          <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
+          <div className="pointer-events-none absolute -bottom-12 -left-8 h-40 w-40 rounded-full bg-white/10" />
+
+          <div className="relative">
+            <div className="mb-6 flex items-center justify-between">
+              <span className="text-sm font-semibold text-white/80">입금 계좌</span>
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold">BEAUTYmaster</span>
+            </div>
+
+            <div className="mb-1 text-sm text-white/70">은행</div>
+            <div className="mb-4 text-2xl font-extrabold tracking-wide">{BANK.name}</div>
+
+            <div className="mb-1 text-sm text-white/70">계좌번호</div>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <span className="text-3xl font-extrabold tracking-wider">{BANK.account}</span>
+              <CopyButton text={BANK.account.replace(/-/g, "")} label="계좌복사" />
+            </div>
+
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="mb-1 text-sm text-white/70">예금주</div>
+                <div className="text-xl font-bold">{BANK.holder}</div>
+              </div>
+              <div className="text-right">
+                <div className="mb-1 text-sm text-white/70">입금자명</div>
+                <div className="text-xl font-bold">{session.name}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 입금 기한 강조 */}
+        <div className="mt-5 flex items-center justify-between rounded-card border border-primary/20 bg-primary-pale/40 px-5 py-4">
+          <span className="text-sm font-semibold text-beauty-neutral">입금 기한</span>
+          <span className="text-lg font-extrabold text-primary">
+            {deadline.toLocaleString("ko-KR", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}까지
+          </span>
+        </div>
+
+        {/* 안내 */}
+        <div className="mt-6 rounded-card bg-white p-5 text-sm shadow-card">
+          <p className="font-bold text-beauty-neutral">📌 입금 시 유의사항</p>
+          <ul className="mt-2 list-disc space-y-1.5 pl-5 text-beauty-gray">
+            <li>
+              반드시 <strong className="text-beauty-neutral">입금자명을 가입자명({session.name})과 동일</strong>하게
+              입금해 주세요.
+            </li>
+            <li>관리자가 입금을 확인하고 승인하면 학습이 활성화됩니다.</li>
+            <li>입금 기한 내 미입금 시 신청이 자동 취소될 수 있습니다.</li>
+            <li>승인 현황은 대시보드 또는 마이페이지에서 확인할 수 있습니다.</li>
           </ul>
         </div>
 
-        <div className="mt-8 rounded-card border-2 border-dashed border-primary p-5 text-center">
-          <p className="mb-3 text-sm text-beauty-gray">
-            🧪 데모 환경에서는 입금 없이 즉시 승인하여 학습을 체험할 수 있습니다.
-          </p>
-          <form action={approveDemoEnrollmentAction}>
-            <input type="hidden" name="slug" value={course.slug} />
-            <button type="submit" className="btn-accent">
-              데모: 즉시 승인하고 학습 시작
-            </button>
-          </form>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link href="/dashboard" className="btn-primary flex-1 text-center">
+            입금 완료 · 대시보드로 이동
+          </Link>
+          <Link href="/mypage/history" className="btn-outline flex-1 text-center">
+            신청 내역 보기
+          </Link>
         </div>
       </main>
     </>
-  );
-}
-
-function Row({
-  label,
-  value,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between border-b border-gray-100 pb-3 last:border-0">
-      <span className="text-sm text-beauty-gray">{label}</span>
-      <span className={`font-semibold ${highlight ? "text-lg text-primary" : "text-beauty-neutral"}`}>
-        {value}
-      </span>
-    </div>
   );
 }

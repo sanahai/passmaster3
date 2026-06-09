@@ -34,6 +34,61 @@ export async function cancelEnrollmentAction(formData: FormData) {
   revalidatePath("/admin/enrollments");
 }
 
+// 관리자가 수강 상태를 직접 지정 (pending | active | expired | cancelled)
+export async function setEnrollmentStatusAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  const status = String(formData.get("status") || "");
+  const allowed = ["pending", "active", "expired", "cancelled"];
+  if (!allowed.includes(status)) return;
+
+  const enrollment = await prisma.enrollment.findUnique({
+    where: { id },
+    include: { course: true },
+  });
+  if (!enrollment) return;
+
+  if (status === "active") {
+    // 승인(결제완료) → 학습 권한 부여
+    const expires = new Date();
+    expires.setDate(expires.getDate() + enrollment.course.durationDays);
+    await prisma.enrollment.update({
+      where: { id },
+      data: {
+        status: "active",
+        paidAt: enrollment.paidAt ?? new Date(),
+        expiresAt: expires,
+      },
+    });
+  } else {
+    await prisma.enrollment.update({ where: { id }, data: { status } });
+  }
+
+  revalidatePath("/admin/enrollments");
+  revalidatePath("/admin");
+}
+
+// 오류 신고 해결 처리
+export async function resolveReportAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  await prisma.questionReport.update({
+    where: { id },
+    data: { status: "resolved", resolvedAt: new Date() },
+  });
+  revalidatePath("/admin/reports");
+  revalidatePath("/admin");
+}
+
+// 오류 신고 삭제
+export async function deleteReportAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  await prisma.questionReport.delete({ where: { id } });
+  revalidatePath("/admin/reports");
+  revalidatePath("/admin");
+}
+
 export async function createQuestionAction(formData: FormData) {
   await requireAdmin();
   const courseId = Number(formData.get("courseId"));

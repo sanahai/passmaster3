@@ -6,6 +6,7 @@ import ProgressBar from "./ProgressBar";
 import TimerGauge from "./TimerGauge";
 import OptionButton, { type OptionStatus } from "./OptionButton";
 import ExplanationBox from "./ExplanationBox";
+import ReportButton from "./ReportButton";
 import type { QuizQuestion, QuizResult, SessionType, WrongItem } from "@/lib/types";
 
 type Props = {
@@ -315,7 +316,10 @@ export default function QuizRunner({
 
       {/* 문제 카드 */}
       <div className="card animate-fade-in">
-        <p className="mb-1 text-sm font-semibold text-primary">{title}</p>
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <p className="text-sm font-semibold text-primary">{title}</p>
+          <ReportButton questionId={q.id} />
+        </div>
         <h2 className="mb-5 text-lg font-bold leading-relaxed text-beauty-neutral">
           Q{index + 1}. {q.content}
         </h2>

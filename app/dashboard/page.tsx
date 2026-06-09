@@ -18,8 +18,13 @@ export default async function DashboardPage() {
   });
   const progByCourse = new Map(progresses.map((p) => [p.courseId, p]));
 
-  const active = enrollments.filter((e) => e.status === "active");
-  const others = enrollments.filter((e) => e.status !== "active");
+  const visible = enrollments.filter((e) => e.status !== "cancelled");
+
+  const STATUS_LABEL: Record<string, string> = {
+    pending: "입금/승인 대기 중",
+    active: "수강중",
+    expired: "수강 만료",
+  };
 
   return (
     <>
@@ -41,15 +46,16 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        <h2 className="mb-4 text-xl font-bold text-beauty-neutral">수강 중인 과정</h2>
-        {active.length === 0 ? (
+        <h2 className="mb-4 text-xl font-bold text-beauty-neutral">내 과정</h2>
+        {visible.length === 0 ? (
           <div className="card mb-8 text-center">
-            <p className="mb-4 text-beauty-gray">아직 수강 중인 과정이 없습니다.</p>
+            <p className="mb-4 text-beauty-gray">아직 신청한 과정이 없습니다.</p>
             <Link href="/enroll" className="btn-primary">과정 둘러보기</Link>
           </div>
         ) : (
           <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2">
-            {active.map((e) => {
+            {visible.map((e) => {
+              const isActive = e.status === "active";
               const prog = progByCourse.get(e.courseId) ?? null;
               const pct = progressPercent(prog);
               const next = nextStepKey(e.course.slug, prog);
@@ -57,57 +63,66 @@ export default async function DashboardPage() {
                 ? Math.max(0, Math.ceil((e.expiresAt.getTime() - Date.now()) / 86400000))
                 : null;
               return (
-                <div key={e.id} className="card">
-                  <div className="mb-3 flex items-start justify-between">
+                <div key={e.id} className={`card ${!isActive ? "bg-gray-50" : ""}`}>
+                  <div className="mb-3 flex items-start justify-between gap-2">
                     <h3 className="text-lg font-bold text-beauty-neutral">{e.course.name}</h3>
-                    {daysLeft !== null && (
+                    {isActive && daysLeft !== null ? (
                       <span className="rounded-full bg-primary-pale px-2.5 py-0.5 text-xs font-semibold text-primary">
                         D-{daysLeft}
                       </span>
+                    ) : (
+                      <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-semibold text-beauty-gray">
+                        {STATUS_LABEL[e.status] || e.status}
+                      </span>
                     )}
                   </div>
-                  <div className="mb-2 flex justify-between text-sm">
-                    <span className="text-beauty-gray">학습 진행률</span>
-                    <span className="font-bold text-primary">{pct}%</span>
-                  </div>
-                  <div className="mb-4 h-2.5 w-full overflow-hidden rounded-full bg-primary-pale">
-                    <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
-                  </div>
-                  {next && (
-                    <p className="mb-4 text-sm text-beauty-gray">
-                      다음 단계: <span className="font-semibold text-beauty-neutral">{next.label}</span>
-                    </p>
+
+                  {isActive ? (
+                    <>
+                      <div className="mb-2 flex justify-between text-sm">
+                        <span className="text-beauty-gray">학습 진행률</span>
+                        <span className="font-bold text-primary">{pct}%</span>
+                      </div>
+                      <div className="mb-4 h-2.5 w-full overflow-hidden rounded-full bg-primary-pale">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                      </div>
+                      {next && (
+                        <p className="mb-4 text-sm text-beauty-gray">
+                          다음 단계: <span className="font-semibold text-beauty-neutral">{next.label}</span>
+                        </p>
+                      )}
+                      <Link href={`/learn/${e.course.slug}`} className="btn-primary w-full">
+                        학습 계속하기
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mb-4 text-sm text-beauty-gray">
+                        {e.status === "pending"
+                          ? "관리자 승인 후 학습을 시작할 수 있습니다."
+                          : "현재 학습할 수 없는 상태입니다."}
+                      </p>
+                      <button
+                        type="button"
+                        disabled
+                        className="w-full cursor-not-allowed rounded-btn bg-gray-300 px-4 py-2.5 text-sm font-bold text-white"
+                      >
+                        {e.status === "pending" ? "승인 대기 중" : "학습 불가"}
+                      </button>
+                      {e.status === "pending" && (
+                        <Link
+                          href={`/enroll/${e.course.slug}/payment`}
+                          className="btn-outline mt-2 w-full text-center"
+                        >
+                          결제 안내 보기
+                        </Link>
+                      )}
+                    </>
                   )}
-                  <Link href={`/learn/${e.course.slug}`} className="btn-primary w-full">
-                    학습 계속하기
-                  </Link>
                 </div>
               );
             })}
           </div>
-        )}
-
-        {others.length > 0 && (
-          <>
-            <h2 className="mb-4 text-xl font-bold text-beauty-neutral">신청 내역</h2>
-            <div className="space-y-3">
-              {others.map((e) => (
-                <div key={e.id} className="card flex items-center justify-between">
-                  <div>
-                    <p className="font-semibold text-beauty-neutral">{e.course.name}</p>
-                    <p className="text-sm text-beauty-gray">
-                      {e.status === "pending" ? "입금 대기 중" : e.status}
-                    </p>
-                  </div>
-                  {e.status === "pending" && (
-                    <Link href={`/enroll/${e.course.slug}/payment`} className="btn-outline">
-                      결제 안내
-                    </Link>
-                  )}
-                </div>
-              ))}
-            </div>
-          </>
         )}
       </main>
     </>
