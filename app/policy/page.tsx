@@ -59,7 +59,7 @@ export default function PolicyPage() {
                 <div>
                   <h3 className="mb-1 font-bold text-beauty-neutral">제1조 (목적)</h3>
                   <p>
-                    본 약관은 주식회사 모든코퍼레이션(이하 “회사”)이 운영하는 BEAUTYmaster(이하
+                    본 약관은 골든웨이브(이하 “회사”)이 운영하는 BEAUTYmaster(이하
                     “서비스”)의 이용과 관련하여 회사와 이용자(이하 “회원”)의 권리·의무 및 책임사항을
                     규정함을 목적으로 합니다.
                   </p>
@@ -139,7 +139,7 @@ export default function PolicyPage() {
               <p className="mb-5 text-xs text-beauty-gray">시행일: 2026년 1월 1일</p>
               <div className="card space-y-5 text-sm leading-relaxed text-beauty-gray">
                 <p>
-                  주식회사 모든코퍼레이션(이하 “회사”)은 「개인정보 보호법」 등 관련 법령을 준수하며,
+                  골든웨이브(이하 “회사”)은 「개인정보 보호법」 등 관련 법령을 준수하며,
                   이용자의 개인정보를 안전하게 보호하기 위해 다음과 같은 처리방침을 둡니다.
                 </p>
                 <div>

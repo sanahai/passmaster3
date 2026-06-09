@@ -92,10 +92,10 @@ export default function CompanyPage() {
             <div className="card overflow-hidden p-0">
               <dl className="divide-y divide-gray-100 text-sm">
                 {[
-                  ["상호명", "주식회사 모든코퍼레이션"],
+                  ["상호명", "골든웨이브"],
                   ["서비스명", "BEAUTYmaster"],
                   ["대표이사", "이동길"],
-                  ["사업자등록번호", "402-86-15931"],
+                  ["사업자등록번호", "326-58-00636"],
                   ["통신판매업 신고", "제2022-인천서구-1321호"],
                   ["주소", "인천광역시 서구 가재울로 20"],
                   ["개인정보보호책임자", "이태나"],
