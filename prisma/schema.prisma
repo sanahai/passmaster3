@@ -28,6 +28,7 @@ model User {
   mockSessions     MockSession[]
   wrongNotes       WrongNote[]
   learningProgress LearningProgress[]
+  consents         UserConsent[]
 }
 
 model Course {
@@ -136,6 +137,20 @@ model WrongNote {
   question Question @relation(fields: [questionId], references: [id])
 
   @@unique([userId, questionId, source])
+}
+
+// 학습 시작/결제 전 안내·동의 기록 (법적 방어용)
+model UserConsent {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  consentMode  String // trial | paid
+  termsVersion String   @default("v1.0")
+  examCategory String? // 해당되는 경우 과정 카테고리/슬러그
+  agreedAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, consentMode])
 }
 
 model LearningProgress {

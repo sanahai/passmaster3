@@ -2,6 +2,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import { AIExplanationSection } from "@/components/HeroAndAIExplanation_1";
+import EnrollCTA from "@/components/consent/EnrollCTA";
 import { COURSES, PACKAGE_PRICE } from "@/lib/courses";
 import { prisma } from "@/lib/prisma";
 
@@ -147,9 +148,11 @@ export default async function LandingPage() {
                   </span>
                   <span className="text-xs text-beauty-gray">3개월</span>
                 </div>
-                <Link href={`/enroll/${c.slug}`} className="btn-primary mt-auto w-full">
-                  수강신청
-                </Link>
+                <EnrollCTA
+                  slug={c.slug}
+                  examCategory={c.slug}
+                  className="btn-primary mt-auto w-full"
+                />
               </div>
             ))}
           </div>
