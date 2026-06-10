@@ -24,12 +24,14 @@ export default async function RoundPage({
   const config = ROUND_CONFIG[n];
   if (!config) notFound();
 
-  const { session, course } = await requireEnrollment(params.slug);
+  const { session, course, isAdmin } = await requireEnrollment(params.slug);
   const progress = await getOrCreateProgress(session.userId, course.id);
 
-  // 잠금 해제 검증
-  if (n === 2 && !progress.round1Done) redirect(`/learn/${params.slug}`);
-  if (n === 3 && !progress.round2Done) redirect(`/learn/${params.slug}`);
+  // 잠금 해제 검증 (관리자는 선행학습 없이 접근 가능)
+  if (!isAdmin) {
+    if (n === 2 && !progress.round1Done) redirect(`/learn/${params.slug}`);
+    if (n === 3 && !progress.round2Done) redirect(`/learn/${params.slug}`);
+  }
 
   const questions = await prisma.question.findMany({
     where: { courseId: course.id, isActive: true },

@@ -9,9 +9,9 @@ export default async function LearnHomePage({
 }: {
   params: { slug: string };
 }) {
-  const { session, course } = await requireEnrollment(params.slug);
+  const { session, course, isAdmin } = await requireEnrollment(params.slug);
   const progress = await getOrCreateProgress(session.userId, course.id);
-  const steps = computeSteps(course.slug, progress);
+  const steps = computeSteps(course.slug, progress, isAdmin);
   const { overallPct, roundMockPct } = computeProgressBars(
     course.slug,
     progress,
@@ -46,6 +46,13 @@ export default async function LearnHomePage({
         </Link>
         <h1 className="mb-1 text-3xl font-bold text-beauty-neutral">{course.name}</h1>
         <p className="mb-6 text-beauty-gray">단계별로 잠금 해제하며 학습을 완성하세요.</p>
+
+        {isAdmin && (
+          <div className="mb-6 rounded-card border border-primary/30 bg-primary-pale/50 px-4 py-3 text-sm text-beauty-neutral">
+            🔍 <b>관리자 검토 모드</b> — 문제 오류 확인을 위해 선행학습 없이 모든 단계에 바로 입장할 수 있습니다.
+            (진행률은 검토용이며 수강생 통계에 영향을 주지 않습니다.)
+          </div>
+        )}
 
         {/* 진행률 막대 2종 */}
         <div className="card mb-8 space-y-5">
@@ -151,8 +158,8 @@ export default async function LearnHomePage({
             if (step.state === "locked") {
               return <div key={step.key}>{card}</div>;
             }
-            // 오답복습은 오답이 없으면 비활성 안내
-            if (wrongCount === 0 && step.state === "current") {
+            // 오답복습은 오답이 없으면 비활성 안내 (관리자는 그대로 입장 허용)
+            if (wrongCount === 0 && step.state === "current" && !isAdmin) {
               return (
                 <div key={step.key} className="relative">
                   {card}

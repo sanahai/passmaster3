@@ -32,7 +32,8 @@ export type Step = {
 };
 
 // 전체 11단계 진행 상태 계산 + 잠금 해제 로직
-export function computeSteps(slug: string, p: ProgressLike): Step[] {
+// isAdmin=true 이면 선행학습 완료 여부와 무관하게 모든 단계 접근 가능(검토용).
+export function computeSteps(slug: string, p: ProgressLike, isAdmin = false): Step[] {
   const round1 = !!p?.round1Done;
   const round2 = !!p?.round2Done;
   const round3 = !!p?.round3Done;
@@ -71,9 +72,9 @@ export function computeSteps(slug: string, p: ProgressLike): Step[] {
 
   return raw.map((step, i) => {
     const done = doneMap[step.key];
-    // 직전 단계 완료 여부로 잠금 판단 (순차적 잠금 해제)
+    // 직전 단계 완료 여부로 잠금 판단 (순차적 잠금 해제). 관리자는 잠금 없음.
     const prevDone = i === 0 ? true : doneMap[raw[i - 1].key];
-    const state: StepState = done ? "done" : prevDone ? "current" : "locked";
+    const state: StepState = done ? "done" : prevDone || isAdmin ? "current" : "locked";
     return { ...step, state };
   });
 }

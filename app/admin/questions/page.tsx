@@ -13,6 +13,7 @@ export default async function AdminQuestionsPage({
 }) {
   const courses = await prisma.course.findMany({ orderBy: { id: "asc" } });
   const courseId = searchParams.course ? Number(searchParams.course) : courses[0]?.id;
+  const selectedCourse = courses.find((c) => c.id === courseId);
   const page = Math.max(1, Number(searchParams.page) || 1);
   const query = (searchParams.q || "").trim();
 
@@ -55,6 +56,15 @@ export default async function AdminQuestionsPage({
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-beauty-neutral">문제 관리</h1>
         <div className="flex gap-2">
+          {selectedCourse && (
+            <Link
+              href={`/learn/${selectedCourse.slug}`}
+              target="_blank"
+              className="btn-outline px-4 py-2 text-sm"
+            >
+              🔍 검토 학습
+            </Link>
+          )}
           <DeleteSampleButton />
           <Link href="/admin/questions/upload" className="btn-outline px-4 py-2 text-sm">
             ⬆️ 일괄 업로드

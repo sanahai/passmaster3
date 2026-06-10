@@ -11,9 +11,9 @@ export default async function WrongRoundPage({
 }: {
   params: { slug: string };
 }) {
-  const { session, course } = await requireEnrollment(params.slug);
+  const { session, course, isAdmin } = await requireEnrollment(params.slug);
   const progress = await getOrCreateProgress(session.userId, course.id);
-  if (!progress.round3Done) redirect(`/learn/${params.slug}`);
+  if (!isAdmin && !progress.round3Done) redirect(`/learn/${params.slug}`);
 
   const notes = await prisma.wrongNote.findMany({
     where: {

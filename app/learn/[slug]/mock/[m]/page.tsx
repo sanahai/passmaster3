@@ -16,12 +16,15 @@ export default async function MockPage({
   const mockConfig = MOCK_CONFIG[m];
   if (!mockConfig) notFound();
 
-  const { session, course } = await requireEnrollment(params.slug);
+  const { session, course, isAdmin } = await requireEnrollment(params.slug);
   const progress = await getOrCreateProgress(session.userId, course.id);
 
   // 잠금 해제: 1회차는 오답복습① 완료 후, 이후는 직전 회차 완료 후
-  if (m === 1 && !progress.wrongRoundDone) redirect(`/learn/${params.slug}`);
-  if (m > 1 && progress.mockDone < m - 1) redirect(`/learn/${params.slug}`);
+  // (관리자는 선행학습 없이 접근 가능)
+  if (!isAdmin) {
+    if (m === 1 && !progress.wrongRoundDone) redirect(`/learn/${params.slug}`);
+    if (m > 1 && progress.mockDone < m - 1) redirect(`/learn/${params.slug}`);
+  }
 
   // 진행 중인(미완료) 모의고사 세션 재사용 또는 신규 생성
   let mockSession = await prisma.mockSession.findFirst({

@@ -9,7 +9,9 @@ import { prisma } from "@/lib/prisma";
 export default async function LandingPage() {
   const totalQuestions = await prisma.question.count({ where: { isActive: true } });
   // 누적 합격생(전 과정 완주) 수
-  const graduates = await prisma.learningProgress.count({ where: { wrongMockDone: true } });
+  const graduates = await prisma.learningProgress.count({
+    where: { wrongMockDone: true, user: { role: { not: "admin" } } },
+  });
 
   const flow = [
     { icon: "🎁", title: "무료체험", desc: "100문제 무제한" },

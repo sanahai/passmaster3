@@ -28,14 +28,19 @@ export async function getActiveEnrollment(userId: number, courseSlug: string) {
 }
 
 // 수강 승인된 사용자만 접근. 아니면 리디렉션.
+// 관리자는 문제 검토 목적으로 수강 등록 없이도 접근 가능(isAdmin=true).
 export async function requireEnrollment(courseSlug: string) {
   const session = await requireSession(`/learn/${courseSlug}`);
   const data = await getActiveEnrollment(session.userId, courseSlug);
   if (!data?.course) redirect("/dashboard");
-  if (!data.enrollment || data.enrollment.status !== "active" || data.enrollment.userDeleted) {
+  const isAdmin = session.role === "admin";
+  if (
+    !isAdmin &&
+    (!data.enrollment || data.enrollment.status !== "active" || data.enrollment.userDeleted)
+  ) {
     redirect(`/enroll/${courseSlug}`);
   }
-  return { session, course: data.course, enrollment: data.enrollment };
+  return { session, course: data.course, enrollment: data.enrollment, isAdmin };
 }
 
 // 학습 진행 상태 조회/생성
