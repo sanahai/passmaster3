@@ -8,6 +8,8 @@ const NAV = [
   { href: "/admin/enrollments", label: "수강·결제 관리", icon: "💳" },
   { href: "/admin/questions", label: "문제 관리", icon: "📚" },
   { href: "/admin/questions/upload", label: "문제 일괄 업로드", icon: "⬆️" },
+  { href: "/admin/free-questions", label: "무료체험 문제 관리", icon: "🎁" },
+  { href: "/admin/free-questions/upload", label: "무료체험 일괄 업로드", icon: "🆓" },
   { href: "/admin/reports", label: "오류 신고", icon: "🚩" },
   { href: "/admin/users", label: "회원 관리", icon: "👥" },
   { href: "/admin/stats", label: "통계", icon: "📈" },

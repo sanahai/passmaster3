@@ -108,6 +108,7 @@ export async function createQuestionAction(formData: FormData) {
     },
   });
   revalidatePath("/admin/questions");
+  revalidatePath("/admin/free-questions");
 }
 
 export async function toggleQuestionAction(formData: FormData) {
@@ -120,6 +121,7 @@ export async function toggleQuestionAction(formData: FormData) {
     data: { isActive: !q.isActive },
   });
   revalidatePath("/admin/questions");
+  revalidatePath("/admin/free-questions");
 }
 
 // 시드(자동 생성) 샘플 문제 전체 삭제 — 업로드한 문제는 남김.
@@ -193,6 +195,8 @@ export async function bulkUploadJsonAction(
   await requireAdmin();
   const courseId = Number(formData.get("courseId"));
   const file = formData.get("file") as File | null;
+  // 무료체험 업로드 시 모든 문제를 무료(isFree=true)로 강제
+  const forceFree = formData.get("forceFree") === "1";
 
   if (!courseId) return { error: "대상 과정을 선택해 주세요." };
   if (!file || file.size === 0) return { error: "JSON 파일을 선택해 주세요." };
@@ -264,7 +268,7 @@ export async function bulkUploadJsonAction(
       answer: answer >= 1 && answer <= 4 ? answer : 1,
       explanation: String(pick(raw, "explanation", "해설") ?? "") || null,
       difficulty: Number(pick(raw, "difficulty", "난이도") ?? 2) || 2,
-      isFree: isFreeRaw === true || String(isFreeRaw).toUpperCase() === "TRUE",
+      isFree: forceFree || isFreeRaw === true || String(isFreeRaw).toUpperCase() === "TRUE",
     });
   }
 
@@ -274,5 +278,6 @@ export async function bulkUploadJsonAction(
 
   await prisma.question.createMany({ data });
   revalidatePath("/admin/questions");
+  revalidatePath("/admin/free-questions");
   return { count: data.length };
 }

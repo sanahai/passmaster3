@@ -14,11 +14,23 @@ function SubmitButton() {
   );
 }
 
-export default function JsonUploadForm({ courses }: { courses: Course[] }) {
+export default function JsonUploadForm({
+  courses,
+  forceFree = false,
+}: {
+  courses: Course[];
+  forceFree?: boolean;
+}) {
   const [state, formAction] = useFormState(bulkUploadJsonAction, undefined);
 
   return (
     <form action={formAction} className="card space-y-4">
+      {forceFree && <input type="hidden" name="forceFree" value="1" />}
+      {forceFree && (
+        <p className="rounded-btn bg-[#E8F5E9] px-4 py-2 text-sm font-semibold text-beauty-success">
+          🎁 업로드되는 모든 문제는 무료체험용(무료)으로 자동 등록됩니다.
+        </p>
+      )}
       <div>
         <label className="label">대상 과정</label>
         <select name="courseId" className="input" required>
