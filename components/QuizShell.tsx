@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function QuizShell({
   exitHref,
@@ -11,8 +12,8 @@ export default function QuizShell({
     <div className="min-h-screen bg-beauty-bg">
       <header className="sticky top-0 z-30 border-b border-primary-pale bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-1.5 font-extrabold text-primary">
-            <span>💄</span> BEAUTYmaster
+          <Link href="/" className="flex items-center">
+            <Image src="/logo.png" alt="BEAUTYmaster" width={439} height={217} className="h-7 w-auto" />
           </Link>
           <Link
             href={exitHref}

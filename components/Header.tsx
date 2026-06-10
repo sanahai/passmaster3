@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getSession } from "@/lib/auth";
 import { logoutAction } from "@/app/actions/auth";
 
@@ -8,11 +9,15 @@ export default async function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-primary-pale bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 text-xl font-extrabold text-primary">
-          <span className="text-2xl">💄</span>
-          <span>
-            BEAUTY<span className="text-beauty-neutral">master</span>
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo.png"
+            alt="BEAUTYmaster"
+            width={439}
+            height={217}
+            priority
+            className="h-9 w-auto"
+          />
         </Link>
 
         <nav className="flex items-center gap-1 sm:gap-3">

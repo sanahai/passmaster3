@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { requireAdmin } from "@/lib/access";
 import { logoutAction } from "@/app/actions/auth";
 
@@ -22,8 +23,8 @@ export default async function AdminLayout({
     <div className="min-h-screen bg-beauty-bg">
       <div className="mx-auto flex max-w-7xl">
         <aside className="sticky top-0 hidden h-screen w-60 shrink-0 border-r border-primary-pale bg-white p-4 md:block">
-          <Link href="/" className="mb-6 flex items-center gap-1.5 px-2 text-lg font-extrabold text-primary">
-            💄 <span>BEAUTYmaster</span>
+          <Link href="/" className="mb-6 flex items-center px-2">
+            <Image src="/logo.png" alt="BEAUTYmaster" width={439} height={217} className="h-8 w-auto" />
           </Link>
           <p className="mb-2 px-2 text-xs font-bold uppercase text-beauty-gray">관리자</p>
           <nav className="space-y-1">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import SignupForm from "@/components/auth/SignupForm";
@@ -9,9 +10,8 @@ export default async function SignupPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-beauty-bg px-4 py-12">
-      <Link href="/" className="mb-8 flex items-center gap-2 text-2xl font-extrabold text-primary">
-        <span className="text-3xl">💄</span>
-        BEAUTY<span className="text-beauty-neutral">master</span>
+      <Link href="/" className="mb-8 flex items-center">
+        <Image src="/logo.png" alt="BEAUTYmaster" width={439} height={217} priority className="h-12 w-auto" />
       </Link>
       <div className="card w-full max-w-md">
         <h1 className="mb-1 text-2xl font-bold text-beauty-neutral">회원가입</h1>
