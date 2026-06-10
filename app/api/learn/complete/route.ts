@@ -57,6 +57,9 @@ export async function POST(req: NextRequest) {
       break;
   }
   update.lastQIndex = 0;
+  // 단계 완료 → 진행 중 단계 표시 초기화 (다음 단계 시작 전까지 0%)
+  update.curStepKey = "";
+  update.curStepPct = 0;
 
   await prisma.learningProgress.upsert({
     where: { userId_courseId: { userId: session.userId, courseId: course.id } },

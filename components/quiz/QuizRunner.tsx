@@ -156,12 +156,23 @@ export default function QuizRunner({
 
   // 서버 진행 위치 저장 (이탈 시점)
   const saveServerProgress = useCallback(() => {
+    // 무료체험은 과정 학습 진행률에 반영하지 않음
+    if (sessionType === "trial" || !courseSlug) return;
+
     const roundNum = sessionType.startsWith("round") ? Number(sessionType.slice(5)) : 0;
+    // 현재 진행 중인 단계 키 (학습 홈의 단계 키와 동일)
+    const curStepKey =
+      sessionType === "mock" ? `mock${mockNumber}` : sessionType;
+    const answered = answers.filter((a) => a?.revealed).length;
+    const curStepPct = total > 0 ? Math.round((answered / total) * 100) : 0;
+
     const payload = JSON.stringify({
       courseSlug,
       lastQIndex: index,
       lastRound: roundNum || undefined,
       lastMock: sessionType === "mock" ? mockNumber : undefined,
+      curStepKey,
+      curStepPct,
     });
     try {
       if (navigator.sendBeacon) {
@@ -178,7 +189,7 @@ export default function QuizRunner({
         }).catch(() => {});
       }
     } catch {}
-  }, [courseSlug, index, sessionType, mockNumber]);
+  }, [courseSlug, index, sessionType, mockNumber, answers, total]);
 
   useEffect(() => {
     const onHide = () => {

@@ -7,7 +7,8 @@ export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const { courseSlug, lastQIndex, lastRound, lastMock } = await req.json();
+  const { courseSlug, lastQIndex, lastRound, lastMock, curStepKey, curStepPct } =
+    await req.json();
 
   const course = await prisma.course.findUnique({ where: { slug: courseSlug } });
   if (!course) return NextResponse.json({ error: "course not found" }, { status: 404 });
@@ -20,11 +21,15 @@ export async function POST(req: NextRequest) {
       lastQIndex: lastQIndex ?? 0,
       lastRound: lastRound ?? 0,
       lastMock: lastMock ?? 0,
+      curStepKey: typeof curStepKey === "string" ? curStepKey : "",
+      curStepPct: typeof curStepPct === "number" ? curStepPct : 0,
     },
     update: {
       lastQIndex: lastQIndex ?? undefined,
       lastRound: lastRound ?? undefined,
       lastMock: lastMock ?? undefined,
+      curStepKey: typeof curStepKey === "string" ? curStepKey : undefined,
+      curStepPct: typeof curStepPct === "number" ? curStepPct : undefined,
     },
   });
 

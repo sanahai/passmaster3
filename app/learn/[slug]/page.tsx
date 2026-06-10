@@ -2,7 +2,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { requireEnrollment, getOrCreateProgress } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { computeSteps, progressPercent } from "@/lib/progress";
+import { computeSteps, computeProgressBars } from "@/lib/progress";
 
 export default async function LearnHomePage({
   params,
@@ -12,7 +12,12 @@ export default async function LearnHomePage({
   const { session, course } = await requireEnrollment(params.slug);
   const progress = await getOrCreateProgress(session.userId, course.id);
   const steps = computeSteps(course.slug, progress);
-  const pct = progressPercent(progress);
+  const { overallPct, roundMockPct } = computeProgressBars(
+    course.slug,
+    progress,
+    progress.curStepKey,
+    progress.curStepPct
+  );
 
   // 오답복습 단계의 오답 개수 표시
   const roundWrong = await prisma.wrongNote.count({
@@ -42,14 +47,38 @@ export default async function LearnHomePage({
         <h1 className="mb-1 text-3xl font-bold text-beauty-neutral">{course.name}</h1>
         <p className="mb-6 text-beauty-gray">단계별로 잠금 해제하며 학습을 완성하세요.</p>
 
-        {/* 전체 진행률 */}
-        <div className="card mb-8">
-          <div className="mb-2 flex justify-between">
-            <span className="font-semibold text-beauty-neutral">전체 진행률</span>
-            <span className="font-bold text-primary">{pct}%</span>
+        {/* 진행률 막대 2종 */}
+        <div className="card mb-8 space-y-5">
+          <div>
+            <div className="mb-2 flex justify-between">
+              <span className="font-semibold text-beauty-neutral">
+                전체 진행률
+                <span className="ml-1 text-xs font-normal text-beauty-gray">(회차·모의고사·복습)</span>
+              </span>
+              <span className="font-bold text-primary">{overallPct}%</span>
+            </div>
+            <div className="h-3 w-full overflow-hidden rounded-full bg-primary-pale">
+              <div
+                className="h-full rounded-full bg-primary transition-all"
+                style={{ width: `${overallPct}%` }}
+              />
+            </div>
           </div>
-          <div className="h-3 w-full overflow-hidden rounded-full bg-primary-pale">
-            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+
+          <div>
+            <div className="mb-2 flex justify-between">
+              <span className="font-semibold text-beauty-neutral">
+                회차·모의고사 진행률
+                <span className="ml-1 text-xs font-normal text-beauty-gray">(복습 제외)</span>
+              </span>
+              <span className="font-bold text-primary-accent">{roundMockPct}%</span>
+            </div>
+            <div className="h-3 w-full overflow-hidden rounded-full bg-primary-pale">
+              <div
+                className="h-full rounded-full bg-primary-accent transition-all"
+                style={{ width: `${roundMockPct}%` }}
+              />
+            </div>
           </div>
         </div>
 
@@ -58,6 +87,10 @@ export default async function LearnHomePage({
           {steps.map((step) => {
             const wrongCount =
               step.key === "wrong_round" ? roundWrong : step.key === "wrong_mock" ? mockWrong : null;
+            const inProgressPct =
+              step.state === "current" && step.key === progress.curStepKey
+                ? progress.curStepPct
+                : 0;
 
             const card = (
               <div
@@ -74,7 +107,12 @@ export default async function LearnHomePage({
                   <div className="flex items-center gap-2">
                     <h3 className="font-bold text-beauty-neutral">{step.label}</h3>
                     {step.state === "done" && (
-                      <span className="text-sm font-bold text-beauty-success">✓ 완료</span>
+                      <span className="text-sm font-bold text-beauty-success">✓ 학습완료</span>
+                    )}
+                    {inProgressPct > 0 && (
+                      <span className="rounded-full bg-primary-accent/15 px-2 py-0.5 text-xs font-bold text-primary-accent">
+                        진행 중 {inProgressPct}%
+                      </span>
                     )}
                     {step.state === "locked" && <span className="text-sm">🔒</span>}
                   </div>
@@ -84,10 +122,22 @@ export default async function LearnHomePage({
                       <span className="ml-1 font-semibold text-primary">· 오답 {wrongCount}개</span>
                     )}
                   </p>
+                  {inProgressPct > 0 && (
+                    <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-primary-pale">
+                      <div
+                        className="h-full rounded-full bg-primary-accent"
+                        style={{ width: `${inProgressPct}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
                 {step.state === "current" && (
                   <span className="rounded-btn bg-primary px-4 py-2 text-sm font-bold text-white">
-                    {step.key.startsWith("round") || step.key.startsWith("wrong") ? "시작" : "응시"}
+                    {inProgressPct > 0
+                      ? "이어하기"
+                      : step.key.startsWith("round") || step.key.startsWith("wrong")
+                      ? "시작"
+                      : "응시"}
                   </span>
                 )}
                 {step.state === "done" && (

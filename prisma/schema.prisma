@@ -186,6 +186,8 @@ model LearningProgress {
   lastRound       Int      @default(0)
   lastMock        Int      @default(0)
   lastQIndex      Int      @default(0)
+  curStepKey      String   @default("") // 현재 진행 중인 단계 키 (round1..mock6, wrong_*)
+  curStepPct      Int      @default(0) // 현재 단계 진행률 0~100 (이탈 시점 저장)
   updatedAt       DateTime @updatedAt
 
   user   User   @relation(fields: [userId], references: [id])

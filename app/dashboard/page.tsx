@@ -2,7 +2,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { progressPercent, nextStepKey } from "@/lib/progress";
+import { computeProgressBars, nextStepKey } from "@/lib/progress";
 
 export default async function DashboardPage() {
   const session = await requireSession("/dashboard");
@@ -57,7 +57,12 @@ export default async function DashboardPage() {
             {visible.map((e) => {
               const isActive = e.status === "active";
               const prog = progByCourse.get(e.courseId) ?? null;
-              const pct = progressPercent(prog);
+              const pct = computeProgressBars(
+                e.course.slug,
+                prog,
+                prog?.curStepKey ?? "",
+                prog?.curStepPct ?? 0
+              ).overallPct;
               const next = nextStepKey(e.course.slug, prog);
               const daysLeft = e.expiresAt
                 ? Math.max(0, Math.ceil((e.expiresAt.getTime() - Date.now()) / 86400000))

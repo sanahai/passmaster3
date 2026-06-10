@@ -84,6 +84,52 @@ export function progressPercent(p: ProgressLike): number {
   return Math.round((done / steps.length) * 100);
 }
 
+// 회차+모의고사에 해당하는 단계 (복습 제외)
+const ROUND_MOCK_KEYS: StepKey[] = [
+  "round1",
+  "round2",
+  "round3",
+  "mock1",
+  "mock2",
+  "mock3",
+  "mock4",
+  "mock5",
+  "mock6",
+];
+
+// 전체 진행률(모든 단계) + 회차·모의고사 진행률(복습 제외) 두 막대 계산.
+// 진행 중인 단계(curStepKey)의 부분 진행률(curStepPct)도 소수로 반영한다.
+export function computeProgressBars(
+  slug: string,
+  p: ProgressLike,
+  curStepKey = "",
+  curStepPct = 0
+): { overallPct: number; roundMockPct: number } {
+  const steps = computeSteps(slug, p);
+  const curStep = steps.find((s) => s.key === curStepKey);
+  const partial =
+    curStep && curStep.state !== "done" && curStepPct > 0
+      ? Math.min(1, curStepPct / 100)
+      : 0;
+
+  const doneAll = steps.filter((s) => s.state === "done").length;
+  const overallPct = Math.min(
+    100,
+    Math.round(((doneAll + partial) / steps.length) * 100)
+  );
+
+  const rmSteps = steps.filter((s) => ROUND_MOCK_KEYS.includes(s.key));
+  const doneRM = rmSteps.filter((s) => s.state === "done").length;
+  const rmPartial =
+    curStep && ROUND_MOCK_KEYS.includes(curStep.key) ? partial : 0;
+  const roundMockPct = Math.min(
+    100,
+    Math.round(((doneRM + rmPartial) / rmSteps.length) * 100)
+  );
+
+  return { overallPct, roundMockPct };
+}
+
 // 다음에 풀어야 할 단계의 키 반환
 export function nextStepKey(slug: string, p: ProgressLike): Step | undefined {
   return computeSteps(slug, p).find((s) => s.state === "current");
