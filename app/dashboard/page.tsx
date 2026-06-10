@@ -57,12 +57,12 @@ export default async function DashboardPage() {
             {visible.map((e) => {
               const isActive = e.status === "active";
               const prog = progByCourse.get(e.courseId) ?? null;
-              const pct = computeProgressBars(
+              const { overallPct, roundMockPct } = computeProgressBars(
                 e.course.slug,
                 prog,
                 prog?.curStepKey ?? "",
                 prog?.curStepPct ?? 0
-              ).overallPct;
+              );
               const next = nextStepKey(e.course.slug, prog);
               const daysLeft = e.expiresAt
                 ? Math.max(0, Math.ceil((e.expiresAt.getTime() - Date.now()) / 86400000))
@@ -84,12 +84,22 @@ export default async function DashboardPage() {
 
                   {isActive ? (
                     <>
-                      <div className="mb-2 flex justify-between text-sm">
-                        <span className="text-beauty-gray">학습 진행률</span>
-                        <span className="font-bold text-primary">{pct}%</span>
+                      <div className="mb-1 flex justify-between text-sm">
+                        <span className="text-beauty-gray">전체 진행률</span>
+                        <span className="font-bold text-primary">{overallPct}%</span>
+                      </div>
+                      <div className="mb-3 h-2.5 w-full overflow-hidden rounded-full bg-primary-pale">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${overallPct}%` }} />
+                      </div>
+                      <div className="mb-1 flex justify-between text-sm">
+                        <span className="text-beauty-gray">회차·모의고사 진행률</span>
+                        <span className="font-bold text-primary-accent">{roundMockPct}%</span>
                       </div>
                       <div className="mb-4 h-2.5 w-full overflow-hidden rounded-full bg-primary-pale">
-                        <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                        <div
+                          className="h-full rounded-full bg-primary-accent"
+                          style={{ width: `${roundMockPct}%` }}
+                        />
                       </div>
                       {next && (
                         <p className="mb-4 text-sm text-beauty-gray">
