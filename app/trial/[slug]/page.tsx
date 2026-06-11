@@ -17,9 +17,9 @@ export default async function TrialCoursePage({
   const course = await prisma.course.findUnique({ where: { slug: params.slug } });
   if (!course) redirect("/trial");
 
-  // 무료체험 동의 기록 확인
+  // 무료체험 동의 기록 확인 (과정별로 동의 여부를 확인)
   const consent = await prisma.userConsent.findFirst({
-    where: { userId: session.userId, consentMode: "trial" },
+    where: { userId: session.userId, consentMode: "trial", examCategory: course.slug },
   });
 
   const questions = await prisma.question.findMany({

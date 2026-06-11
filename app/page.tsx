@@ -104,7 +104,10 @@ export default async function LandingPage() {
                 문제로 필기시험에 합격하세요.
               </p>
               <div className="flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
-                <Link href="/signup" className="btn-accent w-full px-8 py-4 text-lg sm:w-auto">
+                <Link
+                  href={session ? "/trial" : "/signup"}
+                  className="btn-accent w-full px-8 py-4 text-lg sm:w-auto"
+                >
                   무료체험 시작하기
                 </Link>
                 {session ? (
