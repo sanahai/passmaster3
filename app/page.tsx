@@ -5,9 +5,10 @@ import { AIExplanationSection } from "@/components/HeroAndAIExplanation_1";
 import EnrollCTA from "@/components/consent/EnrollCTA";
 import { COURSES, PACKAGE_PRICE } from "@/lib/courses";
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/auth";
 
 export default async function LandingPage() {
-  const totalQuestions = await prisma.question.count({ where: { isActive: true } });
+  const session = await getSession();
   // 누적 합격생(전 과정 완주) 수
   const graduates = await prisma.learningProgress.count({
     where: { wrongMockDone: true, user: { role: { not: "admin" } } },
@@ -97,16 +98,27 @@ export default async function LandingPage() {
                 그 불안, <span className="text-primary">AI가 이유부터</span> 알려드립니다
               </h1>
               <p className="mb-9 max-w-2xl text-lg text-beauty-gray lg:mx-0">
-                문제집은 답만 알려주지만, 뷰티마스터는 &quot;왜 틀렸는지&quot;까지 분석합니다.
-                미용사 일반·피부·네일·메이크업 4종, {totalQuestions.toLocaleString()}개 이상의 문제로 대비하세요.
+                문제집은 답만 알려주지만, 뷰티마스터는{" "}
+                <span className="font-bold text-red-600">&quot;왜 틀렸는지&quot;</span>까지 분석합니다.
+                미용사 일반·피부·네일·메이크업 4종류의 자격증, 총 4,948개 이상의 AI가 만들어낸 문제은행
+                문제로 필기시험에 합격하세요.
               </p>
               <div className="flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
                 <Link href="/signup" className="btn-accent w-full px-8 py-4 text-lg sm:w-auto">
                   무료체험 시작하기
                 </Link>
-                <Link href="/login" className="btn-outline w-full px-8 py-4 text-lg sm:w-auto">
-                  로그인
-                </Link>
+                {session ? (
+                  <Link
+                    href={session.role === "admin" ? "/admin" : "/dashboard"}
+                    className="btn-outline w-full px-8 py-4 text-lg sm:w-auto"
+                  >
+                    내 학습
+                  </Link>
+                ) : (
+                  <Link href="/login" className="btn-outline w-full px-8 py-4 text-lg sm:w-auto">
+                    로그인
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -138,15 +150,18 @@ export default async function LandingPage() {
           <h2 className="mb-8 text-2xl font-bold text-beauty-neutral sm:text-3xl">
             이런 적 있으신가요?
           </h2>
-          <div className="mx-auto mb-8 max-w-xl space-y-4 text-left">
+          <div className="mx-auto mb-8 grid max-w-3xl grid-cols-1 gap-4 text-left sm:grid-cols-2">
             {[
               "문제집 3바퀴 돌렸는데 시험만 보면 새 유형이 나온다",
               "비슷한 보기 두 개 사이에서 헷갈려서 틀린다",
               "틀린 문제 다시 봐도 또 틀린다",
+              "이론은 봤는데 막상 문제로 나오면 막힌다",
+              "공부할 시간이 부족해 핵심만 빠르게 보고 싶다",
+              "무엇부터 어떤 순서로 공부해야 할지 막막하다",
             ].map((item) => (
-              <div key={item} className="flex items-start gap-3 rounded-card bg-white p-4 shadow-card">
-                <span className="text-xl">😩</span>
-                <p className="text-beauty-neutral">{item}</p>
+              <div key={item} className="flex items-start gap-3 rounded-card bg-white p-5 shadow-card">
+                <span className="text-2xl">😩</span>
+                <p className="font-medium text-beauty-neutral">{item}</p>
               </div>
             ))}
           </div>
