@@ -63,13 +63,13 @@ export default async function LandingPage() {
         {/* 상단 안내사항 */}
         <section className="border-b border-primary-pale bg-primary-pale/40">
           <div className="mx-auto max-w-6xl px-4 py-4">
-            <div className="rounded-card border border-primary/15 bg-white/70 p-4 shadow-card">
-              <p className="mb-2 text-sm font-bold text-primary">안내사항</p>
-              <p className="text-sm leading-relaxed text-beauty-neutral">
+            <div className="rounded-card border border-red-300 bg-white/70 p-5 text-center shadow-card">
+              <p className="mb-2 text-xl font-extrabold text-red-600">중요 안내사항</p>
+              <p className="text-lg font-bold leading-relaxed text-red-600">
                 본 사이트에서 제공하는 문제는 큐넷(Q-Net) 또는 한국산업인력공단의 공식 기출문제가
                 아닙니다.
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-beauty-gray">
+              <p className="mt-1 text-lg font-bold leading-relaxed text-red-600">
                 공개된 자격증 기출 경향과 학습 자료를 바탕으로 AI를 활용하여 재구성한 학습용
                 문제입니다.
               </p>
