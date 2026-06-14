@@ -1,7 +1,6 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 import Footer from "@/components/Footer";
-import PWARegister from "@/components/PWARegister";
 
 // 모든 라우트를 요청 시 렌더링(동적)으로 강제 → 빌드 단계에서 DB 접속/프리렌더 방지
 export const dynamic = "force-dynamic";
@@ -18,28 +17,11 @@ export const metadata: Metadata = {
     "네일 자격증",
     "메이크업 자격증",
   ],
-  manifest: "/manifest.webmanifest",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "BEAUTYmaster",
-  },
-  icons: {
-    icon: "/icons/icon-192.png",
-    apple: "/icons/apple-touch-icon.png",
-  },
   openGraph: {
     title: "BEAUTYmaster · 미용사 자격증 필기 문제은행",
     description: "무료체험 → 반복학습 → 오답복습 → 모의고사 → 합격",
     type: "website",
   },
-};
-
-export const viewport: Viewport = {
-  themeColor: "#D81B60",
-  width: "device-width",
-  initialScale: 1,
-  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -50,7 +32,6 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="flex min-h-screen flex-col antialiased">
-        <PWARegister />
         <div className="flex-1">{children}</div>
         <Footer />
       </body>
