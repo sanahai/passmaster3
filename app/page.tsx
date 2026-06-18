@@ -78,7 +78,7 @@ export default async function LandingPage() {
               <p className="mb-9 max-w-2xl text-lg text-beauty-gray lg:mx-0">
                 문제집은 답만 알려주지만, 뷰티마스터는{" "}
                 <span className="font-bold text-red-600">&quot;왜 틀렸는지&quot;</span>까지 분석합니다.
-                미용사 일반·피부·네일·메이크업 4종류의 자격증, 총 4,948개 이상의 AI가 만들어낸 문제은행
+                미용사 일반·피부·네일·메이크업 4종류의 자격증, 총 6,648개 이상의 AI가 만들어낸 문제은행
                 문제로 필기시험에 합격하세요.
               </p>
               <div className="flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
