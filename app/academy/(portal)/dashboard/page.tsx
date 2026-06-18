@@ -7,16 +7,37 @@ import { requireAcademyStaff } from "@/lib/academy-access";
 import { getAcademyStats, getAcademyStudents, getAtRiskStudents, getGroupStats } from "@/lib/academy-stats";
 import { tierAtLeast } from "@/lib/academy";
 
+type SearchParams = {
+  tab?: string;
+  filter?: string;
+  q?: string;
+  error?: string;
+  from?: string;
+};
+
+async function resolveSearchParams(
+  searchParams?: SearchParams | Promise<SearchParams>,
+): Promise<SearchParams> {
+  if (!searchParams) return {};
+  if (typeof (searchParams as Promise<SearchParams>).then === "function") {
+    return await (searchParams as Promise<SearchParams>);
+  }
+  return searchParams;
+}
+
+export const dynamic = "force-dynamic";
+
 export default async function AcademyDashboardPage({
   searchParams,
 }: {
-  searchParams: { tab?: string; filter?: string; q?: string; error?: string; from?: string };
+  searchParams?: SearchParams | Promise<SearchParams>;
 }) {
+  const sp = await resolveSearchParams(searchParams);
   const { user, academy } = await requireAcademyStaff();
   const stats = await getAcademyStats(academy.id);
   const students = await getAcademyStudents(academy.id, {
-    filter: searchParams.filter,
-    q: searchParams.q,
+    filter: sp.filter,
+    q: sp.q,
     branchId: user.role === "branch_admin" ? user.branchId ?? undefined : undefined,
     teacherId: user.role === "teacher" ? user.id : undefined,
   });
@@ -29,7 +50,7 @@ export default async function AcademyDashboardPage({
 
   return (
     <div>
-      {searchParams.error === "upgrade" && (
+      {sp.error === "upgrade" && (
         <div className="mb-6">
           <UpgradeBanner />
         </div>
@@ -93,19 +114,19 @@ export default async function AcademyDashboardPage({
       <div className="mb-4 flex flex-wrap gap-2">
         <Link
           href="/academy/dashboard"
-          className={`rounded-full px-4 py-1.5 text-sm font-semibold ${!searchParams.filter ? "bg-b2b-primary text-white" : "bg-white border"}`}
+          className={`rounded-full px-4 py-1.5 text-sm font-semibold ${!sp.filter ? "bg-b2b-primary text-white" : "bg-white border"}`}
         >
           전체
         </Link>
         <Link
           href="/academy/dashboard?filter=active"
-          className={`rounded-full px-4 py-1.5 text-sm font-semibold ${searchParams.filter === "active" ? "bg-b2b-primary text-white" : "bg-white border"}`}
+          className={`rounded-full px-4 py-1.5 text-sm font-semibold ${sp.filter === "active" ? "bg-b2b-primary text-white" : "bg-white border"}`}
         >
           활성
         </Link>
         <Link
           href="/academy/dashboard?filter=warning"
-          className={`rounded-full px-4 py-1.5 text-sm font-semibold ${searchParams.filter === "warning" ? "bg-b2b-primary text-white" : "bg-white border"}`}
+          className={`rounded-full px-4 py-1.5 text-sm font-semibold ${sp.filter === "warning" ? "bg-b2b-primary text-white" : "bg-white border"}`}
         >
           주의
         </Link>

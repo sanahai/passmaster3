@@ -2,6 +2,8 @@ import AcademyHeader from "@/components/academy/AcademyHeader";
 import AcademySidebar from "@/components/academy/AcademySidebar";
 import { requireAcademyStaff } from "@/lib/academy-access";
 
+export const dynamic = "force-dynamic";
+
 export default async function AcademyPortalLayout({ children }: { children: React.ReactNode }) {
   const { academy } = await requireAcademyStaff();
 

@@ -1,8 +1,6 @@
-"use client";
-
 import Link from "next/link";
-import type { StudentRow } from "@/lib/academy-stats";
 import { coerceDate } from "@/lib/format-date";
+import type { StudentRow } from "@/lib/academy-stats";
 
 function formatLastActive(d: Date | string | null) {
   const date = coerceDate(d);
