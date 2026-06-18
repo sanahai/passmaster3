@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import type { StudentRow } from "@/lib/academy-stats";
+import { coerceDate } from "@/lib/format-date";
 
-function formatLastActive(d: Date | null) {
-  if (!d) return "기록 없음";
-  const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+function formatLastActive(d: Date | string | null) {
+  const date = coerceDate(d);
+  if (!date) return "기록 없음";
+  const days = Math.floor((Date.now() - date.getTime()) / 86400000);
   if (days === 0) return "오늘";
   if (days === 1) return "어제";
   return `${days}일 전`;

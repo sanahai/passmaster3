@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import type { StudentRow } from "./academy-stats";
+import { formatDateKo } from "./format-date";
 
 // jspdf-autotable plugin typing
 declare module "jspdf" {
@@ -37,7 +38,7 @@ export function buildAcademyReportPdf(
       `${s.accuracy}%`,
       String(s.answerCount),
       s.status.label,
-      s.lastActive ? s.lastActive.toLocaleDateString("ko-KR") : "-",
+      s.lastActive ? formatDateKo(s.lastActive) : "-",
     ]),
     styles: { fontSize: 8, cellPadding: 2 },
     headStyles: { fillColor: [15, 23, 42] },

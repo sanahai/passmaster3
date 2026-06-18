@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import { getAcademyStudents, getStudentAccuracy } from "./academy-stats";
+import { formatDateYmd } from "./format-date";
 
 export async function getWeeklyActivity(academyId: number, weeks = 8) {
   const students = await prisma.user.findMany({
@@ -68,7 +69,7 @@ export async function buildAcademyReportCsv(academyId: number): Promise<string> 
   const rows = students
     .map(
       (s) =>
-        `"${s.name}","${s.email}","${s.groupName ?? ""}",${s.accuracy},${s.answerCount},"${s.lastActive?.toISOString().slice(0, 10) ?? ""}","${s.status.label}"`,
+        `"${s.name}","${s.email}","${s.groupName ?? ""}",${s.accuracy},${s.answerCount},"${formatDateYmd(s.lastActive)}","${s.status.label}"`,
     )
     .join("\n");
   return `\uFEFF${header}${rows}\n학원,${academy?.name ?? ""},생성일,${new Date().toISOString().slice(0, 10)}`;

@@ -1,11 +1,12 @@
 import { prisma } from "./prisma";
 import { studentStatusBadge } from "./academy";
+import { coerceDate } from "./format-date";
 
 export type StudentRow = {
   id: number;
   name: string;
   email: string;
-  lastActive: Date | null;
+  lastActive: Date | string | null;
   answerCount: number;
   accuracy: number;
   status: { label: string; className: string };
@@ -84,7 +85,10 @@ export async function getAcademyStudents(
   }
 
   if (opts?.filter === "active") {
-    return rows.filter((r) => r.lastActive && r.lastActive >= sevenDaysAgo);
+    return rows.filter((r) => {
+      const d = coerceDate(r.lastActive);
+      return d !== null && d >= sevenDaysAgo;
+    });
   }
   if (opts?.filter === "warning") {
     return rows.filter((r) => r.status.label === "주의" || r.status.label === "위험");
