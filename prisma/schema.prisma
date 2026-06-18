@@ -13,15 +13,25 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  email         String   @unique
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
   passwordHash  String
   name          String
   phone         String?
-  role          String   @default("student") // 'student' | 'admin'
-  emailVerified Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  role          String    @default("student") // student | admin | owner | teacher | branch_admin
+  emailVerified Boolean   @default(false)
+  academyId     Int?
+  branchId      Int?
+  groupId       Int?
+  lastActiveAt  DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  academy          Academy?        @relation(fields: [academyId], references: [id])
+  branch           AcademyBranch?  @relation("BranchUsers", fields: [branchId], references: [id])
+  group            AcademyGroup?   @relation("GroupMembers", fields: [groupId], references: [id])
+  managedBranches  AcademyBranch[] @relation("BranchManager")
+  teachingGroups   AcademyGroup[]  @relation("GroupTeacher")
 
   enrollments      Enrollment[]
   answers          UserAnswer[]
@@ -30,6 +40,7 @@ model User {
   learningProgress LearningProgress[]
   consents         UserConsent[]
   reports          QuestionReport[]
+  customQuestions  AcademyCustomQuestion[] @relation("QuestionAuthor")
 }
 
 model Course {
@@ -194,4 +205,93 @@ model LearningProgress {
   course Course @relation(fields: [courseId], references: [id])
 
   @@unique([userId, courseId])
+}
+
+// ── B2B 학원 화이트레이블 ──
+
+model Academy {
+  id           Int      @id @default(autoincrement())
+  name         String
+  tier         String // basic | standard | premium
+  code         String?  @unique @db.VarChar(6)
+  subdomain    String?  @unique
+  logoUrl      String?
+  primaryColor String   @default("#0F172A")
+  ownerEmail   String
+  ownerPhone   String?
+  maxStudents  Int      @default(15)
+  activeUntil  DateTime @db.Date
+  createdAt    DateTime @default(now())
+
+  users           User[]
+  branches        AcademyBranch[]
+  groups          AcademyGroup[]
+  customQuestions AcademyCustomQuestion[]
+  invites         AcademyInvite[]
+}
+
+model AcademyBranch {
+  id        Int      @id @default(autoincrement())
+  academyId Int
+  name      String
+  address   String?
+  managerId Int?
+  code      String?  @unique @db.VarChar(8)
+  createdAt DateTime @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  manager User?   @relation("BranchManager", fields: [managerId], references: [id])
+  groups  AcademyGroup[]
+  users   User[]  @relation("BranchUsers")
+
+  @@index([academyId])
+}
+
+model AcademyGroup {
+  id        Int      @id @default(autoincrement())
+  academyId Int
+  branchId  Int?
+  name      String
+  teacherId Int?
+  createdAt DateTime @default(now())
+
+  academy Academy        @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  branch  AcademyBranch? @relation(fields: [branchId], references: [id])
+  teacher User?          @relation("GroupTeacher", fields: [teacherId], references: [id])
+  members User[]         @relation("GroupMembers")
+
+  @@index([academyId])
+}
+
+model AcademyCustomQuestion {
+  id          Int      @id @default(autoincrement())
+  academyId   Int
+  content     String
+  options     Json
+  answer      Int
+  explanation String?
+  subject     String?
+  difficulty  Int      @default(2)
+  createdById Int?
+  createdAt   DateTime @default(now())
+
+  academy   Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+  createdBy User?   @relation("QuestionAuthor", fields: [createdById], references: [id])
+
+  @@index([academyId])
+}
+
+model AcademyInvite {
+  id        Int       @id @default(autoincrement())
+  academyId Int
+  email     String
+  role      String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@index([token])
 }

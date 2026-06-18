@@ -22,6 +22,14 @@ const config: Config = {
           neutral: "#424242",
           gray: "#757575",
         },
+        b2b: {
+          primary: "#0F172A",
+          accent: "#E91E8C",
+          teal: "#14B8A6",
+          section: "#F1F5F9",
+          border: "#E2E8F0",
+          light: "#F8FAFC",
+        },
       },
       fontFamily: {
         kr: ["Pretendard", "system-ui", "sans-serif"],

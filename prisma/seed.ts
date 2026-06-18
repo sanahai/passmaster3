@@ -79,9 +79,16 @@ async function main() {
   await prisma.mockSession.deleteMany();
   await prisma.learningProgress.deleteMany();
   await prisma.enrollment.deleteMany();
+  await prisma.questionReport.deleteMany();
+  await prisma.userConsent.deleteMany();
+  await prisma.academyCustomQuestion.deleteMany();
+  await prisma.academyInvite.deleteMany();
+  await prisma.academyGroup.deleteMany();
+  await prisma.academyBranch.deleteMany();
   await prisma.question.deleteMany();
   await prisma.course.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.academy.deleteMany();
 
   // 관리자 + 데모 학생
   const adminHash = await bcrypt.hash("admin1234", 10);
@@ -148,9 +155,83 @@ async function main() {
   });
   console.log("✔ 데모 학생 수강 등록(미용사 일반, active)");
 
+  // B2B 데모 학원 (프리미엄)
+  const activeUntil = new Date();
+  activeUntil.setFullYear(activeUntil.getFullYear() + 1);
+
+  const demoAcademy = await prisma.academy.create({
+    data: {
+      name: "데모미용학원",
+      tier: "premium",
+      code: "DEMO01",
+      subdomain: "demo-beauty",
+      ownerEmail: "owner@demo.academy",
+      maxStudents: 50,
+      activeUntil,
+      primaryColor: "#0F172A",
+    },
+  });
+
+  const ownerHash = await bcrypt.hash("owner1234", 10);
+  const owner = await prisma.user.create({
+    data: {
+      email: "owner@demo.academy",
+      passwordHash: ownerHash,
+      name: "김원장",
+      role: "owner",
+      academyId: demoAcademy.id,
+      emailVerified: true,
+      lastActiveAt: new Date(),
+    },
+  });
+
+  const branch = await prisma.academyBranch.create({
+    data: {
+      academyId: demoAcademy.id,
+      name: "강남본점",
+      address: "서울 강남구",
+      code: "GN001",
+      managerId: owner.id,
+    },
+  });
+
+  const group = await prisma.academyGroup.create({
+    data: {
+      academyId: demoAcademy.id,
+      branchId: branch.id,
+      name: "A반",
+    },
+  });
+
+  await prisma.user.update({
+    where: { id: student.id },
+    data: {
+      academyId: demoAcademy.id,
+      groupId: group.id,
+      branchId: branch.id,
+      lastActiveAt: new Date(),
+    },
+  });
+
+  await prisma.academyCustomQuestion.create({
+    data: {
+      academyId: demoAcademy.id,
+      subject: "미용이론",
+      content: "[학원문제] 모발의 주성분은?",
+      options: ["케라틴", "콜라겐", "멜라닌", "지방"],
+      answer: 1,
+      explanation: "모발의 주성분은 케라틴 단백질입니다.",
+      createdById: owner.id,
+    },
+  });
+
+  console.log("✔ B2B 데모 학원: owner@demo.academy / owner1234 (코드 DEMO01)");
+  console.log("✔ 화이트레이블: /a/demo-beauty");
+
   console.log("\n🎉 시드 완료!");
   console.log("관리자: admin@beautymaster.kr / admin1234");
-  console.log("학생:   student@test.com / test1234");
+  console.log("학생:   student@test.com / test1234 (데모 학원 A반 연결)");
+  console.log("원장:   owner@demo.academy / owner1234");
 }
 
 main()

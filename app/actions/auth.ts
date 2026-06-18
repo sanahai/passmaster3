@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { linkStudentToAcademy } from "@/lib/academy";
 import {
   hashPassword,
   verifyPassword,
@@ -20,6 +21,7 @@ export async function signupAction(
   const password = String(formData.get("password") || "");
   const passwordConfirm = String(formData.get("passwordConfirm") || "");
   const phone = String(formData.get("phone") || "").trim();
+  const academyCode = String(formData.get("academyCode") || "").trim();
 
   if (!name || !email || !password) {
     return { error: "이름, 이메일, 비밀번호를 모두 입력해 주세요." };
@@ -36,6 +38,13 @@ export async function signupAction(
     return { error: "이미 가입된 이메일입니다." };
   }
 
+  if (academyCode) {
+    const { resolveAcademyByCode } = await import("@/lib/academy");
+    const academy = await resolveAcademyByCode(academyCode);
+    if (!academy) return { error: "유효하지 않은 학원 코드입니다." };
+    if (academy.activeUntil < new Date()) return { error: "만료된 학원 코드입니다." };
+  }
+
   const user = await prisma.user.create({
     data: {
       name,
@@ -46,6 +55,15 @@ export async function signupAction(
       emailVerified: true,
     },
   });
+
+  if (academyCode) {
+    try {
+      await linkStudentToAcademy(user.id, academyCode);
+    } catch (e) {
+      await prisma.user.delete({ where: { id: user.id } });
+      return { error: e instanceof Error ? e.message : "학원 코드 등록 실패" };
+    }
+  }
 
   await createSession({
     userId: user.id,
@@ -85,10 +103,18 @@ export async function loginAction(
       name: user.name,
       role: user.role,
     },
-    remember
+    remember,
   );
 
-  redirect(user.role === "admin" ? "/admin" : redirectTo);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { lastActiveAt: new Date() },
+  });
+
+  const staffRoles = new Set(["owner", "teacher", "branch_admin"]);
+  if (user.role === "admin") redirect("/admin");
+  if (staffRoles.has(user.role)) redirect("/academy/dashboard");
+  redirect(redirectTo);
 }
 
 export async function logoutAction() {

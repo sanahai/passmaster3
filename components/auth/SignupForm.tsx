@@ -38,6 +38,19 @@ export default function SignupForm() {
         <input id="phone" name="phone" type="tel" className="input" placeholder="010-0000-0000" />
       </div>
       <div>
+        <label className="label" htmlFor="academyCode">
+          학원 코드 <span className="font-normal text-beauty-gray">(선택)</span>
+        </label>
+        <input
+          id="academyCode"
+          name="academyCode"
+          type="text"
+          className="input uppercase"
+          placeholder="6자리 코드"
+          maxLength={6}
+        />
+      </div>
+      <div>
         <label className="label" htmlFor="password">
           비밀번호
         </label>

@@ -52,4 +52,13 @@ body {
   .label {
     @apply mb-1.5 block text-sm font-semibold text-beauty-neutral;
   }
+  .b2b-card {
+    @apply rounded-2xl border border-b2b-border bg-white p-6 shadow-sm transition-shadow hover:shadow-md;
+  }
+  .b2b-btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-b2b-primary px-6 py-2.5 font-semibold text-white hover:bg-slate-800;
+  }
+  .b2b-btn-accent {
+    @apply inline-flex items-center justify-center rounded-lg bg-b2b-accent px-6 py-2.5 font-semibold text-white hover:bg-[#B01570];
+  }
 }

@@ -1,11 +1,15 @@
 import Link from "next/link";
 import Header from "@/components/Header";
+import AcademyCodeForm from "@/components/academy/AcademyCodeForm";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 
 export default async function MyPage() {
   const session = await requireSession("/mypage");
-  const user = await prisma.user.findUnique({ where: { id: session.userId } });
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+    include: { academy: true },
+  });
   const enrollCount = await prisma.enrollment.count({
     where: { userId: session.userId, status: "active" },
   });
@@ -26,6 +30,12 @@ export default async function MyPage() {
             <Row label="가입일" value={user?.createdAt.toLocaleDateString("ko-KR") || "-"} />
           </dl>
         </div>
+
+        {user?.role === "student" && (
+          <div className="mb-6">
+            <AcademyCodeForm currentAcademy={user.academy?.name} />
+          </div>
+        )}
 
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div className="card text-center">

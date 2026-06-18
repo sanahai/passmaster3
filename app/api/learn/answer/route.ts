@@ -38,6 +38,11 @@ export async function POST(req: NextRequest) {
     },
   });
 
+  await prisma.user.update({
+    where: { id: session.userId },
+    data: { lastActiveAt: new Date() },
+  });
+
   // 오답 노트 기록 (2·3회차, 모의고사)
   let wrongSource: string | null = null;
   if (sessionType === "round2") wrongSource = "round2";
