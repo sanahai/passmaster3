@@ -2,6 +2,14 @@ import { prisma } from "@/lib/prisma";
 import ApplicantCell, { type ApplicantInfo } from "@/components/admin/ApplicantCell";
 import { progressPercent, nextStepKey } from "@/lib/progress";
 
+const ROLE_LABEL: Record<string, string> = {
+  admin: "관리자",
+  student: "학생",
+  owner: "원장",
+  teacher: "강사",
+  branch_admin: "지점관리",
+};
+
 export default async function AdminUsersPage() {
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
@@ -64,10 +72,12 @@ export default async function AdminUsersPage() {
                     className={`rounded-full px-2.5 py-1 text-xs font-bold ${
                       u.role === "admin"
                         ? "bg-primary text-white"
+                        : u.role === "owner" || u.role === "teacher"
+                        ? "bg-[#0F172A] text-white"
                         : "bg-primary-pale text-primary"
                     }`}
                   >
-                    {u.role === "admin" ? "관리자" : "학생"}
+                    {ROLE_LABEL[u.role] ?? u.role}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-beauty-neutral">{u._count.enrollments}</td>

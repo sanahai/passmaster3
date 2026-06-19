@@ -11,6 +11,7 @@ import {
   type AcademyTier,
 } from "@/lib/academy";
 import { sendTeacherInviteEmail, sendAcademyOwnerInviteEmail } from "@/lib/email";
+import { absoluteUrl } from "@/lib/site-url";
 import { requireAcademyOwner, requireAcademyStaff } from "@/lib/academy-access";
 import crypto from "crypto";
 
@@ -234,7 +235,7 @@ export async function createAcademyWithInviteAction(formData: FormData) {
     code: academy.code,
   });
 
-  return { academyId: academy.id, setupUrl, code: academy.code };
+  return { academyId: academy.id, setupUrl: absoluteUrl(setupUrl), code: academy.code };
 }
 
 export async function deleteCustomQuestionAction(formData: FormData): Promise<void> {

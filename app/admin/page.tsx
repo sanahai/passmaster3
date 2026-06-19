@@ -5,7 +5,7 @@ export default async function AdminDashboard() {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  const [newUsers, newEnrolls, pending, activeStudents, totalQuestions, paidEnrolls, openReports] =
+  const [newUsers, newEnrolls, pending, activeStudents, totalQuestions, paidEnrolls, openReports, academyTotal, academyExpiring] =
     await Promise.all([
       prisma.user.count({ where: { createdAt: { gte: startOfToday } } }),
       prisma.enrollment.count({ where: { createdAt: { gte: startOfToday } } }),
@@ -18,6 +18,15 @@ export default async function AdminDashboard() {
         select: { amount: true },
       }),
       prisma.questionReport.count({ where: { status: "open" } }),
+      prisma.academy.count(),
+      prisma.academy.count({
+        where: {
+          activeUntil: {
+            lte: (() => { const d = new Date(); d.setDate(d.getDate() + 7); return d; })(),
+            gte: new Date(),
+          },
+        },
+      }),
     ]);
 
   const revenue = paidEnrolls.reduce((sum, e) => sum + e.amount, 0);
@@ -28,6 +37,14 @@ export default async function AdminDashboard() {
   const expiringSoon = await prisma.enrollment.findMany({
     where: { status: "active", expiresAt: { lte: soon, gte: new Date() } },
     include: { user: true, course: true },
+    take: 5,
+  });
+
+  const expiringAcademies = await prisma.academy.findMany({
+    where: {
+      activeUntil: { lte: soon, gte: new Date() },
+    },
+    orderBy: { activeUntil: "asc" },
     take: 5,
   });
 
@@ -46,13 +63,19 @@ export default async function AdminDashboard() {
       icon: "🎓",
       href: "/admin/enrollments?status=active",
     },
+    {
+      label: "B2B 학원",
+      value: academyTotal,
+      icon: "🏫",
+      href: "/admin/academies",
+    },
   ];
 
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold text-beauty-neutral">관리자 대시보드</h1>
 
-      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
         {cards.map((c) => {
           const inner = (
             <div className="card transition-shadow hover:shadow-cardHover">
@@ -124,6 +147,27 @@ export default async function AdminDashboard() {
           )}
         </div>
       </div>
+
+      {academyExpiring > 0 && (
+        <div className="card mt-6">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-beauty-neutral">B2B 학원 만료 임박 ({academyExpiring}곳)</h2>
+            <Link href="/admin/academies?status=active" className="text-xs font-semibold text-primary hover:underline">
+              학원 관리 →
+            </Link>
+          </div>
+          <ul className="space-y-2 text-sm">
+            {expiringAcademies.map((a) => (
+              <li key={a.id} className="flex justify-between border-b border-gray-100 pb-2">
+                <Link href={`/admin/academies/${a.id}`} className="font-semibold text-beauty-neutral hover:text-primary">
+                  {a.name}
+                </Link>
+                <span className="text-beauty-gray">~{a.activeUntil.toLocaleDateString("ko-KR")}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
