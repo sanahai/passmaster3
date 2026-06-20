@@ -10,6 +10,7 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
+    "db:reset-owner": "node scripts/reset-owner-password.mjs",
     "db:studio": "prisma studio"
   },
   "prisma": {

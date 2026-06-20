@@ -140,3 +140,41 @@ export async function regenerateAcademyCodeAdminAction(formData: FormData): Prom
   });
   revalidateAcademyAdmin(id);
 }
+
+const TEMP_OWNER_PASSWORD = "owner1234";
+
+/** 통합관리자: 학원 원장 비밀번호 임시 초기화 */
+export async function resetOwnerPasswordAdminAction(formData: FormData) {
+  await requireAdmin();
+  const academyId = Number(formData.get("academyId"));
+  if (!academyId) return { error: "학원 ID가 필요합니다." };
+
+  const academy = await prisma.academy.findUnique({ where: { id: academyId } });
+  if (!academy) return { error: "학원을 찾을 수 없습니다." };
+
+  const owner =
+    (await prisma.user.findFirst({ where: { academyId, role: "owner" } })) ??
+    (await prisma.user.findUnique({ where: { email: academy.ownerEmail } }));
+
+  if (!owner) {
+    return {
+      error: "원장 계정이 없습니다.「원장 초대」로 먼저 계정을 생성하세요.",
+    };
+  }
+
+  const { hashPassword } = await import("@/lib/auth");
+  await prisma.user.update({
+    where: { id: owner.id },
+    data: {
+      passwordHash: await hashPassword(TEMP_OWNER_PASSWORD),
+      emailVerified: true,
+    },
+  });
+
+  revalidateAcademyAdmin(academyId);
+  return {
+    ok: true,
+    email: owner.email,
+    tempPassword: TEMP_OWNER_PASSWORD,
+  };
+}

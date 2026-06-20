@@ -7,6 +7,7 @@ import {
   resendOwnerInviteAdminAction,
   deleteAcademyAdminAction,
   regenerateAcademyCodeAdminAction,
+  resetOwnerPasswordAdminAction,
 } from "@/app/actions/admin-academy";
 
 type AcademyData = {
@@ -29,7 +30,14 @@ export default function AcademyEditPanel({
   pendingInvite: { email: string; setupUrl: string; expiresAt: string } | null;
 }) {
   const [inviteResult, setInviteResult] = useState<{ setupUrl?: string; error?: string } | null>(null);
+  const [resetResult, setResetResult] = useState<{
+    ok?: boolean;
+    email?: string;
+    tempPassword?: string;
+    error?: string;
+  } | null>(null);
   const [pending, setPending] = useState(false);
+  const [resetPending, setResetPending] = useState(false);
 
   async function handleResend(formData: FormData) {
     setPending(true);
@@ -37,6 +45,15 @@ export default function AcademyEditPanel({
     const res = await resendOwnerInviteAdminAction(formData);
     setInviteResult(res ?? null);
     setPending(false);
+  }
+
+  async function handleResetPassword(formData: FormData) {
+    if (!confirm("원장 비밀번호를 임시 비밀번호로 초기화합니다. 계속할까요?")) return;
+    setResetPending(true);
+    setResetResult(null);
+    const res = await resetOwnerPasswordAdminAction(formData);
+    setResetResult(res ?? null);
+    setResetPending(false);
   }
 
   const isExpired = new Date(academy.activeUntil) < new Date();
@@ -146,6 +163,30 @@ export default function AcademyEditPanel({
         )}
         {inviteResult?.error && (
           <p className="text-sm text-beauty-danger">{inviteResult.error}</p>
+        )}
+      </div>
+
+      <div className="card space-y-3 border-amber-200 bg-amber-50/30">
+        <h2 className="text-lg font-bold text-beauty-neutral">원장 비밀번호 초기화</h2>
+        <p className="text-sm text-beauty-gray">
+          원장({academy.ownerEmail}) 비밀번호를 임시 비밀번호 <strong>owner1234</strong>로 재설정합니다.
+        </p>
+        <form action={handleResetPassword}>
+          <input type="hidden" name="academyId" value={academy.id} />
+          <button type="submit" disabled={resetPending} className="btn-outline text-sm">
+            {resetPending ? "처리 중..." : "비밀번호 초기화"}
+          </button>
+        </form>
+        {resetResult?.ok && resetResult.email && resetResult.tempPassword && (
+          <div className="rounded-btn bg-white p-3 text-sm">
+            <p className="font-semibold text-beauty-neutral">초기화 완료</p>
+            <p>이메일: <strong>{resetResult.email}</strong></p>
+            <p>임시 비밀번호: <strong className="font-mono">{resetResult.tempPassword}</strong></p>
+            <p className="mt-2 text-xs text-beauty-gray">로그인 후 비밀번호를 변경하세요.</p>
+          </div>
+        )}
+        {resetResult?.error && (
+          <p className="text-sm text-beauty-danger">{resetResult.error}</p>
         )}
       </div>
 
