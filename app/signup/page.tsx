@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { getSession } from "@/lib/auth";
 import SignupForm from "@/components/auth/SignupForm";
 
@@ -18,7 +19,9 @@ export default async function SignupPage() {
         <p className="mb-6 text-sm text-beauty-gray">
           가입하면 <span className="font-semibold text-primary">무료체험 100문제</span>를 바로 풀어볼 수 있어요.
         </p>
-        <SignupForm />
+        <Suspense fallback={<p className="text-sm text-beauty-gray">로딩 중...</p>}>
+          <SignupForm />
+        </Suspense>
       </div>
     </main>
   );

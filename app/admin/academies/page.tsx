@@ -104,6 +104,7 @@ export default async function AdminAcademiesPage({
               <th className="px-4 py-3">학생</th>
               <th className="px-4 py-3">원장</th>
               <th className="px-4 py-3">만료일</th>
+              <th className="px-4 py-3">전용 URL</th>
               <th className="px-4 py-3">상태</th>
               <th className="px-4 py-3"></th>
             </tr>
@@ -123,6 +124,15 @@ export default async function AdminAcademiesPage({
                   <td className="px-4 py-3 text-beauty-gray">{a.ownerEmail}</td>
                   <td className="px-4 py-3 text-beauty-gray">
                     {a.activeUntil.toLocaleDateString("ko-KR")}
+                  </td>
+                  <td className="px-4 py-3">
+                    {a.subdomain ? (
+                      <Link href={`/a/${a.subdomain}`} target="_blank" className="font-mono text-xs text-primary hover:underline">
+                        /a/{a.subdomain}
+                      </Link>
+                    ) : (
+                      <span className="text-beauty-gray">-</span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${status.className}`}>

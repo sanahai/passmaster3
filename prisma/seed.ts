@@ -84,6 +84,7 @@ async function main() {
   await prisma.academyCustomQuestion.deleteMany();
   await prisma.academyUserAnswer.deleteMany();
   await prisma.academyInvite.deleteMany();
+  await prisma.academyNotice.deleteMany();
   await prisma.academyGroup.deleteMany();
   await prisma.academyBranch.deleteMany();
   await prisma.question.deleteMany();
@@ -163,6 +164,7 @@ async function main() {
   const demoAcademy = await prisma.academy.create({
     data: {
       name: "데모미용학원",
+      brand: "beautymaster",
       tier: "premium",
       code: "DEMO01",
       subdomain: "demo-beauty",
@@ -226,8 +228,27 @@ async function main() {
     },
   });
 
+  await prisma.academyNotice.createMany({
+    data: [
+      {
+        academyId: demoAcademy.id,
+        title: "환영합니다! 학원 전용 문제은행 안내",
+        content: "회원가입 후 대시보드에서 학습을 시작하세요. 문의는 학원 데스크로 연락해 주세요.",
+        isPinned: true,
+      },
+      {
+        academyId: demoAcademy.id,
+        title: "모의고사 1회차 오픈",
+        content: "이번 주부터 모의고사 1~3회차 응시가 가능합니다.",
+        isPinned: false,
+      },
+    ],
+  });
+
   console.log("✔ B2B 데모 학원: owner@demo.academy / owner1234 (코드 DEMO01)");
   console.log("✔ 화이트레이블: /a/demo-beauty");
+  console.log("✔ 수강생 포털: /a/demo-beauty/dashboard");
+  console.log("✔ 관리자 포털: /a/demo-beauty/admin");
 
   console.log("\n🎉 시드 완료!");
   console.log("관리자: admin@beautymaster.kr / admin1234");

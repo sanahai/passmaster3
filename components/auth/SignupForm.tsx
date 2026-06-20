@@ -2,6 +2,7 @@
 
 import { useFormState, useFormStatus } from "react-dom";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { signupAction } from "@/app/actions/auth";
 import PasswordInput from "./PasswordInput";
 
@@ -16,6 +17,8 @@ function SubmitButton() {
 
 export default function SignupForm() {
   const [state, formAction] = useFormState(signupAction, undefined);
+  const searchParams = useSearchParams();
+  const presetCode = searchParams.get("academyCode") ?? "";
 
   return (
     <form action={formAction} className="space-y-4">
@@ -48,7 +51,11 @@ export default function SignupForm() {
           className="input uppercase"
           placeholder="6자리 코드"
           maxLength={6}
+          defaultValue={presetCode}
         />
+        {presetCode && (
+          <p className="mt-1 text-xs text-primary">제휴학원 코드가 자동 입력되었습니다.</p>
+        )}
       </div>
       <div>
         <label className="label" htmlFor="password">

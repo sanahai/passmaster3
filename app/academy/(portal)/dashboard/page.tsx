@@ -1,6 +1,7 @@
 import Link from "next/link";
 import StatCards from "@/components/academy/StatCards";
 import AcademyCodeCard from "@/components/academy/AcademyCodeCard";
+import AcademyPortalLinkCard from "@/components/academy/AcademyPortalLinkCard";
 import StudentTable from "@/components/academy/StudentTable";
 import UpgradeBanner from "@/components/academy/UpgradeBanner";
 import { requireAcademyStaff } from "@/lib/academy-access";
@@ -66,6 +67,8 @@ export default async function AcademyDashboardPage({
       </div>
 
       {academy.code && <AcademyCodeCard code={academy.code} />}
+
+      <AcademyPortalLinkCard subdomain={academy.subdomain} code={academy.code} />
 
       <StatCards
         stats={[

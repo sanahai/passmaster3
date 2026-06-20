@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import {
   generateUniqueAcademyCode,
+  generateUniqueSubdomain,
   type AcademyTier,
 } from "@/lib/academy";
 import { sendAcademyOwnerInviteEmail } from "@/lib/email";
@@ -30,12 +31,22 @@ export async function updateAcademyAdminAction(formData: FormData): Promise<void
   const maxStudents = Number(formData.get("maxStudents") || 15);
   const ownerEmail = String(formData.get("ownerEmail") || "").trim().toLowerCase();
   const ownerPhone = String(formData.get("ownerPhone") || "").trim();
-  const subdomain = String(formData.get("subdomain") || "").trim() || null;
+  const subdomainInput = String(formData.get("subdomain") || "").trim() || null;
   const activeUntilStr = String(formData.get("activeUntil") || "").trim();
 
   if (!id || !name || !ownerEmail) return;
 
   const activeUntil = activeUntilStr ? new Date(activeUntilStr) : undefined;
+
+  const existing = await prisma.academy.findUnique({ where: { id } });
+  if (!existing) return;
+
+  let subdomain = existing.subdomain;
+  if (subdomainInput && subdomainInput !== existing.subdomain) {
+    subdomain = await generateUniqueSubdomain(name, subdomainInput);
+  } else if (!subdomain) {
+    subdomain = await generateUniqueSubdomain(name, null);
+  }
 
   await prisma.academy.update({
     where: { id },
@@ -45,7 +56,7 @@ export async function updateAcademyAdminAction(formData: FormData): Promise<void
       maxStudents,
       ownerEmail,
       ownerPhone: ownerPhone || null,
-      subdomain: tier === "premium" ? subdomain : null,
+      subdomain,
       ...(activeUntil ? { activeUntil } : {}),
     },
   });

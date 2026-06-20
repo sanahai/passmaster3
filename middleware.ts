@@ -18,24 +18,43 @@ async function hasSession(req: NextRequest) {
   }
 }
 
+/** /a/[subdomain]/dashboard, /practice, ... /admin/* — 로그인 필요 */
+function isSubsiteProtected(pathname: string): boolean {
+  const m = pathname.match(/^\/a\/[^/]+(\/.+)?$/);
+  if (!m) return false;
+  const rest = m[1] ?? "";
+  if (!rest || rest === "/") return false;
+  const protectedPrefixes = [
+    "/dashboard",
+    "/practice",
+    "/wrong",
+    "/mock",
+    "/analysis",
+    "/board",
+    "/mypage",
+    "/admin",
+  ];
+  return protectedPrefixes.some((p) => rest === p || rest.startsWith(`${p}/`));
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (
+  const needsAuth =
     (pathname.startsWith("/academy") && !pathname.startsWith("/academy/setup")) ||
-    pathname.startsWith("/admin")
-  ) {
-    if (!(await hasSession(req))) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/login";
-      url.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(url);
-    }
+    pathname.startsWith("/admin") ||
+    isSubsiteProtected(pathname);
+
+  if (needsAuth && !(await hasSession(req))) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/academy/:path*", "/admin/:path*"],
+  matcher: ["/academy/:path*", "/admin/:path*", "/a/:subdomain/:path*"],
 };

@@ -10,6 +10,7 @@ export default function CreateAcademyForm() {
     setupUrl?: string;
     code?: string | null;
     academyId?: number;
+    portalUrl?: string;
     error?: string;
   } | null>(null);
   const [pending, setPending] = useState(false);
@@ -59,9 +60,11 @@ export default function CreateAcademyForm() {
             <input name="months" type="number" className="input" defaultValue={12} min={1} />
           </div>
           <div className="sm:col-span-2">
-            <label className="label">서브도메인 (프리미엄)</label>
+            <label className="label">전용 페이지 URL (서브도메인)</label>
             <input name="subdomain" className="input" placeholder="my-academy" />
-            <p className="mt-1 text-xs text-beauty-gray">등록 시 /a/서브도메인 화이트레이블 페이지 생성</p>
+            <p className="mt-1 text-xs text-beauty-gray">
+              생성 후 https://beautymaster.vercel.app/a/서브도메인 제휴 템플릿 사이트 제공
+            </p>
           </div>
         </div>
         <button type="submit" disabled={pending} className="btn-primary w-full sm:w-auto">
@@ -80,6 +83,12 @@ export default function CreateAcademyForm() {
             <div className="flex gap-2">
               <dt className="text-beauty-gray">학원 코드</dt>
               <dd className="font-mono font-bold">{result.code}</dd>
+            </div>
+            <div>
+              <dt className="text-beauty-gray">제휴학원 페이지</dt>
+              <dd className="mt-1 break-all rounded-btn bg-primary-pale/40 p-2 font-mono text-xs">
+                {result.portalUrl}
+              </dd>
             </div>
             <div>
               <dt className="text-beauty-gray">원장 설정 링크 (48시간)</dt>

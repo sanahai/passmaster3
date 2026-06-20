@@ -33,6 +33,28 @@ export async function generateUniqueAcademyCode(): Promise<string> {
   throw new Error("학원 코드 생성 실패");
 }
 
+export function slugifySubdomain(input: string): string {
+  const slug = input
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 40);
+  return slug || `academy-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+export async function generateUniqueSubdomain(name: string, preferred?: string | null): Promise<string> {
+  const base = preferred?.trim() ? slugifySubdomain(preferred) : slugifySubdomain(name);
+  for (let i = 0; i < 20; i++) {
+    const candidate = i === 0 ? base : `${base}-${i}`;
+    const exists = await prisma.academy.findUnique({ where: { subdomain: candidate } });
+    if (!exists) return candidate;
+  }
+  return `${base}-${Date.now().toString(36)}`;
+}
+
 export async function resolveAcademyByCode(code: string) {
   return prisma.academy.findUnique({
     where: { code: code.toUpperCase().trim() },

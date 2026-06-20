@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import {
   generateUniqueAcademyCode,
+  generateUniqueSubdomain,
   linkStudentToAcademy,
   TIER_MAX_TEACHERS,
   type AcademyTier,
@@ -202,10 +203,12 @@ export async function createAcademyWithInviteAction(formData: FormData) {
   const tier = String(formData.get("tier") || "basic") as AcademyTier;
   const maxStudents = Number(formData.get("maxStudents") || 15);
   const months = Number(formData.get("months") || 3);
-  const subdomain = String(formData.get("subdomain") || "").trim() || null;
+  const subdomainInput = String(formData.get("subdomain") || "").trim() || null;
 
   const activeUntil = new Date();
   activeUntil.setMonth(activeUntil.getMonth() + months);
+
+  const subdomain = await generateUniqueSubdomain(name, subdomainInput);
 
   const academy = await prisma.academy.create({
     data: {
@@ -214,8 +217,9 @@ export async function createAcademyWithInviteAction(formData: FormData) {
       ownerEmail,
       maxStudents,
       activeUntil,
-      subdomain: tier === "premium" ? subdomain : null,
+      subdomain,
       code: await generateUniqueAcademyCode(),
+      brand: process.env.NEXT_PUBLIC_BRAND || "beautymaster",
     },
   });
 
@@ -235,7 +239,12 @@ export async function createAcademyWithInviteAction(formData: FormData) {
     code: academy.code,
   });
 
-  return { academyId: academy.id, setupUrl: absoluteUrl(setupUrl), code: academy.code };
+  return {
+    academyId: academy.id,
+    setupUrl: absoluteUrl(setupUrl),
+    code: academy.code,
+    portalUrl: absoluteUrl(`/a/${subdomain}`),
+  };
 }
 
 export async function deleteCustomQuestionAction(formData: FormData): Promise<void> {

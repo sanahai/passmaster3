@@ -84,8 +84,9 @@ export default function AcademyEditPanel({
             )}
           </div>
           <div className="sm:col-span-2">
-            <label className="label">서브도메인 (프리미엄)</label>
+            <label className="label">전용 페이지 URL (서브도메인)</label>
             <input name="subdomain" className="input" defaultValue={academy.subdomain ?? ""} placeholder="my-academy" />
+            <p className="mt-1 text-xs text-beauty-gray">/a/서브도메인 — 제휴학원 템플릿 사이트</p>
           </div>
         </div>
         <button type="submit" className="btn-primary">저장</button>

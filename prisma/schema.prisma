@@ -229,6 +229,7 @@ model LearningProgress {
 model Academy {
   id           Int      @id @default(autoincrement())
   name         String
+  brand        String   @default("beautymaster") // beautymaster | cookmaster | passmaster
   tier         String // basic | standard | premium
   code         String?  @unique @db.VarChar(6)
   subdomain    String?  @unique
@@ -245,6 +246,21 @@ model Academy {
   groups          AcademyGroup[]
   customQuestions AcademyCustomQuestion[]
   invites         AcademyInvite[]
+  notices         AcademyNotice[]
+}
+
+model AcademyNotice {
+  id        Int      @id @default(autoincrement())
+  academyId Int
+  title     String
+  content   String
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
+
+  @@index([academyId])
 }
 
 model AcademyBranch {
