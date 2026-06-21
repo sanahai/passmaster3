@@ -127,6 +127,60 @@ try {
       console.log("[bootstrap] owner+academy exist, skip");
     }
   }
+
+  // 데모 원장 (owner@demo.academy) — 시드와 동일, 운영에도 항상 보장
+  const DEMO_EMAIL = "owner@demo.academy";
+  const DEMO_PASS = "owner1234";
+  const demoHash = await bcrypt.hash(DEMO_PASS, 10);
+
+  let demoAcademy =
+    (await prisma.academy.findUnique({ where: { subdomain: "demo-beauty" } })) ??
+    (await prisma.academy.findUnique({ where: { code: "DEMO01" } }));
+
+  if (!demoAcademy) {
+    const activeUntil = new Date();
+    activeUntil.setFullYear(activeUntil.getFullYear() + 1);
+    demoAcademy = await prisma.academy.create({
+      data: {
+        name: "데모미용학원",
+        brand: "beautymaster",
+        tier: "premium",
+        code: "DEMO01",
+        subdomain: "demo-beauty",
+        ownerEmail: DEMO_EMAIL,
+        maxStudents: 50,
+        activeUntil,
+        primaryColor: "#0F172A",
+      },
+    });
+    console.log("[bootstrap] demo academy created: DEMO01 / demo-beauty");
+  }
+
+  const demoOwner = await prisma.user.findUnique({ where: { email: DEMO_EMAIL } });
+  if (!demoOwner) {
+    await prisma.user.create({
+      data: {
+        email: DEMO_EMAIL,
+        passwordHash: demoHash,
+        name: "김원장",
+        role: "owner",
+        academyId: demoAcademy.id,
+        emailVerified: true,
+      },
+    });
+    console.log(`[bootstrap] demo owner created: ${DEMO_EMAIL} / ${DEMO_PASS}`);
+  } else {
+    await prisma.user.update({
+      where: { id: demoOwner.id },
+      data: {
+        passwordHash: demoHash,
+        role: "owner",
+        academyId: demoAcademy.id,
+        emailVerified: true,
+      },
+    });
+    console.log(`[bootstrap] demo owner synced: ${DEMO_EMAIL} / ${DEMO_PASS}`);
+  }
 } finally {
   await prisma.$disconnect();
 }
