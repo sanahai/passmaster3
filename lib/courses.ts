@@ -16,6 +16,10 @@ export type CourseConfig = {
 // 미용사 패키지(4종 전체)에 포함되는 카테고리
 export const PACKAGE_CATEGORY = "미용사";
 
+/** 단일 과정 1개월 이용 요금 */
+export const MONTHLY_PRICE = 9900;
+export const COURSE_DURATION_DAYS = 30;
+
 export const COURSES: CourseConfig[] = [
   {
     slug: "beauty-general",
@@ -23,7 +27,7 @@ export const COURSES: CourseConfig[] = [
     category: "미용사",
     icon: "💇‍♀️",
     description: "미용이론·피부학·공중보건학·소독학·법규·화장품학",
-    price: 39000,
+    price: MONTHLY_PRICE,
     subjects: [
       { subject: "미용이론", ratio: 0.2 },
       { subject: "피부학", ratio: 0.2 },
@@ -39,7 +43,7 @@ export const COURSES: CourseConfig[] = [
     category: "미용사",
     icon: "🧖‍♀️",
     description: "피부미용이론·피부학·해부생리학·화장품학·공중보건학·법규",
-    price: 39000,
+    price: MONTHLY_PRICE,
     subjects: [
       { subject: "피부미용이론", ratio: 0.3 },
       { subject: "피부학", ratio: 0.2 },
@@ -55,7 +59,7 @@ export const COURSES: CourseConfig[] = [
     category: "미용사",
     icon: "💅",
     description: "네일개론·피부학·공중보건학·화장품학·법규",
-    price: 39000,
+    price: MONTHLY_PRICE,
     subjects: [
       { subject: "네일개론", ratio: 0.3 },
       { subject: "피부학", ratio: 0.2 },
@@ -70,7 +74,7 @@ export const COURSES: CourseConfig[] = [
     category: "미용사",
     icon: "💄",
     description: "메이크업개론·피부학·공중보건학·화장품학·법규",
-    price: 39000,
+    price: MONTHLY_PRICE,
     subjects: [
       { subject: "메이크업개론", ratio: 0.3 },
       { subject: "피부학", ratio: 0.2 },
@@ -85,7 +89,7 @@ export const COURSES: CourseConfig[] = [
     category: "이용사",
     icon: "💈",
     description: "이용이론·피부학·공중보건학·소독학·법규·화장품학",
-    price: 39000,
+    price: MONTHLY_PRICE,
     subjects: [
       { subject: "이용이론", ratio: 0.25 },
       { subject: "피부학", ratio: 0.15 },
@@ -101,14 +105,14 @@ export const COURSES: CourseConfig[] = [
     category: "문신사",
     icon: "🪡",
     description: "문신 시술 이론·위생·감염관리·관계법규 (준비 중)",
-    price: 39000,
+    price: MONTHLY_PRICE,
     comingSoon: true,
     subjects: [],
   },
 ];
 
-export const PACKAGE_PRICE = 79000;
-export const EXTEND_PRICE = 19000;
+export const PACKAGE_PRICE = MONTHLY_PRICE * 4;
+export const EXTEND_PRICE = MONTHLY_PRICE;
 
 export function getCourseConfig(slug: string): CourseConfig | undefined {
   return COURSES.find((c) => c.slug === slug);

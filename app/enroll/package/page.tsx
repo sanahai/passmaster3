@@ -29,7 +29,7 @@ export default async function PackageEnrollPage() {
         </Link>
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">미용사 패키지 (4종 전체)</h1>
         <p className="mb-8 text-beauty-gray">
-          일반·피부·네일·메이크업 필기 전 과정을 한 번에. 개별 신청 대비 크게 할인됩니다.
+          일반·피부·네일·메이크업 필기 전 과정을 한 번에 신청할 수 있습니다.
         </p>
 
         {/* 가격 요약 */}

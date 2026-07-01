@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { COURSES } from "../lib/courses";
+import { COURSES, COURSE_DURATION_DAYS } from "../lib/courses";
 
 const prisma = new PrismaClient();
 
@@ -24,7 +24,7 @@ async function main() {
         category: c.category,
         description: c.description,
         price: c.price,
-        durationDays: 90,
+        durationDays: COURSE_DURATION_DAYS,
         isActive: !c.comingSoon,
       },
       create: {
@@ -33,7 +33,7 @@ async function main() {
         category: c.category,
         description: c.description,
         price: c.price,
-        durationDays: 90,
+        durationDays: COURSE_DURATION_DAYS,
         isActive: !c.comingSoon,
       },
     });

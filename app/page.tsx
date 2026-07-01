@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import HeroCarousel from "@/components/HeroCarousel";
 import { AIExplanationSection } from "@/components/HeroAndAIExplanation_1";
 import EnrollCTA from "@/components/consent/EnrollCTA";
-import { COURSES, PACKAGE_PRICE } from "@/lib/courses";
+import { COURSES, PACKAGE_PRICE, MONTHLY_PRICE } from "@/lib/courses";
 import { getSession } from "@/lib/auth";
 
 export default async function LandingPage() {
@@ -36,7 +36,7 @@ export default async function LandingPage() {
     },
     {
       q: "수강 기간은 얼마나 되나요?",
-      a: "단일 자격증·패키지 모두 결제일 기준 3개월간 무제한으로 이용할 수 있습니다. 기간 내에는 반복학습과 모의고사를 횟수 제한 없이 풀 수 있습니다.",
+      a: "단일 자격증·패키지 모두 결제일 기준 1개월간 무제한으로 이용할 수 있습니다. 기간 내에는 반복학습과 모의고사를 횟수 제한 없이 풀 수 있습니다.",
     },
     {
       q: "반복학습 3회차는 어떻게 진행되나요?",
@@ -177,7 +177,7 @@ export default async function LandingPage() {
                   <span className="text-lg font-bold text-primary">
                     {c.comingSoon ? "오픈 예정" : `${c.price.toLocaleString()}원`}
                   </span>
-                  {!c.comingSoon && <span className="text-xs text-beauty-gray">3개월</span>}
+                  {!c.comingSoon && <span className="text-xs text-beauty-gray">1개월</span>}
                 </div>
                 {c.comingSoon ? (
                   <button
@@ -240,8 +240,8 @@ export default async function LandingPage() {
                 인기
               </span>
               <h3 className="text-lg font-bold text-beauty-neutral">단일 자격증</h3>
-              <div className="my-4 text-4xl font-extrabold text-primary">39,000원</div>
-              <p className="mb-6 text-sm text-beauty-gray">1종 전체 문제 · 3개월</p>
+              <div className="my-4 text-4xl font-extrabold text-primary">{MONTHLY_PRICE.toLocaleString()}원</div>
+              <p className="mb-6 text-sm text-beauty-gray">1종 전체 문제 · 1개월</p>
               <Link href="/enroll" className="btn-primary w-full">수강신청하기</Link>
             </div>
             <div className="card text-center">
@@ -249,7 +249,7 @@ export default async function LandingPage() {
               <div className="my-4 text-4xl font-extrabold text-primary">
                 {PACKAGE_PRICE.toLocaleString()}원
               </div>
-              <p className="mb-6 text-sm text-beauty-gray">4종 전체 · 약 50% 할인</p>
+              <p className="mb-6 text-sm text-beauty-gray">4종 전체 · 1개월</p>
               <Link href="/enroll" className="btn-outline w-full">수강신청하기</Link>
             </div>
           </div>

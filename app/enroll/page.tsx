@@ -36,7 +36,7 @@ export default async function EnrollListPage() {
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
               <h2 className="text-lg font-bold text-primary">미용사 패키지 (4종 전체)</h2>
-              <p className="text-sm text-beauty-gray">일반·피부·네일·메이크업 모두 · 약 50% 할인</p>
+              <p className="text-sm text-beauty-gray">일반·피부·네일·메이크업 모두 · 1개월</p>
               <p className="mt-1 text-2xl font-extrabold text-primary">
                 {PACKAGE_PRICE.toLocaleString()}원
               </p>

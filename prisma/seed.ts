@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { COURSES } from "../lib/courses";
+import { COURSES, COURSE_DURATION_DAYS, MONTHLY_PRICE } from "../lib/courses";
 
 const prisma = new PrismaClient();
 
@@ -129,7 +129,7 @@ async function main() {
         category: c.category,
         description: c.description,
         price: c.price,
-        durationDays: 90,
+        durationDays: COURSE_DURATION_DAYS,
         isActive: !c.comingSoon,
       },
     });
@@ -144,13 +144,13 @@ async function main() {
 
   // 데모 학생을 첫 과정(미용사 일반)에 활성 수강 등록
   const expires = new Date();
-  expires.setDate(expires.getDate() + 90);
+  expires.setDate(expires.getDate() + COURSE_DURATION_DAYS);
   await prisma.enrollment.create({
     data: {
       userId: student.id,
       courseId: firstCourseId,
       status: "active",
-      amount: 39000,
+      amount: MONTHLY_PRICE,
       paidAt: new Date(),
       expiresAt: expires,
     },

@@ -31,7 +31,7 @@ export default function AcademyPortalHome({ academy, subdomain }: Props) {
     },
     {
       q: "수강 기간은 얼마나 되나요?",
-      a: "결제일 기준 3개월간 무제한 이용 가능합니다. 반복학습·모의고사를 횟수 제한 없이 풀 수 있습니다.",
+      a: "결제일 기준 1개월간 무제한 이용 가능합니다. 반복학습·모의고사를 횟수 제한 없이 풀 수 있습니다.",
     },
     {
       q: "학원에서 학습 현황을 볼 수 있나요?",
@@ -170,7 +170,10 @@ export default function AcademyPortalHome({ academy, subdomain }: Props) {
                 <div className="mb-2 text-3xl">{c.icon}</div>
                 <h3 className="font-bold text-b2b-primary">{c.name}</h3>
                 <p className="mt-1 text-sm text-slate-600">{c.description}</p>
-                <p className="mt-3 text-lg font-bold text-b2b-accent">{c.price.toLocaleString()}원</p>
+                <p className="mt-3 text-lg font-bold text-b2b-accent">
+                  {c.price.toLocaleString()}원
+                  <span className="ml-1 text-sm font-normal text-slate-500">/ 1개월</span>
+                </p>
               </div>
             ))}
           </div>

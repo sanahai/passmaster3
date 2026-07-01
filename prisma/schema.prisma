@@ -66,8 +66,8 @@ model Course {
   name         String // e.g. '미용사(일반) 필기'
   category     String? // e.g. '미용사'
   description  String?
-  price        Int      @default(39000)
-  durationDays Int      @default(90)
+  price        Int      @default(9900)
+  durationDays Int      @default(30)
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
 
@@ -328,4 +328,16 @@ model AcademyInvite {
   academy Academy @relation(fields: [academyId], references: [id], onDelete: Cascade)
 
   @@index([token])
+}
+
+// 일별 유입 경로(Referrer 도메인) 집계
+model VisitReferrerDaily {
+  id             Int      @id @default(autoincrement())
+  date           DateTime @db.Date
+  referrerDomain String
+  visitCount     Int      @default(0)
+  updatedAt      DateTime @updatedAt
+
+  @@unique([date, referrerDomain])
+  @@index([date])
 }
