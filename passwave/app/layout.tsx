@@ -4,10 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "PASSWAVE — AI 국가자격증 문제은행",
   description:
-    "미용·조리·전문자격까지 — BEAUTYmaster, COOKmaster, PASSmaster로 국가자격증 합격을 준비하세요.",
+    "BEAUTYmaster, COOKmaster, PASSmaster — AI 문제은행으로 국가자격증 필기 시험을 준비하세요.",
   openGraph: {
     title: "PASSWAVE — AI 국가자격증 문제은행",
-    description: "미용·조리·전문자격까지 — PASSWAVE 하나로 시작하세요",
+    description: "AI 문제은행 허브 — BEAUTYmaster · COOKmaster · PASSmaster",
     url: "https://passwave.kr",
     siteName: "PASSWAVE",
     locale: "ko_KR",
@@ -25,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
         />
+        <link rel="icon" href="/logo.png" />
       </head>
       <body className="font-sans antialiased">{children}</body>
     </html>

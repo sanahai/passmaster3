@@ -1,6 +1,11 @@
+import ReferrerStatsSection from "@/components/admin/ReferrerStatsSection";
 import { prisma } from "@/lib/prisma";
 
-export default async function AdminStatsPage() {
+export default async function AdminStatsPage({
+  searchParams,
+}: {
+  searchParams: { refDate?: string };
+}) {
   const courses = await prisma.course.findMany({
     orderBy: { id: "asc" },
     include: { _count: { select: { questions: true } } },
@@ -63,6 +68,8 @@ export default async function AdminStatsPage() {
           ))}
         </div>
       </div>
+
+      <ReferrerStatsSection searchDate={searchParams.refDate} />
     </div>
   );
 }

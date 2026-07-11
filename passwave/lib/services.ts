@@ -7,8 +7,7 @@ export type Service = {
   color: ServiceColor;
   certs: string;
   desc: string;
-  icon: string;
-  navLabel: string;
+  logo: string;
 };
 
 export const SERVICES: Service[] = [
@@ -18,9 +17,8 @@ export const SERVICES: Service[] = [
     url: "https://beautymaster.kr",
     color: "rose",
     certs: "미용사·이용사",
-    desc: "미용(일반·피부·네일·메이크업)과 이용사 필기 대비",
-    icon: "💇‍♀️",
-    navLabel: "미용",
+    desc: "미용사(일반·피부·네일·메이크업)와 이용사 필기 시험 대비. AI 해설과 반복학습으로 합격까지.",
+    logo: "/brands/beautymaster.png",
   },
   {
     id: "cook",
@@ -28,9 +26,8 @@ export const SERVICES: Service[] = [
     url: "https://cookmaster.kr",
     color: "amber",
     certs: "조리기능사",
-    desc: "한식·중식·양식·일식 조리기능사 필기 대비",
-    icon: "👨‍🍳",
-    navLabel: "조리",
+    desc: "한식·중식·양식·일식 조리기능사 필기 대비. 실전형 모의고사와 오답노트로 효율적으로 학습하세요.",
+    logo: "/brands/cookmaster.png",
   },
   {
     id: "pass",
@@ -38,35 +35,36 @@ export const SERVICES: Service[] = [
     url: "https://passmaster.kr",
     color: "indigo",
     certs: "전문·일반 자격증",
-    desc: "지게차운전, 전기 등 다양한 국가자격증 필기 대비",
-    icon: "📋",
-    navLabel: "전문자격",
+    desc: "지게차·전기 등 다양한 국가자격증 필기 대비. 분야별 맞춤 문제은행으로 빠르게 준비하세요.",
+    logo: "/brands/passmaster.png",
   },
 ];
 
 export const COLOR_STYLES: Record<
   ServiceColor,
-  { ring: string; bg: string; text: string; btn: string; btnHover: string }
+  {
+    gradient: string;
+    badge: string;
+    border: string;
+    glow: string;
+  }
 > = {
   rose: {
-    ring: "ring-rose-200",
-    bg: "bg-rose-50",
-    text: "text-rose-600",
-    btn: "bg-rose-600",
-    btnHover: "hover:bg-rose-700",
+    gradient: "from-rose-500 to-pink-500",
+    badge: "bg-rose-50 text-rose-700",
+    border: "border-rose-100 hover:border-rose-200",
+    glow: "group-hover:shadow-rose-200/60",
   },
   amber: {
-    ring: "ring-amber-200",
-    bg: "bg-amber-50",
-    text: "text-amber-600",
-    btn: "bg-amber-500",
-    btnHover: "hover:bg-amber-600",
+    gradient: "from-amber-500 to-orange-500",
+    badge: "bg-amber-50 text-amber-700",
+    border: "border-amber-100 hover:border-amber-200",
+    glow: "group-hover:shadow-amber-200/60",
   },
   indigo: {
-    ring: "ring-indigo-200",
-    bg: "bg-indigo-50",
-    text: "text-indigo-600",
-    btn: "bg-indigo-600",
-    btnHover: "hover:bg-indigo-700",
+    gradient: "from-indigo-500 to-violet-500",
+    badge: "bg-indigo-50 text-indigo-700",
+    border: "border-indigo-100 hover:border-indigo-200",
+    glow: "group-hover:shadow-indigo-200/60",
   },
 };

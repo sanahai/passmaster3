@@ -1,25 +1,27 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Footer from "@/components/Footer";
 
-// 모든 라우트를 요청 시 렌더링(동적)으로 강제 → 빌드 단계에서 DB 접속/프리렌더 방지
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "BEAUTYmaster · 미용사 자격증 필기 문제은행",
+  title: "PASSmaster | 자격증 합격의 새로운 패러다임",
   description:
-    "미용사(일반·피부·네일·메이크업) 자격증 필기시험 대비 문제은행. 무료체험 100문제 + 3회차 반복학습 + 6회 모의고사 + 오답복습으로 합격까지.",
+    "모든 자격증 합격에 필요한 합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·낙찰·학습의 12주간 학습 전략으로 따라가면 됩니다.",
   keywords: [
-    "미용사필기",
-    "미용사자격증",
-    "미용사일반 기출문제",
-    "피부미용사 필기",
-    "네일 자격증",
-    "메이크업 자격증",
+    "자격증",
+    "국가기술자격",
+    "전기기능사",
+    "지게차운전기능사",
+    "제과기능사",
+    "제빵기능사",
+    "한식조리기능사",
+    "미용사",
+    "PASSmaster",
+    "자격증 합격",
   ],
   openGraph: {
-    title: "BEAUTYmaster · 미용사 자격증 필기 문제은행",
-    description: "무료체험 → 반복학습 → 오답복습 → 모의고사 → 합격",
+    title: "PASSmaster | 자격증 합격의 새로운 패러다임",
+    description: "최단합격 플랜 · 집중학습 · 모의시험 · 합격 전략",
     type: "website",
   },
 };
@@ -31,9 +33,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex min-h-screen flex-col antialiased">
-        <div className="flex-1">{children}</div>
-        <Footer />
+      <body className="antialiased">
+        {children}
       </body>
     </html>
   );

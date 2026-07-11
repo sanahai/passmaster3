@@ -37,8 +37,38 @@ function isSubsiteProtected(pathname: string): boolean {
   return protectedPrefixes.some((p) => rest === p || rest.startsWith(`${p}/`));
 }
 
+function shouldTrackReferrer(pathname: string): boolean {
+  if (pathname.startsWith("/api")) return false;
+  if (pathname.startsWith("/_next")) return false;
+  if (pathname.startsWith("/admin")) return false;
+  if (pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|css|js|woff2?|map)$/i)) return false;
+  return true;
+}
+
+function trackReferrer(req: NextRequest) {
+  const secret = process.env.CRON_SECRET || process.env.AUTH_SECRET || "";
+  if (!secret && process.env.NODE_ENV === "production") return;
+
+  const host = req.headers.get("host") || "";
+  const referer = req.headers.get("referer") || "";
+  const url = new URL("/api/analytics/visit", req.url);
+
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-analytics-secret": secret,
+    },
+    body: JSON.stringify({ referer, host }),
+  }).catch(() => {});
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  if (req.method === "GET" && shouldTrackReferrer(pathname)) {
+    trackReferrer(req);
+  }
 
   const needsAuth =
     (pathname.startsWith("/academy") && !pathname.startsWith("/academy/setup")) ||
@@ -56,5 +86,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/academy/:path*", "/admin/:path*", "/a/:subdomain/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico).*)",
+  ],
 };

@@ -1,0 +1,17 @@
+{
+	"appId": "kr.beautymaster.app",
+	"appName": "BEAUTYmaster",
+	"webDir": "capacitor-shell",
+	"backgroundColor": "#ffffff",
+	"server": {
+		"url": "https://beautymaster.vercel.app",
+		"cleartext": false
+	},
+	"ios": {
+		"contentInset": "always"
+	},
+	"android": {
+		"allowMixedContent": false
+	},
+	"packageClassList": []
+}

@@ -1,356 +1,272 @@
+"use client";
+import "./landing.css";
 import Link from "next/link";
-import Header from "@/components/Header";
-import HeroCarousel from "@/components/HeroCarousel";
-import { AIExplanationSection } from "@/components/HeroAndAIExplanation_1";
-import EnrollCTA from "@/components/consent/EnrollCTA";
-import { COURSES, PACKAGE_PRICE, MONTHLY_PRICE } from "@/lib/courses";
-import { getSession } from "@/lib/auth";
+import { useEffect, useRef } from "react";
 
-export default async function LandingPage() {
-  const session = await getSession();
+const CERTS = [
+  { slug: "forklift", title: "지게차운전기능사", img: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80" },
+  { slug: "cookkr", title: "한식조리기능사", img: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=800&q=80" },
+  { slug: "cookwest", title: "양식조리기능사", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80" },
+  { slug: "cookjp", title: "일식조리기능사", img: "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80" },
+  { slug: "cookcn", title: "중식조리기능사", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=800&q=80" },
+  { slug: "confection", title: "제과기능사", img: "https://images.unsplash.com/photo-1558961363-fa893d6d5b4e?auto=format&fit=crop&w=800&q=80" },
+  { slug: "bakery", title: "제빵기능사", img: "https://images.unsplash.com/photo-1509440159598-924e33e385ea?auto=format&fit=crop&w=800&q=80" },
+  { slug: "electric", title: "전기기능사", img: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=800&q=80" },
+  { slug: "beautician", title: "미용사(일반)", img: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" },
+  { slug: "skin", title: "피부미용사", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80" },
+  { slug: "nail", title: "네일미용사", img: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=800&q=80" },
+  { slug: "makeup", title: "메이크업미용사", img: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=800&q=80" },
+  { slug: "barber", title: "이용사", img: "https://images.unsplash.com/photo-1585747860715-d9af4b84bdf0?auto=format&fit=crop&w=800&q=80" },
+];
 
-  const flow = [
-    { icon: "🎁", title: "무료체험", desc: "100문제 무제한" },
-    { icon: "📖", title: "반복학습 3회차", desc: "읽기→50초→40초" },
-    { icon: "🔁", title: "오답복습①", desc: "취약점 집중" },
-    { icon: "📝", title: "모의고사 6회", desc: "실전 비율 반영" },
-    { icon: "🔁", title: "오답복습②", desc: "최종 점검" },
-    { icon: "🏆", title: "합격", desc: "60점 이상" },
-  ];
+const ROADMAP = [
+  { num: 1, title: "학습 시작", desc: "자격증 정보에서 합격 확인 후 최단합격 플랜 또는 수강신청으로 시작" },
+  { num: 2, title: "최단합격플랜(무료학습)", desc: "약 100문제·오답 놀이 형태로 서비스 UX 확인" },
+  { num: 3, title: "40일 집중학습", desc: "이론 핵심·오답, 반복복습순환식으로 시작 약 5주간 진행" },
+  { num: 4, title: "전체 모의 시험", desc: "30일간 오답, 모의 핵심·오답; 복습·복습날짜 약 5주간" },
+  { num: 5, title: "1회 핵심 복습", desc: "3·4주간 시작·복습·복습날짜 집중 복습(합격을 위해 필수)" },
+  { num: 6, title: "모의시험 1회", desc: "60문제·문제당 30초 내외·오답 랜덤으로 핵심" },
+  { num: 7, title: "모의시험 2회", desc: "매일 풀이 집중 전체 진행" },
+  { num: 8, title: "모의시험 3회", desc: "60점 기준 자격·합격생들의 평균 합격 시행" },
+  { num: 9, title: "모의시험 4회", desc: "실제 복습·복습날짜로 계획 입력" },
+  { num: 10, title: "모의시험 5회", desc: "전체 시험지 정리" },
+  { num: 11, title: "모의시험 6회", desc: "6회 완료 후 오답·합격생들도 합격 최종 정리" },
+  { num: 12, title: "최종 복습·합격", desc: "합격 복습 기출에서 합격 후 집중학습·문제 시작, 최종 도약" },
+];
 
-  const reviews = [
-    { name: "이○○", course: "미용사 일반", stars: 5, tag: "3회차 반복으로 정답 암기 탈출", text: "선택지가 매번 섞여서 정답 위치를 외우는 습관이 사라졌어요. 3회차 돌고 나니 진짜 외워졌습니다." },
-    { name: "박○○", course: "피부 미용사", stars: 5, tag: "오답복습으로 시간 단축", text: "오답복습 기능이 최고예요. 틀린 문제만 모아서 다시 푸니 시간이 확 줄었어요. 한 번에 합격!" },
-    { name: "최○○", course: "네일 미용사", stars: 4, tag: "실전 같은 모의고사", text: "모의고사 난이도가 실제 시험이랑 비슷해서 실전 감각 잡는 데 큰 도움이 됐습니다." },
-    { name: "정○○", course: "메이크업 미용사", stars: 5, tag: "출퇴근 자투리 시간 합격", text: "직장 다니면서 출퇴근 시간에 폰으로 풀었어요. 짧게 자주 푸는 구조라 부담 없이 합격했습니다." },
-    { name: "김○○", course: "미용사 일반", stars: 3, tag: "AI 해설로 책 없이 끝", text: "해설이 자세해서 따로 책을 볼 필요가 없었어요. 틀린 이유를 바로 이해하니 같은 실수를 안 하게 됐습니다." },
-    { name: "한○○", course: "피부 미용사", stars: 5, tag: "모의고사 6회로 84점 합격", text: "모의고사 6회를 다 풀고 나니 실제 시험이 오히려 쉽게 느껴졌어요. 84점으로 합격했습니다!" },
-    { name: "윤○○", course: "네일 미용사", stars: 5, tag: "단계별 잠금으로 길 안 잃음", text: "단계별로 잠금이 풀려서 뭘 해야 할지 헷갈리지 않았어요. 시키는 대로만 했더니 합격이네요." },
-    { name: "장○○", course: "메이크업 미용사", stars: 5, tag: "2회 탈락 후 3주 만에 합격", text: "두 번 떨어졌다가 여기서 3주 공부하고 붙었어요. 반복학습 알고리즘이 진짜 효과 있습니다." },
-  ];
+const REVIEWS = [
+  { cert: "지게차운전기능사", title: "합격 후기 최초 합격", body: "후기 올리기가 너무 좋아요. 덕분에 짧은 시간 3달 공부했는데 한번에 합격했어요.", meta: "김OO · 직장인 · 2026.04.11" },
+  { cert: "전기기능사", title: "합격 후기 완벽한 성공", body: "오답 복습이 탁월합니다. 어디서도 한번 더 보니 수많은 저도 합격 했어요.", meta: "박뷤O · 주부 · 2026.03.28" },
+  { cert: "일식조리기능사", title: "합격 후기 1년만에 성공", body: "일식·양식 공부가 어려운데 덕분에 정말 합격 후기 공부가 시작됐어요, 문제의 합격이 마지막 합격까지 않습니다.", meta: "최O · 요리사 · 2026.02.19" },
+  { cert: "중식조리기능사", title: "합격 후기 완벽", body: "짧은 시간에서 다양한 어려운 경우 해서 덕분에 합격 횟수가 정확하게 이용했어요.", meta: "이쏰O · 직장인 · 2026.02.02" },
+  { cert: "제과기능사", title: "합격 완벽 도전", body: "합격 최단기 합격이 아마도 덕분에 실제 시험에서도 문제 복습이 예상돼요.", meta: "오뷤O · 주부 · 2026.01.26" },
+  { cert: "메이크업미용사", title: "합격 후기 실수 성공", body: "모의 시험이 없었다면 후기만 진행하는 정말 시간이 걸렸고, 짧은 재도 있습니다.", meta: "짵O · 미용사 수강생 · 2026.01.18" },
+];
 
-  const faqs = [
-    {
-      q: "결제 후 바로 학습할 수 있나요?",
-      a: "무료체험은 회원가입 즉시 100문제를 풀 수 있습니다. 유료 과정은 입금 확인(또는 데모 자동승인) 후 바로 전체 문제와 모의고사가 열립니다.",
-    },
-    {
-      q: "수강 기간은 얼마나 되나요?",
-      a: "단일 자격증·패키지 모두 결제일 기준 1개월간 무제한으로 이용할 수 있습니다. 기간 내에는 반복학습과 모의고사를 횟수 제한 없이 풀 수 있습니다.",
-    },
-    {
-      q: "반복학습 3회차는 어떻게 진행되나요?",
-      a: "1회차는 정답·해설을 보며 읽고, 2회차는 50초, 3회차는 40초 제한으로 풀이합니다. 선택지가 매번 섞여 정답 위치 암기를 방지하고 실제 이해도를 높입니다.",
-    },
-    {
-      q: "오답복습은 무엇인가요?",
-      a: "반복학습과 모의고사에서 틀린 문제만 자동으로 모아 다시 풀게 해주는 기능입니다. 취약한 부분만 집중 공략해 학습 시간을 크게 줄일 수 있습니다.",
-    },
-    {
-      q: "환불은 가능한가요?",
-      a: "학습 이력이 없는 경우 결제일로부터 7일 이내 전액 환불이 가능합니다. 자세한 사항은 support@beautymaster.kr로 문의해 주세요.",
-    },
-  ];
+const FAQS = [
+  { q: "수강 신청은 언제부터 가능한가요?", a: "상시 신청 가능합니다. 원하는 최단합격 플랜으로 문제 및 학습 현황을 확인한 뒤 바로 수강 신청하시면 됩니다." },
+  { q: "수강신청만 하면 바로 학습을 시작하나요?", a: "다릅니다. 안내는 수강생 낙찰 확인 전까지 이루어지며, 낙찰 확인 후 이용자 낙찰이 완료되어야 즉시 합격 학습(주차별 문제 풀기)을 시작하게 됩니다. 진행 현황은 마이페이지에서 확인합니다." },
+  { q: "12주간 학습 로드맵은 어떻게 따라가나요?", a: "로그인 완료 후 즉시 합격생에서 시작 주차를 안내합니다. 무료학습과 집중(오답)·전체 모의 및 복습, 그리고 이후 단계에서 모의시험 최종 복습·합격 도약으로 따라가게 됩니다. 합격생으로 이동하면 문제·기출 로드맵 학습·문제 결과 따라갑니다. 자세한 시험지는 학습로드맵을 참고하세요." },
+  { q: "기존 온라인 문제집보다 시험 시간이 달라지나요?", a: "답변은 점수로만 학습하는 학습은 필요합니다. 문제 기준 그대로 먹고 선택지 번호가 섞이며, 핵심 선택지 옵션 학습으로 이루어집니다. 기존 답 및 실제 답변은 공부하지 않도록 하는 것이 실제 도움이 됩니다." },
+  { q: "결제/낙찰 확인은 어디에서 하나요?", a: "당일 기준 1~2시간 이내 처리를 목표로 하며, 주말·공휴일·연휴는 6시간 이내의 시작 확인·처리합니다. (공식·연휴 일정에 따라 약소 차이가 있을 수 있습니다.)" },
+  { q: "수강 현황은 어디에서 확인하나요?", a: "로그인 후 마이페이지에서 신청 현황, 낙찰 여부, 진행을 한 눈에 확인하실 수 있습니다." },
+  { q: "환불/로그인 문의는 어떻게 하나요?", a: "고객센터 문의 또는 로그인 후 1:1 문의하기 버튼을 사용해주세요. 빠른 문의 및 1:1로 도와드리겠습니다." },
+  { q: "모바일에서도 학습이 가능한가요?", a: "네, 모바일과 PC 모두 지원합니다. 매일 정해진 시간 진행 학습 로드맵도 자동 진행됩니다." },
+];
+
+export default function Home() {
+  const fadeRefs = useRef<HTMLElement[]>([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) (e.target as HTMLElement).style.animationPlayState = "running"; }),
+      { threshold: 0.12 }
+    );
+    fadeRefs.current.forEach((el) => { if (el) { el.style.animationPlayState = "paused"; observer.observe(el); } });
+    return () => observer.disconnect();
+  }, []);
+
+  const addFade = (el: HTMLElement | null) => { if (el && !fadeRefs.current.includes(el)) fadeRefs.current.push(el); };
 
   return (
     <>
-      <Header />
-      <main>
-        {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-primary-pale to-beauty-bg">
-          {/* 움직이는 배경 장식 */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-            <div className="absolute -left-16 top-10 h-64 w-64 animate-pulse rounded-full bg-primary/20 blur-3xl" />
-            <div className="absolute right-0 top-1/3 h-72 w-72 animate-pulse rounded-full bg-primary-accent/20 blur-3xl [animation-delay:1s]" />
-            <div className="absolute bottom-0 left-1/3 h-56 w-56 animate-pulse rounded-full bg-rose-300/20 blur-3xl [animation-delay:2s]" />
-          </div>
-
-          <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:py-20 lg:grid-cols-2">
-            <div className="text-center lg:text-left">
-              <span className="mb-5 inline-block rounded-full bg-white px-4 py-1.5 text-sm font-semibold text-primary shadow-card">
-                미용사 자격증 필기 합격 플랫폼
-              </span>
-              <h1 className="mb-5 text-4xl font-extrabold leading-tight text-beauty-neutral sm:text-5xl">
-                &quot;또 떨어지면 어떡하지?&quot;
-                <br />
-                그 불안, <span className="text-primary">AI가 이유부터</span> 알려드립니다
-              </h1>
-              <p className="mb-9 max-w-2xl text-lg text-beauty-gray lg:mx-0">
-                문제집은 답만 알려주지만, 뷰티마스터는{" "}
-                <span className="font-bold text-red-600">&quot;왜 틀렸는지&quot;</span>까지 분석합니다.
-                미용사 일반·피부·네일·메이크업·이용사, 총 5종류의 국가기능사 자격증, 총 6,648개 이상의 AI가 만들어낸 문제은행
-                문제로 필기시험에 합격하세요.
-              </p>
-              <div className="flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
-                <Link
-                  href={session ? "/trial" : "/signup"}
-                  className="btn-accent w-full px-8 py-4 text-lg sm:w-auto"
-                >
-                  무료체험 시작하기
-                </Link>
-                {session ? (
-                  <Link
-                    href={session.role === "admin" ? "/admin" : "/dashboard"}
-                    className="btn-outline w-full px-8 py-4 text-lg sm:w-auto"
-                  >
-                    내 학습
-                  </Link>
-                ) : (
-                  <Link href="/login" className="btn-outline w-full px-8 py-4 text-lg sm:w-auto">
-                    로그인
-                  </Link>
-                )}
-              </div>
-            </div>
-
-            <div className="h-72 w-full sm:h-96 lg:h-[26rem]">
-              <HeroCarousel />
-            </div>
-          </div>
-        </section>
-
-        {/* 수치 배너 */}
-        <section className="border-y border-primary-pale bg-white">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 py-10 text-center md:grid-cols-4">
-            {[
-              { num: "6,648문항", label: "기출·예상 문제" },
-              { num: "6회", label: "실전 모의고사" },
-              { num: "3단계", label: "반복학습" },
-              { num: "합격률 ↑", label: "오답복습 시스템" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="text-3xl font-extrabold text-primary">{s.num}</div>
-                <div className="mt-1 text-sm text-beauty-gray">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 공감 트리거 */}
-        <section className="mx-auto max-w-4xl px-4 py-14 text-center">
-          <h2 className="mb-8 text-2xl font-bold text-beauty-neutral sm:text-3xl">
-            이런 적 있으신가요?
-          </h2>
-          <div className="mx-auto mb-8 grid max-w-3xl grid-cols-1 gap-4 text-left sm:grid-cols-2">
-            {[
-              "문제집 3바퀴 돌렸는데 시험만 보면 새 유형이 나온다",
-              "비슷한 보기 두 개 사이에서 헷갈려서 틀린다",
-              "틀린 문제 다시 봐도 또 틀린다",
-              "이론은 봤는데 막상 문제로 나오면 막힌다",
-              "공부할 시간이 부족해 핵심만 빠르게 보고 싶다",
-              "무엇부터 어떤 순서로 공부해야 할지 막막하다",
-            ].map((item) => (
-              <div key={item} className="flex items-start gap-3 rounded-card bg-white p-5 shadow-card">
-                <span className="text-2xl">😩</span>
-                <p className="font-medium text-beauty-neutral">{item}</p>
-              </div>
-            ))}
-          </div>
-          <a href="#ai-explanation" className="btn-accent inline-flex px-8 py-4 text-lg">
-            그 이유, AI가 30초 안에 알려드립니다 →
-          </a>
-        </section>
-
-        {/* 자격증 목록 */}
-        <section className="mx-auto max-w-6xl px-4 py-16">
-          <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">국가 자격증 과정</h2>
-          <p className="mb-10 text-center text-beauty-gray">원하는 자격증을 선택해 시작하세요.</p>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {COURSES.map((c) => (
-              <div
-                key={c.slug}
-                className={`card group flex flex-col transition-shadow hover:shadow-cardHover ${
-                  c.comingSoon ? "opacity-80" : ""
-                }`}
-              >
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-5xl">{c.icon}</span>
-                  {c.comingSoon && (
-                    <span className="rounded-full bg-gray-200 px-3 py-1 text-xs font-bold text-beauty-gray">
-                      준비 중
-                    </span>
-                  )}
-                </div>
-                <h3 className="mb-1 text-lg font-bold text-beauty-neutral">{c.name}</h3>
-                <p className="mb-4 text-sm text-beauty-gray">{c.description}</p>
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="text-lg font-bold text-primary">
-                    {c.comingSoon ? "오픈 예정" : `${c.price.toLocaleString()}원`}
-                  </span>
-                  {!c.comingSoon && <span className="text-xs text-beauty-gray">1개월</span>}
-                </div>
-                {c.comingSoon ? (
-                  <button
-                    type="button"
-                    disabled
-                    className="mt-auto w-full cursor-not-allowed rounded-btn bg-gray-200 px-4 py-2.5 text-sm font-bold text-beauty-gray"
-                  >
-                    오픈 준비 중
-                  </button>
-                ) : (
-                  <EnrollCTA
-                    slug={c.slug}
-                    examCategory={c.slug}
-                    className="btn-primary mt-auto w-full"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* AI 해설 차별점 (히어로와 학습 플로우 사이) */}
-        <AIExplanationSection />
-
-        {/* 학습 플로우 */}
-        <section className="bg-primary-pale/50">
-          <div className="mx-auto max-w-6xl px-4 py-16">
-            <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">합격까지 학습 플로우</h2>
-            <p className="mb-10 text-center text-beauty-gray">단계별 잠금 해제 방식으로 빠짐없이 학습합니다.</p>
-            <div className="flex flex-wrap items-stretch justify-center gap-3">
-              {flow.map((f, i) => (
-                <div key={f.title} className="flex items-center gap-3">
-                  <div className="w-32 rounded-card bg-white p-4 text-center shadow-card">
-                    <div className="mb-1 text-3xl">{f.icon}</div>
-                    <div className="text-sm font-bold text-beauty-neutral">{f.title}</div>
-                    <div className="text-xs text-beauty-gray">{f.desc}</div>
-                  </div>
-                  {i < flow.length - 1 && (
-                    <span className="hidden text-2xl text-primary sm:inline">→</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 가격 안내 */}
-        <section className="mx-auto max-w-6xl px-4 py-16">
-          <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">가격 안내</h2>
-          <p className="mb-10 text-center text-beauty-gray">합리적인 가격으로 합격까지.</p>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="card text-center">
-              <h3 className="text-lg font-bold text-beauty-neutral">무료 체험</h3>
-              <div className="my-4 text-4xl font-extrabold text-primary">0원</div>
-              <p className="mb-6 text-sm text-beauty-gray">100문제 무제한 반복</p>
-              <Link href="/signup" className="btn-outline w-full">시작하기</Link>
-            </div>
-            <div className="card relative border-2 border-primary text-center">
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary-accent px-3 py-1 text-xs font-bold text-white">
-                인기
-              </span>
-              <h3 className="text-lg font-bold text-beauty-neutral">단일 자격증</h3>
-              <div className="my-4 text-4xl font-extrabold text-primary">{MONTHLY_PRICE.toLocaleString()}원</div>
-              <p className="mb-6 text-sm text-beauty-gray">1종 전체 문제 · 1개월</p>
-              <Link href="/enroll" className="btn-primary w-full">수강신청하기</Link>
-            </div>
-            <div className="card text-center">
-              <h3 className="text-lg font-bold text-beauty-neutral">미용사 패키지</h3>
-              <div className="my-4 text-4xl font-extrabold text-primary">
-                {PACKAGE_PRICE.toLocaleString()}원
-              </div>
-              <p className="mb-6 text-sm text-beauty-gray">4종 전체 · 1개월</p>
-              <Link href="/enroll" className="btn-outline w-full">수강신청하기</Link>
-            </div>
-          </div>
-        </section>
-
-        {/* 문제 제공 배너 */}
-        <section className="bg-primary py-10 text-center">
-          <p className="text-2xl font-bold text-white sm:text-3xl">
-            지금까지 총{" "}
-            <span className="font-extrabold text-yellow-300">6,648문제</span>를 제공하고 있습니다.
-          </p>
-        </section>
-
-        {/* 후기 */}
-        <section className="bg-primary-pale/50">
-          <div className="mx-auto max-w-6xl px-4 py-16">
-            <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">
-              3주 만에 합격한 사람들의 공통점
-            </h2>
-            <p className="mb-10 text-center text-beauty-gray">먼저 합격한 수강생들의 생생한 후기입니다.</p>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {reviews.map((r) => (
-                <div key={r.name} className="card">
-                  <span className="mb-2 inline-block rounded-full bg-primary-pale px-3 py-1 text-xs font-bold text-primary">
-                    {r.tag}
-                  </span>
-                  <div className="mb-3 text-primary-accent">
-                    {"★".repeat(r.stars)}
-                    <span className="text-gray-300">{"★".repeat(5 - r.stars)}</span>
-                  </div>
-                  <p className="mb-4 text-sm leading-relaxed text-beauty-neutral">“{r.text}”</p>
-                  <div className="text-sm font-semibold text-beauty-gray">
-                    {r.name} · {r.course}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section id="faq" className="mx-auto max-w-3xl scroll-mt-24 px-4 py-16">
-          <h2 className="mb-2 text-center text-3xl font-bold text-beauty-neutral">자주 묻는 질문</h2>
-          <p className="mb-10 text-center text-beauty-gray">궁금한 점을 빠르게 확인하세요.</p>
-          <div className="space-y-3">
-            {faqs.map((f) => (
-              <details key={f.q} className="card group">
-                <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-beauty-neutral">
-                  <span>
-                    <span className="mr-2 text-primary">Q.</span>
-                    {f.q}
-                  </span>
-                  <span className="text-primary transition-transform group-open:rotate-180">▾</span>
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-beauty-gray">{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        {/* Footer CTA */}
-        <section className="bg-primary">
-          <div className="mx-auto max-w-6xl px-4 py-16 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-white">지금 무료로 시작하세요</h2>
-            <p className="mb-8 text-primary-pale">회원가입 후 100문제를 바로 풀어볼 수 있습니다.</p>
-            <Link href="/signup" className="inline-flex rounded-btn bg-white px-8 py-4 text-lg font-bold text-primary transition hover:bg-primary-pale">
-              무료체험 시작하기
+      <div className="floating left" />
+      <div className="floating right" />
+      <div className="container">
+        <main className="landing">
+          {/* 헤더 */}
+          <header className="header">
+            <Link className="logo-wrap" href="/">
+              <span className="logo-icon">P</span>
+              <span className="logo">PASSmaster</span>
             </Link>
-          </div>
-        </section>
-
-        {/* 문제·학습 자료 관련 안내 */}
-        <section className="bg-beauty-bg">
-          <div className="mx-auto max-w-5xl px-4 py-14">
-            <h2 className="mb-6 text-2xl font-bold text-beauty-neutral">
-              문제·학습 자료 관련 안내
-            </h2>
-            <div className="space-y-4 rounded-card border border-primary/15 bg-primary-pale/40 p-6 text-sm leading-relaxed text-beauty-gray">
-              <p>
-                본 사이트는 큐넷(Q-Net), 한국산업인력공단 또는 국가자격시험 시행기관과 제휴·운영
-                관계가 없는 민간 학습 서비스이며, 국가자격증 필기시험 준비를 위한 학습용 문제은행입니다.
-                제공되는 문제는 해당 기관이 공식적으로 배포하는 정식 기출문제 원문이 아닙니다.
-              </p>
-              <p>
-                문제는 공개된 출제 경향·과목 구성·문제 유형과 시험 범위를 참고하여 AI를 활용해
-                재구성한 학습용 예상·복습 문항입니다. 지문·선택지·해설은 학습 편의를 위해 본 사이트
-                형식에 맞게 편집될 수 있으며 실제 시험문과 동일하지 않을 수 있습니다.
-              </p>
-              <p>
-                실제 시험에 동일 문항이 출제된다는 보장은 없으며, 출제 범위·방식·법령·기준 개정
-                등과 차이가 날 수 있습니다. 학습 자료는 보조 목적이며 합격을 보장하지 않습니다.
-              </p>
-              <p>
-                시험 접수, 출제기준, 일정, 합격 기준 등 공식 정보는 반드시 큐넷(Q-Net) 또는 해당
-                자격시험 시행기관의 공지를 확인해 주시기 바랍니다.
-              </p>
+            <nav className="nav">
+              <Link href="/enroll">수강신청</Link>
+              <a href="#cert-courses">자격증</a>
+              <a href="#cert-courses">최단합격 플랜</a>
+              <a href="#learning-roadmap">학습로드맵</a>
+              <Link href="/login">학습 시작</Link>
+              <a href="#reviews">수강후기</a>
+              <Link href="/support">고객센터</Link>
+            </nav>
+            <div className="auth">
+              <Link className="btn btn-ghost" href="/login">로그인</Link>
+              <Link className="btn btn-primary" href="/signup">회원가입</Link>
             </div>
-          </div>
-        </section>
+          </header>
 
-      </main>
+          {/* 히어로 */}
+          <section className="hero fade" ref={addFade}>
+            <article className="hero-main">
+              <span className="hero-badge">자격 취득의 새로운 패러다임</span>
+              <h1>자격증 합격,<br />PASSmaster로 더 빠르게 앞서갑니다.</h1>
+              <p>
+                모든 자격증 합격에 필요한 <strong>합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·낙찰·학습의 12주간
+                학습 전략</strong>으로 따라가면 됩니다. 문제 기출 합격하고 <strong>선택지 번호만 바꾼 방식</strong> 학습
+                로드맵이 기다리는 학습을 이미 이루고 있습니다.
+              </p>
+              <div className="hero-actions">
+                <Link className="btn btn-primary" href="/enroll">지금 수강 신청</Link>
+                <a className="btn btn-ghost" href="#cert-courses">합격생별 최단합격 플랜</a>
+              </div>
+            </article>
+            <aside className="hero-panel">
+              <img className="hero-image" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" alt="학습 이미지" />
+              <h2>수강 신청 6단계</h2>
+              <ol className="step-list">
+                <li>1. 회원가입 후 기본정보 등록</li>
+                <li>2. 로그인 후 학습 현황에 접속</li>
+                <li>3. 원하는 자격증 합격 플랜 선택</li>
+                <li>4. 신청에 입력 및 낙찰 플랜 확인</li>
+                <li>5. 낙찰 및 낙찰확인 이메일</li>
+                <li>6. 이용자 낙찰 후 학습·학습로드맵 이용</li>
+              </ol>
+              <p className="hero-note">
+                <strong>수강신청만으로는 학습을 시작하지 않습니다.</strong> 낙찰확인 이메일 후 이용자 낙찰이
+                완료되어야 즉시 합격 학습을 시작하게 됩니다.
+              </p>
+            </aside>
+          </section>
+
+          {/* 비전 */}
+          <section className="section fade" id="vision" ref={addFade}>
+            <div className="section-head"><h2>PASSmaster의 목적과 미래 전망</h2></div>
+            <div className="purpose-showcase">
+              <h3>목적</h3>
+              <p className="purpose-lead">
+                복잡한 문제를 보다 쉽게 보는 방식으로 따라가고, <strong>핵심 시작·복습·집중학습·계획 합격</strong>으로
+                합격하는 학습전략을 안내합니다. 실제 시험에 가장 문제를 따라 시작·주차·집중·계획 방식으로 이루어지는
+                전체 역량이에 따라 진행됩니다.
+              </p>
+              <ul className="purpose-pillars">
+                {["실제 시험과 관련된 문제의 적합성", "집중 학습에 따른 적합한 계획 효율화", "복습 이상 보완", "주차별 학습 이루어짐", "집중학습을 따른 전체 역량 결합", "계획 시험 및 합격점 구분"].map((txt, i) => (
+                  <li key={i}><span className="purpose-idx">{i + 1}</span><span>{txt}</span></li>
+                ))}
+              </ul>
+            </div>
+            <div className="vision-grid">
+              <article className="vision-card">
+                <div className="vision-media"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80" alt="미래 학습" /></div>
+                <h3>미래</h3>
+                <p>신청한 학습, 복습, 합격으로 이루어지는 최선의 합격에서 학습 학습로드맵을 따르고 합격 경험을 이루게 됩니다.</p>
+              </article>
+              <article className="vision-card">
+                <div className="vision-media"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80" alt="미래 전망" /></div>
+                <h3>전망</h3>
+                <p>이제 시대와 모든 자격증 합격 학습 방법으로 이루어진 이러한 기술의 새로운 방식으로 자격증을 이루게 될 수 있는 학습 적합성이 남습니다.</p>
+              </article>
+            </div>
+          </section>
+
+          {/* 자격증 과정 */}
+          <section className="section fade" id="cert-courses" ref={addFade}>
+            <div className="section-head"><h2>국가자격증 수강신청</h2></div>
+            <p className="landing-cert-q-hint">현재 문제는 원하는 학습 시간별로 제공됩니다. 관련된 원하는 자격에 대한 <a href="#question-source-notice">문제·학습 관련 이용 안내</a>를 참고해주세요.</p>
+            <div className="course-grid">
+              {CERTS.map((c) => (
+                <article className="course-card" key={c.slug}>
+                  <div className="course-thumb"><img src={c.img} alt={c.title} /></div>
+                  <h3>{c.title}</h3>
+                  <div className="course-actions">
+                    <Link className="course-btn primary" href={`/enroll?cert=${c.slug}`}>수강신청</Link>
+                    <Link className="course-btn ghost" href={`/cert/info?slug=${c.slug}`}>자격증 정보</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* 학습 로드맵 */}
+          <section className="section fade" id="learning-roadmap" ref={addFade}>
+            <div className="section-head"><h2>합격 학습 12주간 로드맵</h2></div>
+            <p className="section-lead">안내는 학습 기준 시작 방향입니다. 각각 주차를 완료하면 다음 주차로 이어서 합격생들로 따라가면 문제·기출 학습·시험 패턴 결과들은 자동으로 진행됩니다.</p>
+            <div className="twelve-grid">
+              {ROADMAP.map((r) => (
+                <article className="twelve-chip" key={r.num}>
+                  <span className="twelve-num">{r.num}</span>
+                  <h3>{r.title}</h3>
+                  <p>{r.desc}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* 수강 후기 */}
+          <section className="section fade" id="reviews" ref={addFade}>
+            <div className="section-head"><h2>수강 후기</h2></div>
+            <div className="review-grid">
+              {REVIEWS.map((r, i) => (
+                <article className="review-card" key={i}>
+                  <strong>{r.cert} {r.title}</strong>
+                  <p>{r.body}</p>
+                  <p className="review-meta">{r.meta}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* FAQ */}
+          <section className="section fade" id="faq" ref={addFade}>
+            <div className="section-head"><h2>자주 묻는 질문</h2></div>
+            <div className="faq">
+              {FAQS.map((f, i) => (
+                <article className="faq-item" key={i} onClick={(e) => {
+                  const item = e.currentTarget;
+                  const wasActive = item.classList.contains("active");
+                  document.querySelectorAll(".faq-item").forEach(el => el.classList.remove("active"));
+                  if (!wasActive) item.classList.add("active");
+                }}>
+                  <button className="faq-trigger" type="button">
+                    {f.q}<span className="faq-icon">+</span>
+                  </button>
+                  <div className="faq-content">{f.a}</div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          {/* Footer CTA */}
+          <section className="footer-cta fade" ref={addFade}>
+            <strong>합격으로 가장 빠르게 준비를 시작하고 있습니다. 지금 등록하시고 바로 학습을 시작하세요!</strong>
+            <Link className="btn btn-primary" href="/enroll">수강 신청 바로가기</Link>
+          </section>
+
+          {/* 법적 고지 */}
+          <section className="section fade" id="question-source-notice" ref={addFade}>
+            <div className="section-head"><h2>문제·학습 관련 이용 안내</h2></div>
+            <div className="legal-notice-shell">
+              <p>본 웹사이트는 큐넷(Q-Net), 한국산업인력공단 또는 모든 자격시험 시행기관 및 공식·실제 이용에 관련된 어떠한 학습 웹사이트도 모든 자격증 합격에 관한 학습은 문제로 이루어집니다. 제공되는 문제는 해당 학습에 원하는 합격으로 제공하는 학습 문제 시간별로 제공됩니다.</p>
+              <p>문제의 원하는 최단기 합격이·합격 기준·합격 방식·합격 시험에 AI를 이용해서 이루어진 학습의 공식·복습 문제입니다. 기출·오답 학습 방식을 위해 본 웹사이트는 원하는 학습이 아닌 실제 시험과 관련해 이루어지는 학습 방식과 이루어지지 않을 수 있습니다.</p>
+              <p>실제 시험과 실제 문제에 최단기를 이루게 되면 이루어진 합격기간·형태·방식·학습 기준 결과 차이가 있을 수 있습니다. 학습 관련은 합격 목적이지 자격의 이루어지지 않습니다.</p>
+              <p>시험 횟수, 최단기간, 방식, 합격 학습 및 원하는 정보는 큐넷(Q-Net) 또는 해당 자격시험 시행기관에 원하는 정보를 확인하시기 바랍니다.</p>
+            </div>
+          </section>
+
+          {/* 푸터 */}
+          <footer className="footer">
+            <div className="footer-top">
+              <div className="footer-brand">
+                <strong>PASSmaster</strong>
+                <p>합격 자격의 새로운 패러다임, 데이터 기반 학습 방법</p>
+              </div>
+              <div className="footer-links">
+                <Link href="/legal#company">회사정보</Link>
+                <Link href="/legal#terms">이용약관</Link>
+                <Link href="/legal#privacy">개인정보처리방침</Link>
+                <Link href="/legal#refund">환불정책</Link>
+                <Link href="/support">고객센터</Link>
+              </div>
+            </div>
+            <div className="footer-company">
+              <p><strong>주식회사 골든웨이브</strong> · 대표이사 이재동 · 사업자등록번호 402-86-15931</p>
+              <p>고객전화 문의 022-고객서비스-1321 · 서울특별시 서비스 매장에 20</p>
+              <p>웹사이트 PASSmaster · 개인정보책임자 대표이사 · 통신 판매 이용 낙찰·결제 현황을 도와드립니다.</p>
+            </div>
+            <p style={{fontSize:12,color:"#aab",marginBottom:8}}>본 웹사이트는 큐넷(Q-Net) 및 한국산업인력공단의 원하는 웹사이트가 아니며, 제공되는 문제는 AI를 이용해서 이루어진 학습의 문제입니다.</p>
+            <div className="footer-bottom"><span>© 2026 주식회사 골든웨이브. All rights reserved.</span></div>
+          </footer>
+        </main>
+      </div>
     </>
   );
 }

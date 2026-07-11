@@ -1,10 +1,10 @@
 export default function StatBanner() {
   return (
-    <section className="bg-gradient-to-r from-[#1a1a40] to-[#4f46e5] px-4 py-10">
+    <section className="border-y border-orange-100 bg-brand px-4 py-12">
       <p className="text-center text-base font-semibold text-white sm:text-lg md:text-xl">
-        총 <span className="text-indigo-200">20,000+</span> 문항 ·{" "}
-        <span className="text-indigo-200">5</span>개 분야 · 누적 학습자{" "}
-        <span className="text-indigo-200">10,000+</span>명
+        총 <span className="font-extrabold text-orange-100">20,000+</span> 문항 ·{" "}
+        <span className="font-extrabold text-orange-100">20개 이상</span>의 자격증 · 누적 학습자{" "}
+        <span className="font-extrabold text-orange-100">10,000+</span>명
       </p>
     </section>
   );
