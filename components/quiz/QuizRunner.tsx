@@ -8,6 +8,10 @@ import OptionButton, { type OptionStatus } from "./OptionButton";
 import ExplanationBox from "./ExplanationBox";
 import ReportButton from "./ReportButton";
 import type { QuizQuestion, QuizResult, SessionType, WrongItem } from "@/lib/types";
+import {
+  displayAnswerNumber,
+  formatExplanationForDisplay,
+} from "@/lib/explanation-display";
 
 type Props = {
   questions: QuizQuestion[];
@@ -256,12 +260,17 @@ export default function QuizRunner({
           perSubject[subj].correct += 1;
         } else {
           const correctOpt = question.options.find((o) => o.originalIndex === question.answer);
+          const disp = displayAnswerNumber(question.options, question.answer);
           wrongList.push({
             id: question.id,
             subject: question.subject,
             content: question.content,
-            correctText: correctOpt?.text || "",
-            explanation: question.explanation,
+            correctText: `${disp}번. ${correctOpt?.text || ""}`,
+            explanation: formatExplanationForDisplay(
+              question.explanation,
+              question.options,
+              question.answer
+            ),
           });
         }
       });
@@ -337,6 +346,8 @@ export default function QuizRunner({
   };
 
   const isCorrectNow = revealMode ? null : revealed ? selected === q.answer : null;
+  const displayExplanation = formatExplanationForDisplay(q.explanation, q.options, q.answer);
+  const displayAnswer = displayAnswerNumber(q.options, q.answer);
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -382,10 +393,11 @@ export default function QuizRunner({
         {revealed && (
           <div className="mt-5">
             <ExplanationBox
-              explanation={q.explanation}
+              explanation={displayExplanation}
               isCorrect={isCorrectNow}
               aiAnalysis={q.aiAnalysis}
               selected={selected}
+              displayAnswer={displayAnswer}
             />
           </div>
         )}
