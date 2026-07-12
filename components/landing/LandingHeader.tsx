@@ -1,11 +1,11 @@
 import Link from "next/link";
+import PassmasterLogo from "@/components/PassmasterLogo";
 
 export default function LandingHeader() {
   return (
     <header className="header">
       <Link className="logo-wrap" href="/">
-        <span className="logo-icon">P</span>
-        <span className="logo">PASSmaster</span>
+        <PassmasterLogo className="landing-logo" priority />
       </Link>
       <nav className="nav">
         <Link href="/enroll">수강신청</Link>

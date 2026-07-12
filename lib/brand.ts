@@ -1,4 +1,4 @@
-/** beautymaster / cookmaster / passmaster — 배포별 NEXT_PUBLIC_BRAND 로 구분 */
+﻿/** passmaster / cookmaster / legacy beautymaster id — 배포별 NEXT_PUBLIC_BRAND 로 구분 */
 
 export type BrandId = "beautymaster" | "cookmaster" | "passmaster";
 
@@ -18,15 +18,15 @@ export type BrandConfig = {
 export const BRANDS: Record<BrandId, BrandConfig> = {
   beautymaster: {
     id: "beautymaster",
-    name: "BEAUTYmaster",
-    shortName: "BEAUTY",
-    tagline: "미용사 국가기능사 필기 문제은행",
+    name: "PASSmaster",
+    shortName: "PASS",
+    tagline: "국가기능사·자격증 필기 문제은행",
     logo: "/logo.png",
-    primary: "#D81B60",
-    accent: "#0EA5E9",
-    studentAccent: "#10B981",
+    primary: "#2563EB",
+    accent: "#7C3AED",
+    studentAccent: "#14B8A6",
     adminBg: "#0F172A",
-    categoryLabel: "미용사",
+    categoryLabel: "자격증",
   },
   cookmaster: {
     id: "cookmaster",
@@ -45,7 +45,7 @@ export const BRANDS: Record<BrandId, BrandConfig> = {
     name: "PASSmaster",
     shortName: "PASS",
     tagline: "국가기능사·자격증 필기 문제은행",
-    logo: "/brands/passmaster.svg",
+    logo: "/logo.png",
     primary: "#2563EB",
     accent: "#7C3AED",
     studentAccent: "#14B8A6",
@@ -56,8 +56,9 @@ export const BRANDS: Record<BrandId, BrandConfig> = {
 
 export function getBrand(override?: string | null): BrandConfig {
   const fromEnv = process.env.NEXT_PUBLIC_BRAND as BrandId | undefined;
-  const id = (override || fromEnv || "beautymaster") as BrandId;
-  return BRANDS[id] ?? BRANDS.beautymaster;
+  const id = (override || fromEnv || "passmaster") as BrandId;
+  const resolved = id === "beautymaster" ? "passmaster" : id;
+  return BRANDS[resolved] ?? BRANDS.passmaster;
 }
 
 export function brandForAcademy(academyBrand?: string | null): BrandConfig {

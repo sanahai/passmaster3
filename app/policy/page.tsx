@@ -2,8 +2,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 
 export const metadata = {
-  title: "이용약관 · 개인정보처리방침 · 환불정책 · BEAUTYmaster",
-  description: "BEAUTYmaster 이용약관, 개인정보처리방침, 환불정책 안내",
+  title: "이용약관 · 개인정보처리방침 · 환불정책 · PASSmaster",
+  description: "PASSmaster 이용약관, 개인정보처리방침, 환불정책 안내",
 };
 
 const NAV = [
@@ -70,9 +70,9 @@ export default function PolicyPage() {
                 <br />
                 통신판매업 신고: 제2022-인천서구-1321호 · 주소: 인천광역시 서구 가재울로 20
                 <br />
-                서비스명: BEAUTYmaster · 고객센터:{" "}
-                <a href="mailto:support@beautymaster.kr" className="font-semibold text-primary">
-                  support@beautymaster.kr
+                서비스명: PASSmaster · 고객센터:{" "}
+                <a href="mailto:support@passmaster.kr" className="font-semibold text-primary">
+                  support@passmaster.kr
                 </a>
               </p>
             </div>
@@ -84,14 +84,14 @@ export default function PolicyPage() {
               <div className="card space-y-5 text-sm leading-relaxed text-beauty-gray">
                 <Clause title="제1조 (목적)">
                   <p>
-                    이 약관은 골든웨이브(이하 “회사”)가 운영하는 BEAUTYmaster(이하 “서비스”)의
+                    이 약관은 골든웨이브(이하 “회사”)가 운영하는 PASSmaster(이하 “서비스”)의
                     이용과 관련하여 회사와 이용자 간의 권리·의무 및 책임사항, 기타 필요한 사항을
                     규정함을 목적으로 합니다.
                   </p>
                 </Clause>
 
                 <Clause title="제2조 (정의)">
-                  <p>1. “서비스”란 회사가 제공하는 미용사 자격증 필기시험 대비 온라인 문제은행 및 관련 학습 콘텐츠 일체를 말합니다.</p>
+                  <p>1. “서비스”란 회사가 제공하는 국가기술자격·자격증 필기시험 대비 온라인 문제은행 및 관련 학습 콘텐츠 일체를 말합니다.</p>
                   <p>2. “이용자”란 이 약관에 따라 회사가 제공하는 서비스를 이용하는 회원 및 비회원을 말합니다.</p>
                   <p>3. “회원”이란 서비스에 가입하여 아이디(ID)를 부여받은 자로서, 회사의 정보를 지속적으로 제공받으며 서비스를 계속 이용할 수 있는 자를 말합니다.</p>
                   <p>4. “콘텐츠”란 회사가 서비스에서 제공하는 문제, 해설, 모의고사, 학습 자료 등 디지털 형태의 정보 또는 자료를 말합니다.</p>
@@ -105,7 +105,7 @@ export default function PolicyPage() {
                 </Clause>
 
                 <Clause title="제4조 (서비스의 내용)">
-                  <p>1. 회사가 제공하는 서비스는 미용사(일반·피부·네일·메이크업) 자격증 필기시험 대비를 위한 학습용 문제은행 및 모의고사, 오답복습 등 부가 학습 기능입니다.</p>
+                  <p>1. 회사가 제공하는 서비스는 국가기술자격·자격증 필기시험 대비를 위한 학습용 문제은행 및 모의고사, 오답복습 등 부가 학습 기능입니다.</p>
                   <p>
                     2. 서비스에서 제공되는 문제는 큐넷(Q-Net), 한국산업인력공단 또는 자격시험 시행기관이
                     공식적으로 배포하는 정식 기출문제 원문이 아니며, 공개된 출제 경향·과목 구성·시험
@@ -244,8 +244,8 @@ export default function PolicyPage() {
                     성명: 이태나
                     <br />
                     이메일:{" "}
-                    <a href="mailto:support@beautymaster.kr" className="font-semibold text-primary">
-                      support@beautymaster.kr
+                    <a href="mailto:support@passmaster.kr" className="font-semibold text-primary">
+                      support@passmaster.kr
                     </a>
                   </p>
                 </Clause>
@@ -264,7 +264,7 @@ export default function PolicyPage() {
                 <Clause title="제1조 (목적)">
                   <p>
                     이 정책은 「전자상거래 등에서의 소비자보호에 관한 법률」(이하 “전자상거래법”) 및
-                    관련 법령에 따라 BEAUTYmaster 유료 콘텐츠의 청약철회 및 환불 기준을 정함을 목적으로
+                    관련 법령에 따라 PASSmaster 유료 콘텐츠의 청약철회 및 환불 기준을 정함을 목적으로
                     합니다.
                   </p>
                 </Clause>
@@ -324,8 +324,8 @@ export default function PolicyPage() {
                 <Clause title="제5조 (환불 절차)">
                   <p>
                     1. 환불을 원하는 이용자는 고객센터(
-                    <a href="mailto:support@beautymaster.kr" className="font-semibold text-primary">
-                      support@beautymaster.kr
+                    <a href="mailto:support@passmaster.kr" className="font-semibold text-primary">
+                      support@passmaster.kr
                     </a>
                     )로 주문자명, 결제일, 환불 사유를 기재하여 환불을 요청합니다.
                   </p>

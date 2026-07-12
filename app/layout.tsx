@@ -24,6 +24,10 @@ export const metadata: Metadata = {
     description: "최단합격 플랜 · 집중학습 · 모의시험 · 합격 전략",
     type: "website",
   },
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

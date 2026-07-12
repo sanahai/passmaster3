@@ -1,6 +1,6 @@
 "use client";
 
-// BEAUTYmaster — Hero (D안) + AI 해설 차별점 섹션
+// PASSmaster — Hero (D안) + AI 해설 차별점 섹션
 // Tailwind CSS 기준. 기존 프로젝트의 rose/pink 계열 색상을 사용합니다.
 
 import { useState } from "react";
@@ -223,7 +223,7 @@ export function AIExplanationSection() {
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-gray-600">
             대부분의 문제집은 “정답은 ②번, 왜냐하면…”에서 끝납니다.
-            BEAUTYmaster는 당신이 고른 오답이 ‘왜’ 매력적이었는지,
+            PASSmaster는 당신이 고른 오답이 ‘왜’ 매력적이었는지,
             어떤 개념을 헷갈렸는지까지 짚어줍니다.
           </p>
         </div>
@@ -239,7 +239,7 @@ export function AIExplanationSection() {
             </ul>
           </div>
           <div className="rounded-2xl border-2 border-rose-300 bg-white p-6 shadow-lg shadow-rose-100">
-            <p className="text-sm font-semibold text-rose-600">BEAUTYmaster</p>
+            <p className="text-sm font-semibold text-rose-600">PASSmaster</p>
             <ul className="mt-4 space-y-3 text-sm text-gray-800">
               <CompareItem text="정답 + 왜 맞는지 해설" />
               <CompareItem text="내가 고른 오답의 오개념 진단" />

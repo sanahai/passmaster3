@@ -219,7 +219,7 @@ export async function createAcademyWithInviteAction(formData: FormData) {
       activeUntil,
       subdomain,
       code: await generateUniqueAcademyCode(),
-      brand: process.env.NEXT_PUBLIC_BRAND || "beautymaster",
+      brand: process.env.NEXT_PUBLIC_BRAND || "passmaster",
     },
   });
 

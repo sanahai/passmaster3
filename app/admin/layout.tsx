@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { requireAdmin } from "@/lib/access";
 import { logoutAction } from "@/app/actions/auth";
+import PassmasterLogo from "@/components/PassmasterLogo";
 
 const NAV = [
   { href: "/admin", label: "대시보드", icon: "📊" },
@@ -28,10 +28,10 @@ export default async function AdminLayout({
       <div className="mx-auto flex max-w-7xl">
         <aside className="sticky top-0 hidden h-screen w-60 shrink-0 border-r border-primary-pale bg-white p-4 md:block">
           <Link href="/" className="mb-6 flex items-center gap-2 px-2">
-            <Image src="/logo.png" alt="BEAUTYmaster" width={439} height={217} className="h-8 w-auto" />
+            <PassmasterLogo className="h-8 w-auto" />
           </Link>
           <p className="mb-1 px-2 text-xs font-bold uppercase text-primary">통합 관리자</p>
-          <p className="mb-4 px-2 text-xs text-beauty-gray">플랫폼 전체 · BEAUTYmaster</p>
+          <p className="mb-4 px-2 text-xs text-beauty-gray">플랫폼 전체 · PASSmaster</p>
           <nav className="space-y-1">
             {NAV.map((n) => (
               <Link

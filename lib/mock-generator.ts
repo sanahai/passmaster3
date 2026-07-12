@@ -1,7 +1,14 @@
 import { prisma } from "./prisma";
 import { getCourseConfig, MOCK_CONFIG } from "./courses";
 
-type QLite = { id: number; difficulty: number };
+type QLite = { id: number; difficulty: string };
+
+function difficultyBucket(value: string): "low" | "medium" | "high" {
+  const v = value.toLowerCase();
+  if (v === "low" || v === "easy" || v === "1") return "low";
+  if (v === "high" || v === "hard" || v === "3") return "high";
+  return "medium";
+}
 
 function pickRandom<T>(arr: T[], n: number): T[] {
   const copy = [...arr];
@@ -38,12 +45,13 @@ export async function generateMockQuestionIds(
     const normalQ = Math.round(totalQ * mock.normal);
     const hardQ = totalQ - easyQ - normalQ;
 
-    const byDiff = (d: number) => subjectQs.filter((q) => q.difficulty === d);
+    const byDiff = (bucket: "low" | "medium" | "high") =>
+      subjectQs.filter((q) => difficultyBucket(q.difficulty) === bucket);
 
     const chosen = [
-      ...pickRandom(byDiff(1), easyQ),
-      ...pickRandom(byDiff(2), normalQ),
-      ...pickRandom(byDiff(3), hardQ),
+      ...pickRandom(byDiff("low"), easyQ),
+      ...pickRandom(byDiff("medium"), normalQ),
+      ...pickRandom(byDiff("high"), hardQ),
     ].map((q) => q.id);
 
     // 난이도별 문제가 부족하면 같은 과목 내 다른 문제로 보충

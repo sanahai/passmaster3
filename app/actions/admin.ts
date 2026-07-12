@@ -4,6 +4,20 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/access";
 
+function normalizeDifficulty(value: unknown): string {
+  if (typeof value === "string") {
+    const v = value.trim().toLowerCase();
+    if (v === "low" || v === "easy" || v === "1") return "low";
+    if (v === "high" || v === "hard" || v === "3") return "high";
+    if (v === "medium" || v === "normal" || v === "2") return "medium";
+    return v || "medium";
+  }
+  const n = Number(value);
+  if (n === 1) return "low";
+  if (n >= 3) return "high";
+  return "medium";
+}
+
 export async function approveEnrollmentAction(formData: FormData) {
   await requireAdmin();
   const id = Number(formData.get("id"));
@@ -103,7 +117,7 @@ export async function createQuestionAction(formData: FormData) {
       option4: String(formData.get("option4") || ""),
       answer: Number(formData.get("answer")) || 1,
       explanation: String(formData.get("explanation") || "") || null,
-      difficulty: Number(formData.get("difficulty")) || 2,
+      difficulty: normalizeDifficulty(formData.get("difficulty")),
       isFree: formData.get("isFree") === "on",
     },
   });
@@ -171,7 +185,7 @@ export async function bulkUploadAction(formData: FormData): Promise<void> {
         option4: c[5]?.trim() || "",
         answer: Number(c[6]?.trim()) || 1,
         explanation: c[7]?.trim() || null,
-        difficulty: Number(c[8]?.trim()) || 2,
+        difficulty: normalizeDifficulty(c[8]?.trim() ?? 2),
         isFree: (c[9]?.trim() || "").toUpperCase() === "TRUE",
       };
     })
@@ -238,7 +252,7 @@ export async function bulkUploadJsonAction(
     option4: string;
     answer: number;
     explanation: string | null;
-    difficulty: number;
+    difficulty: string;
     isFree: boolean;
   };
 
@@ -267,7 +281,7 @@ export async function bulkUploadJsonAction(
       option4: String(option4),
       answer: answer >= 1 && answer <= 4 ? answer : 1,
       explanation: String(pick(raw, "explanation", "해설") ?? "") || null,
-      difficulty: Number(pick(raw, "difficulty", "난이도") ?? 2) || 2,
+      difficulty: normalizeDifficulty(pick(raw, "difficulty", "난이도") ?? 2),
       isFree: forceFree || isFreeRaw === true || String(isFreeRaw).toUpperCase() === "TRUE",
     });
   }

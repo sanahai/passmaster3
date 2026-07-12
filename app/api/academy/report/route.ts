@@ -14,7 +14,7 @@ export async function GET() {
 
   const csv = await buildAcademyReportCsv(user.academyId);
   const academy = await prisma.academy.findUnique({ where: { id: user.academyId } });
-  const filename = `beautymaster-report-${academy?.name ?? "academy"}.csv`;
+  const filename = `passmaster-report-${academy?.name ?? "academy"}.csv`;
 
   return new NextResponse(csv, {
     headers: {

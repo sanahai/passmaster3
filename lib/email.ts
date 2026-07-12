@@ -2,7 +2,7 @@ import { Resend } from "resend";
 import { absoluteUrl } from "./site-url";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const FROM = process.env.RESEND_FROM || "BEAUTYmaster <onboarding@resend.dev>";
+const FROM = process.env.RESEND_FROM || "PASSmaster <onboarding@resend.dev>";
 
 export async function sendTeacherInviteEmail(opts: {
   to: string;
@@ -10,13 +10,13 @@ export async function sendTeacherInviteEmail(opts: {
   setupUrl: string;
 }) {
   const link = absoluteUrl(opts.setupUrl);
-  const subject = `[BEAUTYmaster] ${opts.academyName} 강사 초대`;
+  const subject = `[PASSmaster] ${opts.academyName} 강사 초대`;
   const html = `
     <p>안녕하세요,</p>
-    <p><strong>${opts.academyName}</strong>에서 BEAUTYmaster B2B 강사 계정 초대가 도착했습니다.</p>
+    <p><strong>${opts.academyName}</strong>에서 PASSmaster B2B 강사 계정 초대가 도착했습니다.</p>
     <p>아래 링크에서 비밀번호를 설정해 주세요. (48시간 유효)</p>
     <p><a href="${link}">${link}</a></p>
-    <p>— BEAUTYmaster</p>
+    <p>— PASSmaster</p>
   `;
 
   if (!resend) {
@@ -35,7 +35,7 @@ export async function sendOwnerWeeklyReportEmail(opts: {
   atRisk: { name: string; accuracy: number; status: string }[];
 }) {
   const dashboard = absoluteUrl("/academy/dashboard");
-  const subject = `[BEAUTYmaster] ${opts.academyName} 주간 학습 리포트`;
+  const subject = `[PASSmaster] ${opts.academyName} 주간 학습 리포트`;
   const atRiskHtml =
     opts.atRisk.length === 0
       ? "<p>주의 학생이 없습니다.</p>"
@@ -72,7 +72,7 @@ export async function sendAcademyOwnerInviteEmail(opts: {
   code: string | null;
 }) {
   const link = absoluteUrl(opts.setupUrl);
-  const subject = `[BEAUTYmaster] ${opts.academyName} 원장 계정 설정`;
+  const subject = `[PASSmaster] ${opts.academyName} 원장 계정 설정`;
   const html = `
     <p>${opts.academyName} B2B 학원이 개설되었습니다.</p>
     <p>원장 계정 설정: <a href="${link}">${link}</a></p>

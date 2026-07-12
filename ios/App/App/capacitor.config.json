@@ -1,10 +1,10 @@
 {
-	"appId": "kr.beautymaster.app",
-	"appName": "BEAUTYmaster",
+	"appId": "kr.passmaster.app",
+	"appName": "PASSmaster",
 	"webDir": "capacitor-shell",
 	"backgroundColor": "#ffffff",
 	"server": {
-		"url": "https://beautymaster.vercel.app",
+		"url": "https://passmaster.kr",
 		"cleartext": false
 	},
 	"ios": {

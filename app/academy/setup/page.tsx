@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import AcademySetupForm from "@/components/academy/AcademySetupForm";
+import PassmasterLogo from "@/components/PassmasterLogo";
 
 export default async function AcademySetupPage({
   searchParams,
@@ -33,7 +33,7 @@ export default async function AcademySetupPage({
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-b2b-light px-4 py-12">
       <Link href="/" className="mb-8">
-        <Image src="/logo.png" alt="BEAUTYmaster" width={160} height={48} className="h-10 w-auto" />
+        <PassmasterLogo className="h-10 w-auto" />
       </Link>
       <div className="b2b-card w-full max-w-md">
         <h1 className="mb-1 text-2xl font-bold text-b2b-primary">학원 관리자 설정</h1>

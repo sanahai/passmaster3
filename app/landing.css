@@ -10,8 +10,7 @@ a{color:inherit;text-decoration:none}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
 .header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid #ebf0fa;background:rgba(255,255,255,.94);backdrop-filter:blur(10px)}
 .logo-wrap{display:flex;align-items:center;gap:8px}
-.logo-icon{width:32px;height:32px;border-radius:8px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
-.logo{font-weight:800;font-size:18px;letter-spacing:-.5px}
+.landing-logo{height:40px;width:auto}
 .nav{display:flex;gap:20px;font-size:14px;font-weight:500;color:var(--muted)}
 .nav a:hover{color:var(--primary)}
 .auth{display:flex;gap:8px}
@@ -33,7 +32,8 @@ a{color:inherit;text-decoration:none}
 .section-lead{color:var(--muted);font-size:15px;margin:-8px 0 16px;max-width:700px}
 .course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .course-card{border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s}.course-card:hover{transform:translateY(-4px);box-shadow:var(--card-shadow)}
-.course-thumb img{width:100%;height:140px;object-fit:cover}
+.course-thumb{aspect-ratio:16/9;background:#f1f5f9}
+.course-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .course-card h3{font-size:15px;font-weight:700;margin:12px 16px 8px}
 .course-actions{display:flex;gap:8px;padding:0 16px 16px}
 .course-btn{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:.2s}

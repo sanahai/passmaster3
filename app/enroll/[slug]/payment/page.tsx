@@ -51,7 +51,7 @@ export default async function PaymentPage({
           <div className="relative">
             <div className="mb-6 flex items-center justify-between">
               <span className="text-sm font-semibold text-white/80">입금 계좌</span>
-              <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold">BEAUTYmaster</span>
+              <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-bold">PASSmaster</span>
             </div>
 
             <div className="mb-1 text-sm text-white/70">은행</div>

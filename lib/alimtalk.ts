@@ -9,7 +9,7 @@ export async function sendWeeklyAlimtalk(opts: {
   const senderKey = process.env.ALIMTALK_SENDER_KEY;
   const templateId = process.env.ALIMTALK_WEEKLY_TEMPLATE_ID;
 
-  const message = `[${opts.academyName}] 주간리포트: 미접속 ${opts.inactiveCount}명, 주의학생 ${opts.atRiskCount}명. BEAUTYmaster 대시보드를 확인하세요.`;
+  const message = `[${opts.academyName}] 주간리포트: 미접속 ${opts.inactiveCount}명, 주의학생 ${opts.atRiskCount}명. PASSmaster 대시보드를 확인하세요.`;
 
   if (!apiKey || !senderKey || !templateId) {
     console.log("[alimtalk stub]", opts.phone, message);

@@ -2,8 +2,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 
 export const metadata = {
-  title: "회사정보 · 고객센터 · BEAUTYmaster",
-  description: "BEAUTYmaster 운영사 회사정보와 고객센터 안내",
+  title: "회사정보 · 고객센터 · PASSmaster",
+  description: "PASSmaster 운영사 회사정보와 고객센터 안내",
 };
 
 export default function CompanyPage() {
@@ -18,7 +18,7 @@ export default function CompanyPage() {
               회사정보 · 고객센터
             </span>
             <h1 className="text-3xl font-extrabold text-beauty-neutral sm:text-4xl">
-              BEAUTYmaster를 소개합니다
+              PASSmaster를 소개합니다
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-beauty-gray">
               데이터 기반 학습과 AI 해설로 미용 국가자격증 필기 합격을 돕는 학습 플랫폼입니다.
@@ -40,8 +40,8 @@ export default function CompanyPage() {
             <h2 className="mb-4 text-2xl font-bold text-beauty-neutral">회사 소개</h2>
             <div className="card space-y-4 text-sm leading-relaxed text-beauty-gray">
               <p>
-                <strong className="text-beauty-neutral">BEAUTYmaster</strong>는 미용사(일반)·피부·네일·메이크업
-                국가기술자격 필기시험을 준비하는 수험생을 위한 온라인 문제은행 서비스입니다. 단순히
+                <strong className="text-beauty-neutral">PASSmaster</strong>는 국가기술자격·자격증 필기시험을
+                준비하는 수험생을 위한 온라인 문제은행 서비스입니다. 단순히
                 정답만 알려주는 학습이 아니라, AI가 수험생이 ‘왜 그 오답을 골랐는지’까지 진단하여
                 같은 실수를 반복하지 않도록 돕습니다.
               </p>
@@ -93,13 +93,13 @@ export default function CompanyPage() {
               <dl className="divide-y divide-gray-100 text-sm">
                 {[
                   ["상호명", "골든웨이브"],
-                  ["서비스명", "BEAUTYmaster"],
+                  ["서비스명", "PASSmaster"],
                   ["대표", "이동길"],
                   ["사업자등록번호", "326-58-00636"],
                   ["통신판매업 신고", "제2022-인천서구-1321호"],
                   ["주소", "인천광역시 서구 가재울로 20"],
                   ["개인정보보호책임자", "이태나"],
-                  ["이메일", "support@beautymaster.kr"],
+                  ["이메일", "support@passmaster.kr"],
                 ].map(([k, v]) => (
                   <div key={k} className="flex flex-col gap-1 px-5 py-3 sm:flex-row sm:gap-4">
                     <dt className="w-40 shrink-0 font-semibold text-beauty-neutral">{k}</dt>
@@ -119,8 +119,8 @@ export default function CompanyPage() {
                 <ul className="space-y-2 text-sm text-beauty-gray">
                   <li>
                     이메일:{" "}
-                    <a href="mailto:support@beautymaster.kr" className="font-semibold text-primary">
-                      support@beautymaster.kr
+                    <a href="mailto:support@passmaster.kr" className="font-semibold text-primary">
+                      support@passmaster.kr
                     </a>
                   </li>
                   <li>1:1 문의: 로그인 후 마이페이지에서 접수</li>

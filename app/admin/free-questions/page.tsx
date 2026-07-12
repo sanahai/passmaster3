@@ -193,7 +193,7 @@ export default async function AdminFreeQuestionsPage({
                     {q.subject}
                   </span>
                   <span className="text-beauty-gray">
-                    난이도 {q.difficulty === 1 ? "쉬움" : q.difficulty === 2 ? "보통" : "어려움"}
+                    난이도 {q.difficulty === "low" || q.difficulty === "easy" ? "쉬움" : q.difficulty === "high" || q.difficulty === "hard" ? "어려움" : "보통"}
                   </span>
                   <span className="font-bold text-beauty-success">무료</span>
                   {!q.isActive && <span className="font-bold text-beauty-danger">비활성</span>}

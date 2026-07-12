@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="flex flex-col gap-6 border-b border-white/10 pb-6 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="text-xl font-bold text-white">BEAUTYmaster</p>
+            <p className="text-xl font-bold text-white">PASSmaster</p>
             <p className="mt-1 text-sm text-white/60">
               필기 합격의 가장 빠른 루트, 데이터 기반 학습 플랫폼
             </p>
@@ -27,7 +27,7 @@ export default function Footer() {
           </p>
           <p>통신판매업 신고 제2022-인천서구-1321호 · 인천광역시 서구 가재울로 20</p>
           <p>
-            서비스명 BEAUTYmaster · 개인정보보호책임자 이태나 · 무통장 입금 계좌 등은 수강·결제
+            서비스명 PASSmaster · 개인정보보호책임자 이태나 · 무통장 입금 계좌 등은 수강·결제
             안내를 따릅니다.
           </p>
         </div>

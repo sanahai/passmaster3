@@ -13,8 +13,8 @@ export default function SubsiteFooter({ academyName, brand }: Props) {
       </p>
       <p className="mt-1">
         문의: 학원 데스크 · 기술지원{" "}
-        <a href="mailto:support@beautymaster.kr" className="text-[var(--subsite-primary)] hover:underline">
-          support@beautymaster.kr
+        <a href="mailto:support@passmaster.kr" className="text-[var(--subsite-primary)] hover:underline">
+          support@passmaster.kr
         </a>
       </p>
     </footer>

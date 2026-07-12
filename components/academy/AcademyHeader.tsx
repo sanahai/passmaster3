@@ -1,8 +1,6 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
 import { logoutAction } from "@/app/actions/auth";
+import PassmasterLogo from "@/components/PassmasterLogo";
 
 type Props = {
   academyName: string;
@@ -18,7 +16,7 @@ export default function AcademyHeader({ academyName, logoUrl }: Props) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={logoUrl} alt={academyName} className="h-8 max-w-[100px] object-contain" />
           ) : (
-            <Image src="/logo.png" alt="BEAUTYmaster" width={100} height={30} className="h-7 w-auto brightness-0 invert opacity-90" />
+            <PassmasterLogo className="h-7 w-auto rounded bg-white/95 px-1" />
           )}
           <span className="hidden text-sm font-bold sm:inline">{academyName}</span>
         </Link>

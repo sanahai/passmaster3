@@ -35,7 +35,7 @@ export default function AcademyPortalHome({ academy, subdomain }: Props) {
     },
     {
       q: "학원에서 학습 현황을 볼 수 있나요?",
-      a: "학원 코드 등록 후 원장·강사님이 BEAUTYmaster B2B 대시보드에서 정답률, 접속 현황, 모의고사 이력을 확인할 수 있습니다.",
+      a: "학원 코드 등록 후 원장·강사님이 PASSmaster B2B 대시보드에서 정답률, 접속 현황, 모의고사 이력을 확인할 수 있습니다.",
     },
   ];
 
@@ -52,7 +52,7 @@ export default function AcademyPortalHome({ academy, subdomain }: Props) {
         </div>
         <div className="relative mx-auto max-w-4xl text-center">
           <span className="mb-4 inline-block rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur">
-            {academy.name} × BEAUTYmaster 제휴학원
+            {academy.name} × PASSmaster 제휴학원
           </span>
           <h1 className="mb-5 text-4xl font-extrabold leading-tight sm:text-5xl">
             미용사 국가기능사 필기,
@@ -186,7 +186,7 @@ export default function AcademyPortalHome({ academy, subdomain }: Props) {
           <h2 className="mb-10 text-center text-2xl font-bold text-b2b-primary">시작 방법</h2>
           <ol className="space-y-6">
             {[
-              { step: "1", title: "회원가입", desc: "아래 버튼으로 BEAUTYmaster 계정을 만듭니다." },
+              { step: "1", title: "회원가입", desc: "아래 버튼으로 PASSmaster 계정을 만듭니다." },
               {
                 step: "2",
                 title: "학원 코드 등록",
@@ -232,7 +232,7 @@ export default function AcademyPortalHome({ academy, subdomain }: Props) {
       <section className="py-16 px-4" style={{ backgroundColor: brand }}>
         <div className="mx-auto max-w-2xl text-center text-white">
           <h2 className="mb-4 text-2xl font-bold">지금 시작하세요</h2>
-          <p className="mb-8 text-white/90">{academy.name}과 BEAUTYmaster가 함께 합격을 응원합니다.</p>
+          <p className="mb-8 text-white/90">{academy.name}과 PASSmaster가 함께 합격을 응원합니다.</p>
           <Link href={signupHref} className="inline-block rounded-xl bg-white px-10 py-4 text-lg font-bold text-slate-900">
             회원가입 · 학원 코드 {academy.code ?? "등록"}
           </Link>

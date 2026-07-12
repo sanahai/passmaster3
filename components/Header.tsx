@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getSession } from "@/lib/auth";
 import { logoutAction } from "@/app/actions/auth";
+import PassmasterLogo from "@/components/PassmasterLogo";
 
 export default async function Header() {
   const session = await getSession();
@@ -10,14 +10,7 @@ export default async function Header() {
     <header className="sticky top-0 z-40 border-b border-primary-pale bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center">
-          <Image
-            src="/logo.png"
-            alt="BEAUTYmaster"
-            width={439}
-            height={217}
-            priority
-            className="h-9 w-auto"
-          />
+          <PassmasterLogo priority />
         </Link>
 
         <nav className="flex items-center gap-1 sm:gap-3">

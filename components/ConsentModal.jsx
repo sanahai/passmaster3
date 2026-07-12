@@ -1,6 +1,6 @@
 "use client";
 
-// BEAUTYmaster — 학습 시작 전 안내·동의 컴포넌트
+// PASSmaster — 학습 시작 전 안내·동의 컴포넌트
 // 무료체험(mode="trial")과 유료결제(mode="paid") 두 가지를 지원합니다.
 // 모든 필수 항목 체크 시에만 "다음" 버튼이 활성화됩니다.
 
@@ -94,7 +94,7 @@ export default function ConsentModal({ mode = "trial", onAgree, onCancel, submit
             <InfoBlock
               icon="💳"
               title="환불 안내"
-              body="결제 후 학습 기록(문제 풀이)이 전혀 없는 경우, 결제일로부터 7일 이내 전액 환불이 가능합니다. 다만 단 1문항이라도 풀이를 시작하면 디지털콘텐츠 제공이 개시된 것으로 보아 환불이 제한될 수 있습니다. 결제 전 무료체험 100문제로 충분히 확인하시기를 권장합니다. (문의: support@beautymaster.kr)"
+              body="결제 후 학습 기록(문제 풀이)이 전혀 없는 경우, 결제일로부터 7일 이내 전액 환불이 가능합니다. 다만 단 1문항이라도 풀이를 시작하면 디지털콘텐츠 제공이 개시된 것으로 보아 환불이 제한될 수 있습니다. 결제 전 무료체험 100문제로 충분히 확인하시기를 권장합니다. (문의: support@passmaster.kr)"
               highlight
             />
           )}

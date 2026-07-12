@@ -37,7 +37,7 @@ export default function SubsiteHeader({ subdomain, academyName, logoUrl, brand, 
                 alt={brand.name}
                 width={120}
                 height={32}
-                className={`h-7 w-auto ${isAdmin ? "brightness-0 invert" : ""}`}
+                className="h-7 w-auto rounded bg-white/95 px-1"
               />
             )}
             <span className="hidden truncate text-sm font-bold sm:inline">

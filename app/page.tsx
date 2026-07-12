@@ -3,21 +3,22 @@ import "./landing.css";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import LandingFooter from "@/components/landing/LandingFooter";
+import PassmasterLogo from "@/components/PassmasterLogo";
 
 const CERTS = [
-  { slug: "forklift", title: "지게차운전기능사", img: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80" },
-  { slug: "cookkr", title: "한식조리기능사", img: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=800&q=80" },
-  { slug: "cookwest", title: "양식조리기능사", img: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80" },
-  { slug: "cookjp", title: "일식조리기능사", img: "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=800&q=80" },
-  { slug: "cookcn", title: "중식조리기능사", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=800&q=80" },
-  { slug: "confection", title: "제과기능사", img: "https://images.unsplash.com/photo-1558961363-fa893d6d5b4e?auto=format&fit=crop&w=800&q=80" },
-  { slug: "bakery", title: "제빵기능사", img: "https://images.unsplash.com/photo-1509440159598-924e33e385ea?auto=format&fit=crop&w=800&q=80" },
-  { slug: "electric", title: "전기기능사", img: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=800&q=80" },
-  { slug: "beautician", title: "미용사(일반)", img: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" },
-  { slug: "skin", title: "피부미용사", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80" },
-  { slug: "nail", title: "네일미용사", img: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=800&q=80" },
-  { slug: "makeup", title: "메이크업미용사", img: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=800&q=80" },
-  { slug: "barber", title: "이용사", img: "https://images.unsplash.com/photo-1585747860715-d9af4b84bdf0?auto=format&fit=crop&w=800&q=80" },
+  { slug: "forklift", title: "지게차운전기능사", img: "/certs/forklift.png" },
+  { slug: "cookkr", title: "한식조리기능사", img: "/certs/cookkr.png" },
+  { slug: "cookwest", title: "양식조리기능사", img: "/certs/cookwest.png" },
+  { slug: "cookjp", title: "일식조리기능사", img: "/certs/cookjp.png" },
+  { slug: "cookcn", title: "중식조리기능사", img: "/certs/cookcn.png" },
+  { slug: "confection", title: "제과기능사", img: "/certs/confection.png" },
+  { slug: "bakery", title: "제빵기능사", img: "/certs/bakery.png" },
+  { slug: "electric", title: "전기기능사", img: "/certs/electric.png" },
+  { slug: "beautician", title: "미용사(일반)", img: "/certs/beautician.png" },
+  { slug: "skin", title: "피부미용사", img: "/certs/skin.png" },
+  { slug: "nail", title: "네일미용사", img: "/certs/nail.png" },
+  { slug: "makeup", title: "메이크업미용사", img: "/certs/makeup.png" },
+  { slug: "barber", title: "이용사", img: "/certs/barber.png" },
 ];
 
 const ROADMAP = [
@@ -78,8 +79,7 @@ export default function Home() {
           {/* 헤더 */}
           <header className="header">
             <Link className="logo-wrap" href="/">
-              <span className="logo-icon">P</span>
-              <span className="logo">PASSmaster</span>
+              <PassmasterLogo className="landing-logo" priority />
             </Link>
             <nav className="nav">
               <Link href="/enroll">수강신청</Link>

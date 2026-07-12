@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { AcademyPortal } from "@/lib/academy-portal";
 import { academySignupUrl } from "@/lib/academy-portal";
+import PassmasterLogo from "@/components/PassmasterLogo";
 
 type Props = {
   academy: AcademyPortal;
@@ -24,7 +24,7 @@ export default function AcademyPortalHeader({ academy, subdomain }: Props) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={academy.logoUrl} alt={academy.name} className="h-9 w-auto rounded object-contain" />
           ) : (
-            <Image src="/logo.png" alt="BEAUTYmaster" width={100} height={30} className="h-7 w-auto brightness-0 invert" />
+            <PassmasterLogo className="h-8 w-auto rounded bg-white/95 px-1" />
           )}
           <span className="text-lg font-bold text-white">{academy.name}</span>
         </Link>

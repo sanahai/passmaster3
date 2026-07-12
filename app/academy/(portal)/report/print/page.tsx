@@ -98,7 +98,7 @@ export default async function AcademyReportPrintPage() {
       </section>
 
       <footer className="mt-10 text-center text-xs text-slate-400 print:fixed print:bottom-4 print:w-full">
-        BEAUTYmaster B2B · Powered by 골든웨이브
+        PASSmaster B2B · Powered by 골든웨이브
       </footer>
     </div>
   );

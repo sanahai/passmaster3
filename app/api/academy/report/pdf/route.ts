@@ -22,7 +22,7 @@ export async function GET() {
   ]);
 
   const pdfBytes = buildAcademyReportPdf(academy?.name ?? "Academy", students, stats);
-  const filename = `beautymaster-report-${academy?.name ?? "academy"}.pdf`;
+  const filename = `passmaster-report-${academy?.name ?? "academy"}.pdf`;
 
   return new NextResponse(Buffer.from(pdfBytes), {
     headers: {

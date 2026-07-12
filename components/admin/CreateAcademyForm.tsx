@@ -63,7 +63,7 @@ export default function CreateAcademyForm() {
             <label className="label">전용 페이지 URL (서브도메인)</label>
             <input name="subdomain" className="input" placeholder="my-academy" />
             <p className="mt-1 text-xs text-beauty-gray">
-              생성 후 https://beautymaster.vercel.app/a/서브도메인 제휴 템플릿 사이트 제공
+              생성 후 https://passmaster.kr/a/서브도메인 제휴 템플릿 사이트 제공
             </p>
           </div>
         </div>

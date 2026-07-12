@@ -51,9 +51,14 @@ export default async function EnrollListPage() {
                   입금 대기 중 · 결제 안내
                 </Link>
               ) : (
-                <Link href="/enroll/package" className="btn-primary w-full sm:w-auto">
-                  패키지 신청하기
-                </Link>
+                <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                  <Link href="/trial" className="btn-primary flex-1 text-center">
+                    무료체험하기
+                  </Link>
+                  <Link href="/enroll/package" className="btn-outline flex-1 text-center">
+                    패키지 신청하기
+                  </Link>
+                </div>
               )}
             </div>
           </div>
@@ -81,9 +86,14 @@ export default async function EnrollListPage() {
                       입금 대기 중 · 결제 안내
                     </Link>
                   ) : (
-                    <Link href={`/enroll/${c.slug}`} className="btn-primary w-full">
-                      신청하기
-                    </Link>
+                    <div className="flex gap-2">
+                      <Link href={`/trial/${c.slug}`} className="btn-primary flex-1 text-center">
+                        무료체험하기
+                      </Link>
+                      <Link href={`/enroll/${c.slug}`} className="btn-outline flex-1 text-center">
+                        신청하기
+                      </Link>
+                    </div>
                   )}
                 </div>
               </div>
