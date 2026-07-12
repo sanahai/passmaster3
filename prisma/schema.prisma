@@ -1,15 +1,15 @@
-// BEAUTYmaster - 미용사 자격증 필기 문제은행
-// 스펙(Chapter 5)을 기반으로 한 스키마.
-// 배포(Vercel 서버리스)에서는 PostgreSQL(Neon/Vercel Postgres)을 사용합니다.
-// 로컬 개발도 동일한 DATABASE_URL(클라우드 Postgres)을 사용하면 됩니다.
+// PASSmaster - 국가기술자격 필기 문제은행 (13종)
+// 핵심 차별점: AI 오답분석 (misconception_map 기반, 오답별 "왜 틀렸는지" 제공)
+// 배포(Vercel 서버리스): PostgreSQL(Supabase). Connection Pooling(6543) 사용 권장.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")   // Supabase pooling URL (port 6543, pgbouncer=true)
+  directUrl = env("DIRECT_URL")     // Supabase direct URL (port 5432) — 마이그레이션용
 }
 
 model User {
@@ -60,15 +60,19 @@ model AcademyUserAnswer {
   @@index([academyQuestionId])
 }
 
+// 과정(자격증). 13종: 조리 4 · 제과 · 제빵 · 미용 4 · 이용 · 지게차 · 전기
 model Course {
   id           Int      @id @default(autoincrement())
-  slug         String   @unique // e.g. 'beauty-general'
-  name         String // e.g. '미용사(일반) 필기'
-  category     String? // e.g. '미용사'
+  slug         String   @unique // e.g. 'hansik', 'jegwa', 'skin', 'electric'
+  name         String   // e.g. '한식조리기능사 필기'
+  category     String?  // e.g. '조리', '미용', '기타'
+  brand        String   @default("passmaster") // 노출 브랜드 구분(멀티사이트 대비)
   description  String?
-  price        Int      @default(9900)
-  durationDays Int      @default(30)
+  price        Int      @default(14900)
+  durationDays Int      @default(90)
+  freeTrialCount Int    @default(100) // 무료체험 문제 수
   isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)   // 목록 정렬 순서
   createdAt    DateTime @default(now())
 
   questions        Question[]
@@ -80,16 +84,35 @@ model Course {
 model Question {
   id          Int      @id @default(autoincrement())
   courseId    Int
-  subject     String? // 과목명
-  content     String // 문제 지문
+  subject     String?  // 과목명
+  content     String   // 문제 지문 (기존 stem)
   option1     String
   option2     String
   option3     String
   option4     String
-  answer      Int // 정답 번호 1~4
-  explanation String?
-  difficulty  Int      @default(2) // 1(쉬움)~3(어려움)
-  isFree      Boolean  @default(false)
+  answer      Int      // 정답 번호 1~4 (기존 answer_index)
+  explanation String?  // 전체 해설
+
+  // 난이도: 문제은행 표준(low/medium/high). 기존 Int(1~3)에서 String으로 변경.
+  difficulty  String   @default("medium")
+
+  // ★★ AI 오답분석 (이 서비스의 핵심 차별점) ★★
+  // 문제은행의 ai_analysis 객체를 통째로 저장(jsonb).
+  //   { learning_objective, key_concept, study_reference,
+  //     misconception_map: { "2": {concept_gap, remediation_topic,
+  //       misconception_weight, correct_concept, remediation_tip}, ... } }
+  // 사용자가 오답 N번을 고르면 misconception_map["N"]을 꺼내 "왜 틀렸는지" 표시.
+  aiAnalysis  Json?
+
+  // 문제은행 메타데이터
+  questionPolarity String?  // positive | negative (부정형 여부)
+  trapType         String?  // none | lookalike_term | partial_truth | ...
+  keywordTags      Json?    // 키워드 태그 배열
+  unitTag          String?  // 세부 단원
+  requiresImage    Boolean  @default(false)
+  imageDescription String?
+
+  isFree      Boolean  @default(false) // 무료체험 포함 여부
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
 
@@ -99,6 +122,8 @@ model Question {
   reports    QuestionReport[]
 
   @@index([courseId])
+  @@index([courseId, isFree])
+  @@index([courseId, subject])
 }
 
 // 수강생 오류 신고 (문제/선택지/정답/해설 등)
@@ -127,7 +152,7 @@ model Enrollment {
   expiresAt   DateTime?
   amount      Int
   memo        String?
-  userDeleted Boolean   @default(false) // 회원이 삭제(숨김) 처리 — 기록은 보존
+  userDeleted Boolean   @default(false)
   createdAt   DateTime  @default(now())
 
   user   User   @relation(fields: [userId], references: [id])
@@ -187,13 +212,12 @@ model WrongNote {
   @@unique([userId, questionId, source])
 }
 
-// 학습 시작/결제 전 안내·동의 기록 (법적 방어용)
 model UserConsent {
   id           Int      @id @default(autoincrement())
   userId       Int
   consentMode  String // trial | paid
   termsVersion String   @default("v1.0")
-  examCategory String? // 해당되는 경우 과정 카테고리/슬러그
+  examCategory String?
   agreedAt     DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
@@ -209,13 +233,13 @@ model LearningProgress {
   round2Done      Boolean  @default(false)
   round3Done      Boolean  @default(false)
   wrongRoundDone  Boolean  @default(false)
-  mockDone        Int      @default(0) // 완료한 모의고사 수 0~6
+  mockDone        Int      @default(0)
   wrongMockDone   Boolean  @default(false)
   lastRound       Int      @default(0)
   lastMock        Int      @default(0)
   lastQIndex      Int      @default(0)
-  curStepKey      String   @default("") // 현재 진행 중인 단계 키 (round1..mock6, wrong_*)
-  curStepPct      Int      @default(0) // 현재 단계 진행률 0~100 (이탈 시점 저장)
+  curStepKey      String   @default("")
+  curStepPct      Int      @default(0)
   updatedAt       DateTime @updatedAt
 
   user   User   @relation(fields: [userId], references: [id])
@@ -224,12 +248,12 @@ model LearningProgress {
   @@unique([userId, courseId])
 }
 
-// ── B2B 학원 화이트레이블 ──
+// ── B2B 학원 화이트레이블 (기존 유지 — 나중에 B2B 실시간 AI 분석 차별점 얹을 자리) ──
 
 model Academy {
   id           Int      @id @default(autoincrement())
   name         String
-  brand        String   @default("beautymaster") // beautymaster | cookmaster | passmaster
+  brand        String   @default("passmaster") // passmaster | beautymaster | cookmaster
   tier         String // basic | standard | premium
   code         String?  @unique @db.VarChar(6)
   subdomain    String?  @unique
@@ -303,8 +327,9 @@ model AcademyCustomQuestion {
   options     Json
   answer      Int
   explanation String?
+  aiAnalysis  Json?    // 학원 커스텀 문제도 오답분석 지원(선택)
   subject     String?
-  difficulty  Int      @default(2)
+  difficulty  String   @default("medium")
   createdById Int?
   createdAt   DateTime @default(now())
 
@@ -330,7 +355,6 @@ model AcademyInvite {
   @@index([token])
 }
 
-// 일별 유입 경로(Referrer 도메인) 집계
 model VisitReferrerDaily {
   id             Int      @id @default(autoincrement())
   date           DateTime @db.Date
