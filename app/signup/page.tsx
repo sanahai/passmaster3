@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getSession } from "@/lib/auth";
+import AuthGuideInfo from "@/components/auth/AuthGuideInfo";
 import SignupForm from "@/components/auth/SignupForm";
 import PassmasterLogo from "@/components/PassmasterLogo";
 
@@ -14,14 +15,17 @@ export default async function SignupPage() {
       <Link href="/" className="mb-8 flex items-center">
         <PassmasterLogo className="h-12 w-auto" priority />
       </Link>
-      <div className="card w-full max-w-md">
-        <h1 className="mb-1 text-2xl font-bold text-beauty-neutral">회원가입</h1>
-        <p className="mb-6 text-sm text-beauty-gray">
-          가입하면 <span className="font-semibold text-primary">무료체험 100문제</span>를 바로 풀어볼 수 있어요.
-        </p>
-        <Suspense fallback={<p className="text-sm text-beauty-gray">로딩 중...</p>}>
-          <SignupForm />
-        </Suspense>
+      <div className="w-full max-w-md">
+        <div className="card w-full">
+          <h1 className="mb-1 text-2xl font-bold text-beauty-neutral">회원가입</h1>
+          <p className="mb-6 text-sm text-beauty-gray">
+            가입하면 <span className="font-semibold text-primary">무료체험 100문제</span>를 바로 풀어볼 수 있어요.
+          </p>
+          <Suspense fallback={<p className="text-sm text-beauty-gray">로딩 중...</p>}>
+            <SignupForm />
+          </Suspense>
+        </div>
+        <AuthGuideInfo variant="signup" />
       </div>
     </main>
   );

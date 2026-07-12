@@ -141,45 +141,6 @@ export default function Home() {
             </aside>
           </section>
 
-          <section className="section fade" id="login-guide" ref={addFade}>
-            <div className="section-head"><h2>회원가입 및 로그인 안내</h2></div>
-            <p className="section-lead">
-              PASSmaster는 <strong>이메일</strong>, <strong>카카오</strong>, <strong>구글</strong> 계정으로 가입·로그인할 수 있습니다.
-            </p>
-            <div className="auth-guide-grid">
-              <article className="auth-guide-card">
-                <h3>이메일 회원가입</h3>
-                <ul>
-                  <li>이름, 이메일, 비밀번호(8자 이상·영문+숫자)를 입력합니다.</li>
-                  <li>연락처·학원 코드는 선택 입력입니다.</li>
-                  <li>가입 완료 후 무료체험 또는 수강신청을 진행할 수 있습니다.</li>
-                </ul>
-                <Link className="btn btn-primary" href="/signup">이메일 회원가입</Link>
-              </article>
-              <article className="auth-guide-card">
-                <h3>이메일 로그인</h3>
-                <ul>
-                  <li>가입한 이메일과 비밀번호로 로그인합니다.</li>
-                  <li>「로그인 상태 유지」를 선택하면 7일간 세션이 유지됩니다.</li>
-                  <li>로그인 후 대시보드에서 학습 현황을 확인합니다.</li>
-                </ul>
-                <Link className="btn btn-ghost" href="/login">이메일 로그인</Link>
-              </article>
-              <article className="auth-guide-card">
-                <h3>카카오 · 구글 로그인</h3>
-                <ul>
-                  <li>카카오톡 또는 구글 계정으로 간편 가입·로그인이 가능합니다.</li>
-                  <li>소셜 로그인 후에도 동일하게 무료체험·수강신청을 이용할 수 있습니다.</li>
-                  <li>로그인 화면에서 카카오/구글 버튼을 선택해 주세요.</li>
-                </ul>
-                <div className="auth-guide-social">
-                  <Link className="btn btn-kakao" href="/api/auth/kakao">카카오로 시작</Link>
-                  <Link className="btn btn-google" href="/api/auth/google">구글로 시작</Link>
-                </div>
-              </article>
-            </div>
-          </section>
-
           <section className="section fade" id="roadmap-overview" ref={addFade}>
             <div className="section-head"><h2>PASSmaster가 제공하는 합격 로드맵</h2></div>
             <div className="roadmap-visual-grid">

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { resolvePostLoginRedirect } from "@/lib/post-login-redirect";
+import AuthGuideInfo from "@/components/auth/AuthGuideInfo";
 import LoginForm from "@/components/auth/LoginForm";
 import PassmasterLogo from "@/components/PassmasterLogo";
 
@@ -31,15 +32,18 @@ export default async function LoginPage({
       <Link href="/" className="mb-8 flex items-center">
         <PassmasterLogo className="h-12 w-auto" priority />
       </Link>
-      <div className="card w-full max-w-md">
-        <h1 className="mb-1 text-2xl font-bold text-beauty-neutral">로그인</h1>
-        <p className="mb-6 text-sm text-beauty-gray">
-          이메일 또는 카카오·구글 계정으로 로그인할 수 있습니다.
-        </p>
-        {oauthErrorMsg && (
-          <p className="mb-4 rounded-btn bg-amber-50 px-4 py-2 text-sm text-amber-800">{oauthErrorMsg}</p>
-        )}
-        <LoginForm redirectTo={redirectTo} />
+      <div className="w-full max-w-md">
+        <div className="card w-full">
+          <h1 className="mb-1 text-2xl font-bold text-beauty-neutral">로그인</h1>
+          <p className="mb-6 text-sm text-beauty-gray">
+            이메일 또는 카카오·구글 계정으로 로그인할 수 있습니다.
+          </p>
+          {oauthErrorMsg && (
+            <p className="mb-4 rounded-btn bg-amber-50 px-4 py-2 text-sm text-amber-800">{oauthErrorMsg}</p>
+          )}
+          <LoginForm redirectTo={redirectTo} />
+        </div>
+        <AuthGuideInfo variant="login" />
       </div>
     </main>
   );
