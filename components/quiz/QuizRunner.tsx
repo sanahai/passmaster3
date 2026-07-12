@@ -381,7 +381,12 @@ export default function QuizRunner({
 
         {revealed && (
           <div className="mt-5">
-            <ExplanationBox explanation={q.explanation} isCorrect={isCorrectNow} />
+            <ExplanationBox
+              explanation={q.explanation}
+              isCorrect={isCorrectNow}
+              aiAnalysis={q.aiAnalysis}
+              selected={selected}
+            />
           </div>
         )}
 

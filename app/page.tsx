@@ -2,6 +2,7 @@
 import "./landing.css";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import LandingFooter from "@/components/landing/LandingFooter";
 
 const CERTS = [
   { slug: "forklift", title: "지게차운전기능사", img: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80" },
@@ -168,8 +169,8 @@ export default function Home() {
                   <div className="course-thumb"><img src={c.img} alt={c.title} /></div>
                   <h3>{c.title}</h3>
                   <div className="course-actions">
-                    <Link className="course-btn primary" href={`/enroll?cert=${c.slug}`}>수강신청</Link>
-                    <Link className="course-btn ghost" href={`/cert/info?slug=${c.slug}`}>자격증 정보</Link>
+                    <Link className="course-btn primary" href={`/trial/${c.slug}`}>무료체험</Link>
+                    <Link className="course-btn ghost" href={`/enroll?cert=${c.slug}`}>수강신청</Link>
                   </div>
                 </article>
               ))}
@@ -243,28 +244,7 @@ export default function Home() {
           </section>
 
           {/* 푸터 */}
-          <footer className="footer">
-            <div className="footer-top">
-              <div className="footer-brand">
-                <strong>PASSmaster</strong>
-                <p>합격 자격의 새로운 패러다임, 데이터 기반 학습 방법</p>
-              </div>
-              <div className="footer-links">
-                <Link href="/legal#company">회사정보</Link>
-                <Link href="/legal#terms">이용약관</Link>
-                <Link href="/legal#privacy">개인정보처리방침</Link>
-                <Link href="/legal#refund">환불정책</Link>
-                <Link href="/support">고객센터</Link>
-              </div>
-            </div>
-            <div className="footer-company">
-              <p><strong>주식회사 골든웨이브</strong> · 대표이사 이재동 · 사업자등록번호 402-86-15931</p>
-              <p>고객전화 문의 022-고객서비스-1321 · 서울특별시 서비스 매장에 20</p>
-              <p>웹사이트 PASSmaster · 개인정보책임자 대표이사 · 통신 판매 이용 낙찰·결제 현황을 도와드립니다.</p>
-            </div>
-            <p style={{fontSize:12,color:"#aab",marginBottom:8}}>본 웹사이트는 큐넷(Q-Net) 및 한국산업인력공단의 원하는 웹사이트가 아니며, 제공되는 문제는 AI를 이용해서 이루어진 학습의 문제입니다.</p>
-            <div className="footer-bottom"><span>© 2026 주식회사 골든웨이브. All rights reserved.</span></div>
-          </footer>
+          <LandingFooter />
         </main>
       </div>
     </>
