@@ -21,39 +21,57 @@ const CERTS = [
   { slug: "barber", title: "이용사", img: "/certs/barber.png" },
 ];
 
+const PURPOSE_PILLARS = [
+  "실제 자격증 시험과 동일한 방식의 CBT방식으로 운영",
+  "기출문제들을 분석하여 AI가 실제 자격증 필기시험과 동일한 방식으로 문제 출제",
+  "3번에 걸친 반복 학습을 통해 합격의 로드맵 제공",
+  "AI가 학습과 오답을 분석해서 빠른 합격 로드맵 제공",
+  "6차례의 실제 시험과 동일한 방식의 모의고사 제공",
+  "학습과 오답분석, 모의고사를 통해 AI가 틀린 부분들을 집중 분석해서 빠른 합격 로드맵 제공",
+];
+
 const ROADMAP = [
-  { num: 1, title: "학습 시작", desc: "자격증 정보에서 합격 확인 후 최단합격 플랜 또는 수강신청으로 시작" },
-  { num: 2, title: "최단합격플랜(무료학습)", desc: "약 100문제·오답 놀이 형태로 서비스 UX 확인" },
-  { num: 3, title: "40일 집중학습", desc: "이론 핵심·오답, 반복복습순환식으로 시작 약 5주간 진행" },
-  { num: 4, title: "전체 모의 시험", desc: "30일간 오답, 모의 핵심·오답; 복습·복습날짜 약 5주간" },
-  { num: 5, title: "1회 핵심 복습", desc: "3·4주간 시작·복습·복습날짜 집중 복습(합격을 위해 필수)" },
-  { num: 6, title: "모의시험 1회", desc: "60문제·문제당 30초 내외·오답 랜덤으로 핵심" },
-  { num: 7, title: "모의시험 2회", desc: "매일 풀이 집중 전체 진행" },
-  { num: 8, title: "모의시험 3회", desc: "60점 기준 자격·합격생들의 평균 합격 시행" },
-  { num: 9, title: "모의시험 4회", desc: "실제 복습·복습날짜로 계획 입력" },
-  { num: 10, title: "모의시험 5회", desc: "전체 시험지 정리" },
-  { num: 11, title: "모의시험 6회", desc: "6회 완료 후 오답·합격생들도 합격 최종 정리" },
-  { num: 12, title: "최종 복습·합격", desc: "합격 복습 기출에서 합격 후 집중학습·문제 시작, 최종 도약" },
+  { num: 1, title: "회원가입/로그인", desc: "학습을 진행하시기 위해서는 회원가입 및 로그인을 하셔야 합니다." },
+  { num: 2, title: "무료체험학습", desc: "각 자격증별로 100문제의 무료 체험 학습을 하실 수 있습니다." },
+  { num: 3, title: "1차 집중학습", desc: "AI가 만든 문제들을 눈에 익히는 학습 단계입니다." },
+  { num: 4, title: "2차 집중학습", desc: "1차 집중학습을 통해서 익힌 문제들을 직접 풀어보는 단계입니다." },
+  { num: 5, title: "3차 집중학습", desc: "1차와 2차를 통해서 학습한 내용들을 직접 풀어보고 정답을 확인하는 단계입니다." },
+  { num: 6, title: "1차 오답분석", desc: "2차와 3차의 집중학습을 통해 틀린 문제들을 AI가 분석하고 문제들을 재구성해서 재학습을 실시합니다." },
+  { num: 7, title: "1차 모의고사", desc: "실제 시험과 동일한 형식과 방식으로 쉬운 난이도의 60문제를 50분 안에 풀어보고 성적을 체크합니다." },
+  { num: 8, title: "2차 모의고사", desc: "실제 시험과 동일한 형식과 방식으로 중간 난이도의 60문제를 50분 안에 풀어보고 성적을 체크합니다." },
+  { num: 9, title: "3차 모의고사", desc: "실제 시험과 동일한 형식과 방식으로 어려운 난이도의 60문제를 50분 안에 풀어보고 성적을 체크합니다." },
+  { num: 10, title: "4차 모의고사", desc: "실제 시험과 동일한 형식과 방식으로 난이도를 섞어서 60문제를 50분 안에 풀어보고 성적을 체크합니다." },
+  { num: 11, title: "5차 모의고사", desc: "실제 시험과 동일한 형식과 방식으로 난이도를 섞어서 60문제를 40분 안에 풀어보고 성적을 체크합니다." },
+  { num: 12, title: "6차 모의고사", desc: "실제 시험과 동일한 형식과 방식으로 난이도를 섞어서 60문제를 30분 안에 풀어보고 성적을 체크합니다." },
+  { num: 13, title: "2차 오답분석", desc: "1차~6차에 걸친 모의고사를 통해서 틀린 문제들을 AI가 분석하여 리포트를 해줍니다. 이를 통해서 수강생의 부족한 부분들을 좀 더 학습할 수 있습니다." },
 ];
 
 const REVIEWS = [
   { cert: "지게차운전기능사", title: "합격 후기 최초 합격", body: "후기 올리기가 너무 좋아요. 덕분에 짧은 시간 3달 공부했는데 한번에 합격했어요.", meta: "김OO · 직장인 · 2026.04.11" },
   { cert: "전기기능사", title: "합격 후기 완벽한 성공", body: "오답 복습이 탁월합니다. 어디서도 한번 더 보니 수많은 저도 합격 했어요.", meta: "박뷤O · 주부 · 2026.03.28" },
+  { cert: "한식조리기능사", title: "합격 후기 단기 합격", body: "한식 조리 이론이 방대했는데 AI 오답 분석 덕분에 핵심만 집중해서 2달 만에 합격했습니다.", meta: "정OO · 요리학원 수강생 · 2026.03.15" },
   { cert: "일식조리기능사", title: "합격 후기 1년만에 성공", body: "일식·양식 공부가 어려운데 덕분에 정말 합격 후기 공부가 시작됐어요, 문제의 합격이 마지막 합격까지 않습니다.", meta: "최O · 요리사 · 2026.02.19" },
   { cert: "중식조리기능사", title: "합격 후기 완벽", body: "짧은 시간에서 다양한 어려운 경우 해서 덕분에 합격 횟수가 정확하게 이용했어요.", meta: "이쏰O · 직장인 · 2026.02.02" },
   { cert: "제과기능사", title: "합격 완벽 도전", body: "합격 최단기 합격이 아마도 덕분에 실제 시험에서도 문제 복습이 예상돼요.", meta: "오뷤O · 주부 · 2026.01.26" },
+  { cert: "미용사(일반)", title: "합격 후기 헤어 집중", body: "미용사 일반 필기를 헤어 위주로 공부했는데 모의고사 6회가 실전과 비슷해서 시험장에서 당황하지 않았어요.", meta: "한OO · 미용실 직원 · 2026.01.22" },
   { cert: "메이크업미용사", title: "합격 후기 실수 성공", body: "모의 시험이 없었다면 후기만 진행하는 정말 시간이 걸렸고, 짧은 재도 있습니다.", meta: "짵O · 미용사 수강생 · 2026.01.18" },
 ];
 
 const FAQS = [
-  { q: "수강 신청은 언제부터 가능한가요?", a: "상시 신청 가능합니다. 원하는 최단합격 플랜으로 문제 및 학습 현황을 확인한 뒤 바로 수강 신청하시면 됩니다." },
-  { q: "수강신청만 하면 바로 학습을 시작하나요?", a: "다릅니다. 안내는 수강생 낙찰 확인 전까지 이루어지며, 낙찰 확인 후 이용자 낙찰이 완료되어야 즉시 합격 학습(주차별 문제 풀기)을 시작하게 됩니다. 진행 현황은 마이페이지에서 확인합니다." },
-  { q: "12주간 학습 로드맵은 어떻게 따라가나요?", a: "로그인 완료 후 즉시 합격생에서 시작 주차를 안내합니다. 무료학습과 집중(오답)·전체 모의 및 복습, 그리고 이후 단계에서 모의시험 최종 복습·합격 도약으로 따라가게 됩니다. 합격생으로 이동하면 문제·기출 로드맵 학습·문제 결과 따라갑니다. 자세한 시험지는 학습로드맵을 참고하세요." },
-  { q: "기존 온라인 문제집보다 시험 시간이 달라지나요?", a: "답변은 점수로만 학습하는 학습은 필요합니다. 문제 기준 그대로 먹고 선택지 번호가 섞이며, 핵심 선택지 옵션 학습으로 이루어집니다. 기존 답 및 실제 답변은 공부하지 않도록 하는 것이 실제 도움이 됩니다." },
-  { q: "결제/낙찰 확인은 어디에서 하나요?", a: "당일 기준 1~2시간 이내 처리를 목표로 하며, 주말·공휴일·연휴는 6시간 이내의 시작 확인·처리합니다. (공식·연휴 일정에 따라 약소 차이가 있을 수 있습니다.)" },
-  { q: "수강 현황은 어디에서 확인하나요?", a: "로그인 후 마이페이지에서 신청 현황, 낙찰 여부, 진행을 한 눈에 확인하실 수 있습니다." },
-  { q: "환불/로그인 문의는 어떻게 하나요?", a: "고객센터 문의 또는 로그인 후 1:1 문의하기 버튼을 사용해주세요. 빠른 문의 및 1:1로 도와드리겠습니다." },
-  { q: "모바일에서도 학습이 가능한가요?", a: "네, 모바일과 PC 모두 지원합니다. 매일 정해진 시간 진행 학습 로드맵도 자동 진행됩니다." },
+  { q: "수강 신청은 언제부터 가능한가요?", a: "상시 신청 가능합니다. 원하는 자격증의 무료체험을 먼저 진행해 보신 뒤 수강 신청하시면 됩니다." },
+  { q: "수강신청만 하면 바로 학습을 시작하나요?", a: "아닙니다. 수강신청을 하시고, 수강비를 입금하시면 관리자가 확인 후 승인을 하면 바로 학습을 하실 수 있습니다." },
+  { q: "13단계 학습 로드맵은 어떻게 따라가나요?", a: "관리자의 승인 이후에는 제공하는 로드맵에 따라서 집중학습, 복습, 오답학습, 모의고사의 순서로 진행이 됩니다. 학습 로드맵에 따라 가시면 합격 하실 수 있습니다." },
+  { q: "기존의 자격증 문제집들과의 차이점은 무엇인가요?", a: "PASSmaster의 문제들은 모두 AI가 직접 기출문제들과 학습 내용을 분석해서 문제들을 만들었기 때문에 기존의 자격증 문제집들보다 최신의 정보와 문제들을 제공하고 있습니다." },
+  { q: "수강신청 및 결제는 언제 처리가 되나요?", a: "당일 기준 1~2시간 이내 처리를 목표로 하며, 주말·공휴일·연휴는 6시간 이내의 확인·처리를 진행합니다. (공식·연휴 일정에 따라 약소 차이가 있을 수 있습니다.)" },
+  { q: "수강 현황은 어디에서 확인하나요?", a: "로그인 후 마이페이지에서 신청 현황, 승인 여부, 학습 진행을 한눈에 확인하실 수 있습니다." },
+  { q: "별도의 수업내용이나 문제집을 제공하나요?", a: "저희 PASSmaster는 온라인 시험 문제은행 기반이기 때문에 별도의 학습 요약이나 문제집은 제공하고 있지 않습니다." },
+  { q: "환불/로그인 문의는 어떻게 하나요?", a: "고객센터 문의 또는 로그인 후 1:1 문의하기 버튼을 사용해 주세요. 빠른 문의 및 1:1로 도와드리겠습니다." },
+  { q: "모바일에서도 학습이 가능한가요?", a: "네, 모바일과 PC 모두 지원합니다. 학습 로드맵에 따라 단계별로 진행하실 수 있습니다." },
+];
+
+const ROADMAP_VISUALS = [
+  { src: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80", alt: "AI 기반 합격 학습" },
+  { src: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80", alt: "CBT 방식 모의고사" },
 ];
 
 export default function Home() {
@@ -76,7 +94,6 @@ export default function Home() {
       <div className="floating right" />
       <div className="container">
         <main className="landing">
-          {/* 헤더 */}
           <header className="header">
             <Link className="logo-wrap" href="/">
               <PassmasterLogo className="landing-logo" priority />
@@ -84,7 +101,7 @@ export default function Home() {
             <nav className="nav">
               <Link href="/enroll">수강신청</Link>
               <a href="#cert-courses">자격증</a>
-              <a href="#cert-courses">최단합격 플랜</a>
+              <a href="#roadmap-overview">합격 로드맵</a>
               <a href="#learning-roadmap">학습로드맵</a>
               <Link href="/login">학습 시작</Link>
               <a href="#reviews">수강후기</a>
@@ -96,73 +113,98 @@ export default function Home() {
             </div>
           </header>
 
-          {/* 히어로 */}
           <section className="hero fade" ref={addFade}>
             <article className="hero-main">
               <span className="hero-badge">자격 취득의 새로운 패러다임</span>
               <h1>자격증 합격,<br />PASSmaster로 더 빠르게 앞서갑니다.</h1>
               <p>
-                모든 자격증 합격에 필요한 <strong>합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·낙찰·학습의 12주간
-                학습 전략</strong>으로 따라가면 됩니다. 문제 기출 합격하고 <strong>선택지 번호만 바꾼 방식</strong> 학습
-                로드맵이 기다리는 학습을 이미 이루고 있습니다.
+                모든 자격증 합격에 필요한 <strong>합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·승인·학습의 12단계
+                학습 전략</strong>으로 따라가면 됩니다. AI가 분석한 <strong>CBT 방식 문제와 오답 분석</strong>으로
+                합격까지 안내합니다.
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/enroll">지금 수강 신청</Link>
-                <a className="btn btn-ghost" href="#cert-courses">합격생별 최단합격 플랜</a>
+                <a className="btn btn-ghost" href="#cert-courses">무료체험 바로가기</a>
               </div>
             </article>
             <aside className="hero-panel">
               <img className="hero-image" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" alt="학습 이미지" />
               <h2>수강 신청 6단계</h2>
               <ol className="step-list">
-                <li>1. 회원가입 후 기본정보 등록</li>
-                <li>2. 로그인 후 학습 현황에 접속</li>
-                <li>3. 원하는 자격증 합격 플랜 선택</li>
-                <li>4. 신청에 입력 및 낙찰 플랜 확인</li>
-                <li>5. 낙찰 및 낙찰확인 이메일</li>
-                <li>6. 이용자 낙찰 후 학습·학습로드맵 이용</li>
+                <li>1. 회원 가입 및 로그인</li>
+                <li>2. 원하는 자격증 무료체험 학습</li>
+                <li>3. 자격증 수강신청 및 수강비 입금</li>
+                <li>4. 관리자 수강 신청내역 및 입금 확인</li>
+                <li>5. 관리자 수강신청 승인</li>
+                <li>6. 학습 시작</li>
               </ol>
-              <p className="hero-note">
-                <strong>수강신청만으로는 학습을 시작하지 않습니다.</strong> 낙찰확인 이메일 후 이용자 낙찰이
-                완료되어야 즉시 합격 학습을 시작하게 됩니다.
-              </p>
             </aside>
           </section>
 
-          {/* 비전 */}
-          <section className="section fade" id="vision" ref={addFade}>
-            <div className="section-head"><h2>PASSmaster의 목적과 미래 전망</h2></div>
+          <section className="section fade" id="login-guide" ref={addFade}>
+            <div className="section-head"><h2>회원가입 및 로그인 안내</h2></div>
+            <p className="section-lead">
+              PASSmaster는 <strong>이메일</strong>, <strong>카카오</strong>, <strong>구글</strong> 계정으로 가입·로그인할 수 있습니다.
+            </p>
+            <div className="auth-guide-grid">
+              <article className="auth-guide-card">
+                <h3>이메일 회원가입</h3>
+                <ul>
+                  <li>이름, 이메일, 비밀번호(8자 이상·영문+숫자)를 입력합니다.</li>
+                  <li>연락처·학원 코드는 선택 입력입니다.</li>
+                  <li>가입 완료 후 무료체험 또는 수강신청을 진행할 수 있습니다.</li>
+                </ul>
+                <Link className="btn btn-primary" href="/signup">이메일 회원가입</Link>
+              </article>
+              <article className="auth-guide-card">
+                <h3>이메일 로그인</h3>
+                <ul>
+                  <li>가입한 이메일과 비밀번호로 로그인합니다.</li>
+                  <li>「로그인 상태 유지」를 선택하면 7일간 세션이 유지됩니다.</li>
+                  <li>로그인 후 대시보드에서 학습 현황을 확인합니다.</li>
+                </ul>
+                <Link className="btn btn-ghost" href="/login">이메일 로그인</Link>
+              </article>
+              <article className="auth-guide-card">
+                <h3>카카오 · 구글 로그인</h3>
+                <ul>
+                  <li>카카오톡 또는 구글 계정으로 간편 가입·로그인이 가능합니다.</li>
+                  <li>소셜 로그인 후에도 동일하게 무료체험·수강신청을 이용할 수 있습니다.</li>
+                  <li>로그인 화면에서 카카오/구글 버튼을 선택해 주세요.</li>
+                </ul>
+                <div className="auth-guide-social">
+                  <Link className="btn btn-kakao" href="/api/auth/kakao">카카오로 시작</Link>
+                  <Link className="btn btn-google" href="/api/auth/google">구글로 시작</Link>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section className="section fade" id="roadmap-overview" ref={addFade}>
+            <div className="section-head"><h2>PASSmaster가 제공하는 합격 로드맵</h2></div>
+            <div className="roadmap-visual-grid">
+              {ROADMAP_VISUALS.map((img) => (
+                <div className="roadmap-visual" key={img.src}>
+                  <img src={img.src} alt={img.alt} />
+                </div>
+              ))}
+            </div>
             <div className="purpose-showcase">
               <h3>목적</h3>
               <p className="purpose-lead">
                 복잡한 문제를 보다 쉽게 보는 방식으로 따라가고, <strong>핵심 시작·복습·집중학습·계획 합격</strong>으로
-                합격하는 학습전략을 안내합니다. 실제 시험에 가장 문제를 따라 시작·주차·집중·계획 방식으로 이루어지는
-                전체 역량이에 따라 진행됩니다.
+                합격하는 학습전략을 안내합니다.
               </p>
               <ul className="purpose-pillars">
-                {["실제 시험과 관련된 문제의 적합성", "집중 학습에 따른 적합한 계획 효율화", "복습 이상 보완", "주차별 학습 이루어짐", "집중학습을 따른 전체 역량 결합", "계획 시험 및 합격점 구분"].map((txt, i) => (
+                {PURPOSE_PILLARS.map((txt, i) => (
                   <li key={i}><span className="purpose-idx">{i + 1}</span><span>{txt}</span></li>
                 ))}
               </ul>
             </div>
-            <div className="vision-grid">
-              <article className="vision-card">
-                <div className="vision-media"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80" alt="미래 학습" /></div>
-                <h3>미래</h3>
-                <p>신청한 학습, 복습, 합격으로 이루어지는 최선의 합격에서 학습 학습로드맵을 따르고 합격 경험을 이루게 됩니다.</p>
-              </article>
-              <article className="vision-card">
-                <div className="vision-media"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80" alt="미래 전망" /></div>
-                <h3>전망</h3>
-                <p>이제 시대와 모든 자격증 합격 학습 방법으로 이루어진 이러한 기술의 새로운 방식으로 자격증을 이루게 될 수 있는 학습 적합성이 남습니다.</p>
-              </article>
-            </div>
           </section>
 
-          {/* 자격증 과정 */}
           <section className="section fade" id="cert-courses" ref={addFade}>
             <div className="section-head"><h2>국가자격증 수강신청</h2></div>
-            <p className="landing-cert-q-hint">현재 문제는 원하는 학습 시간별로 제공됩니다. 관련된 원하는 자격에 대한 <a href="#question-source-notice">문제·학습 관련 이용 안내</a>를 참고해주세요.</p>
             <div className="course-grid">
               {CERTS.map((c) => (
                 <article className="course-card" key={c.slug}>
@@ -177,10 +219,11 @@ export default function Home() {
             </div>
           </section>
 
-          {/* 학습 로드맵 */}
           <section className="section fade" id="learning-roadmap" ref={addFade}>
-            <div className="section-head"><h2>합격 학습 12주간 로드맵</h2></div>
-            <p className="section-lead">안내는 학습 기준 시작 방향입니다. 각각 주차를 완료하면 다음 주차로 이어서 합격생들로 따라가면 문제·기출 학습·시험 패턴 결과들은 자동으로 진행됩니다.</p>
+            <div className="section-head"><h2>13단계의 합격 학습 로드맵</h2></div>
+            <p className="section-lead">
+              안내는 학습 시작 기준 방향입니다. 각각의 학습 단계를 완료하시면 다음 단계로 이어서 학습을 진행하실 수 있습니다.
+            </p>
             <div className="twelve-grid">
               {ROADMAP.map((r) => (
                 <article className="twelve-chip" key={r.num}>
@@ -192,7 +235,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* 수강 후기 */}
           <section className="section fade" id="reviews" ref={addFade}>
             <div className="section-head"><h2>수강 후기</h2></div>
             <div className="review-grid">
@@ -206,7 +248,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* FAQ */}
           <section className="section fade" id="faq" ref={addFade}>
             <div className="section-head"><h2>자주 묻는 질문</h2></div>
             <div className="faq">
@@ -226,13 +267,11 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Footer CTA */}
           <section className="footer-cta fade" ref={addFade}>
             <strong>합격으로 가장 빠르게 준비를 시작하고 있습니다. 지금 등록하시고 바로 학습을 시작하세요!</strong>
             <Link className="btn btn-primary" href="/enroll">수강 신청 바로가기</Link>
           </section>
 
-          {/* 법적 고지 */}
           <section className="section fade" id="question-source-notice" ref={addFade}>
             <div className="section-head"><h2>문제·학습 관련 이용 안내</h2></div>
             <div className="legal-notice-shell">
@@ -243,7 +282,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* 푸터 */}
           <LandingFooter />
         </main>
       </div>

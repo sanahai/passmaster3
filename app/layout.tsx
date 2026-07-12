@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "PASSmaster | 자격증 합격의 새로운 패러다임",
   description:
-    "모든 자격증 합격에 필요한 합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·낙찰·학습의 12주간 학습 전략으로 따라가면 됩니다.",
+    "모든 자격증 합격에 필요한 합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·승인·학습의 12단계 학습 전략으로 따라가면 됩니다.",
   keywords: [
     "자격증",
     "국가기술자격",

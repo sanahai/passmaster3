@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { signupAction } from "@/app/actions/auth";
 import PasswordInput from "./PasswordInput";
+import SocialLoginButtons from "./SocialLoginButtons";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -75,6 +76,8 @@ export default function SignupForm() {
       )}
 
       <SubmitButton />
+
+      <SocialLoginButtons redirectTo="/enroll" />
 
       <p className="text-center text-sm text-beauty-gray">
         이미 회원이신가요?{" "}

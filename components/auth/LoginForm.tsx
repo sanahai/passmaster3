@@ -4,6 +4,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import Link from "next/link";
 import { loginAction } from "@/app/actions/auth";
 import PasswordInput from "./PasswordInput";
+import SocialLoginButtons from "./SocialLoginButtons";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -42,6 +43,8 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
       )}
 
       <SubmitButton />
+
+      <SocialLoginButtons redirectTo={redirectTo} />
 
       <p className="text-center text-sm text-beauty-gray">
         아직 회원이 아니신가요?{" "}
