@@ -1,5 +1,7 @@
 import { prisma } from "./prisma";
 import { getCourseConfig, MOCK_CONFIG } from "./courses";
+import { quizOrderSeed } from "./quiz";
+import { seededShuffle } from "./shuffle";
 
 type QLite = { id: number; difficulty: string };
 
@@ -20,51 +22,89 @@ function pickRandom<T>(arr: T[], n: number): T[] {
   return out;
 }
 
-// 모의고사 문제 60문항을 과목 비율 + 난이도 비율에 맞게 선정 (스펙 Chapter 4-6)
+/** 이전 회차 모의고사에서 이미 출제된 문제 ID */
+export async function getPriorMockQuestionIds(
+  userId: number,
+  courseId: number,
+  mockNumber: number
+): Promise<number[]> {
+  const sessions = await prisma.mockSession.findMany({
+    where: { userId, courseId, mockNumber: { lt: mockNumber } },
+    select: { questionIds: true },
+  });
+  const used = new Set<number>();
+  for (const s of sessions) {
+    if (!s.questionIds) continue;
+    try {
+      for (const id of JSON.parse(s.questionIds) as number[]) used.add(id);
+    } catch {
+      /* ignore malformed */
+    }
+  }
+  return Array.from(used);
+}
+
+function selectFromPool(
+  pool: (QLite & { subject: string | null })[],
+  subject: string,
+  totalQ: number,
+  mock: { easy: number; normal: number; hard: number }
+): number[] {
+  const subjectQs = pool.filter((q) => q.subject === subject);
+  const easyQ = Math.round(totalQ * mock.easy);
+  const normalQ = Math.round(totalQ * mock.normal);
+  const hardQ = totalQ - easyQ - normalQ;
+
+  const byDiff = (bucket: "low" | "medium" | "high") =>
+    subjectQs.filter((q) => difficultyBucket(q.difficulty) === bucket);
+
+  const chosen = [
+    ...pickRandom(byDiff("low"), easyQ),
+    ...pickRandom(byDiff("medium"), normalQ),
+    ...pickRandom(byDiff("high"), hardQ),
+  ].map((q) => q.id);
+
+  if (chosen.length < totalQ) {
+    const remaining = subjectQs.filter((q) => !chosen.includes(q.id)).map((q) => q.id);
+    chosen.push(...pickRandom(remaining, totalQ - chosen.length));
+  }
+  return chosen;
+}
+
+// 모의고사 문제 60문항을 과목 비율 + 난이도 비율에 맞게 선정 (이전 회차 출제 ID 제외)
 export async function generateMockQuestionIds(
   courseId: number,
   courseSlug: string,
   mockNumber: number,
+  userId: number,
   total = 60
 ): Promise<number[]> {
   const config = getCourseConfig(courseSlug);
   const mock = MOCK_CONFIG[mockNumber];
   if (!config || !mock) return [];
 
+  const excludeIds = await getPriorMockQuestionIds(userId, courseId, mockNumber);
+  const excludeSet = new Set(excludeIds);
+
   const allQuestions = (await prisma.question.findMany({
     where: { courseId, isActive: true, isFree: false },
     select: { id: true, subject: true, difficulty: true },
   })) as (QLite & { subject: string | null })[];
 
+  const freshPool = allQuestions.filter((q) => !excludeSet.has(q.id));
   const selected: number[] = [];
 
   for (const { subject, ratio } of config.subjects) {
-    const subjectQs = allQuestions.filter((q) => q.subject === subject);
-    const totalQ = Math.round(total * ratio);
-    const easyQ = Math.round(totalQ * mock.easy);
-    const normalQ = Math.round(totalQ * mock.normal);
-    const hardQ = totalQ - easyQ - normalQ;
-
-    const byDiff = (bucket: "low" | "medium" | "high") =>
-      subjectQs.filter((q) => difficultyBucket(q.difficulty) === bucket);
-
-    const chosen = [
-      ...pickRandom(byDiff("low"), easyQ),
-      ...pickRandom(byDiff("medium"), normalQ),
-      ...pickRandom(byDiff("high"), hardQ),
-    ].map((q) => q.id);
-
-    // 난이도별 문제가 부족하면 같은 과목 내 다른 문제로 보충
-    if (chosen.length < totalQ) {
-      const remaining = subjectQs
-        .filter((q) => !chosen.includes(q.id))
-        .map((q) => q.id);
-      chosen.push(...pickRandom(remaining, totalQ - chosen.length));
-    }
-    selected.push(...chosen);
+    selected.push(...selectFromPool(freshPool, subject, Math.round(total * ratio), mock));
   }
 
-  // 60문항이 안 되면 전체에서 보충
+  if (selected.length < total) {
+    const remaining = freshPool
+      .filter((q) => !selected.includes(q.id))
+      .map((q) => q.id);
+    selected.push(...pickRandom(remaining, total - selected.length));
+  }
+
   if (selected.length < total) {
     const remaining = allQuestions
       .filter((q) => !selected.includes(q.id))
@@ -72,5 +112,7 @@ export async function generateMockQuestionIds(
     selected.push(...pickRandom(remaining, total - selected.length));
   }
 
-  return selected.slice(0, total);
+  const unique = Array.from(new Set(selected)).slice(0, total);
+  const orderSeed = quizOrderSeed(courseId, userId, 100 + mockNumber);
+  return seededShuffle(unique, orderSeed);
 }

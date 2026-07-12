@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { requireEnrollment, getOrCreateProgress } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { buildQuizQuestions, ROUND_SEED } from "@/lib/quiz";
+import { buildQuizQuestions, ROUND_SEED, quizOrderSeed } from "@/lib/quiz";
 import QuizShell from "@/components/QuizShell";
 import QuizRunner from "@/components/quiz/QuizRunner";
 
@@ -50,7 +50,9 @@ export default async function WrongMockPage({
     where: { id: { in: ids } },
     orderBy: [{ subject: "asc" }, { id: "asc" }],
   });
-  const quiz = buildQuizQuestions(questions, ROUND_SEED.wrong_mock);
+  const quiz = buildQuizQuestions(questions, ROUND_SEED.wrong_mock, {
+    orderSeed: quizOrderSeed(course.id, session.userId, 51),
+  });
 
   return (
     <QuizShell exitHref={`/learn/${params.slug}`}>

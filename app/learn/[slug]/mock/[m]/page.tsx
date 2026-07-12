@@ -36,7 +36,7 @@ export default async function MockPage({
   if (mockSession?.questionIds) {
     questionIds = JSON.parse(mockSession.questionIds);
   } else {
-    questionIds = await generateMockQuestionIds(course.id, course.slug, m);
+    questionIds = await generateMockQuestionIds(course.id, course.slug, m, session.userId);
     mockSession = await prisma.mockSession.create({
       data: {
         userId: session.userId,
@@ -57,7 +57,7 @@ export default async function MockPage({
   const orderMap = new Map(questionIds.map((id, i) => [id, i]));
   dbQuestions.sort((a, b) => (orderMap.get(a.id)! - orderMap.get(b.id)!));
 
-  const quiz = buildQuizQuestions(dbQuestions, 10 + m);
+  const quiz = buildQuizQuestions(dbQuestions, 10 + m, { shuffleOrder: false });
 
   return (
     <QuizShell exitHref={`/learn/${params.slug}`}>

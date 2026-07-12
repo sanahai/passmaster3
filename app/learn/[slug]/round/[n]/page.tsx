@@ -1,7 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { requireEnrollment, getOrCreateProgress } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { buildQuizQuestions, ROUND_SEED } from "@/lib/quiz";
+import { buildQuizQuestions, ROUND_SEED, quizOrderSeed } from "@/lib/quiz";
 import QuizShell from "@/components/QuizShell";
 import QuizRunner from "@/components/quiz/QuizRunner";
 import type { SessionType } from "@/lib/types";
@@ -39,7 +39,9 @@ export default async function RoundPage({
   });
 
   const seed = ROUND_SEED[config.session] ?? n;
-  const quiz = buildQuizQuestions(questions, seed);
+  const quiz = buildQuizQuestions(questions, seed, {
+    orderSeed: quizOrderSeed(course.id, session.userId, n),
+  });
 
   return (
     <QuizShell exitHref={`/learn/${params.slug}`}>
