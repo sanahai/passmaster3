@@ -116,11 +116,10 @@ export default function Home() {
           <section className="hero fade" ref={addFade}>
             <article className="hero-main">
               <span className="hero-badge">자격 취득의 새로운 패러다임</span>
-              <h1>자격증 합격,<br />PASSmaster로 더 빠르게 앞서갑니다.</h1>
+              <h1>국가자격증 합격,<br />이제 AI를 기반으로 하는 PASSmaster에서 단기간 당신의 합격을 도와 드립니다.</h1>
               <p>
-                모든 자격증 합격에 필요한 <strong>합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·승인·학습의 12단계
-                학습 전략</strong>으로 따라가면 됩니다. AI가 분석한 <strong>CBT 방식 문제와 오답 분석</strong>으로
-                합격까지 안내합니다.
+                모든 자격증 합격에 필요한 <strong>합격 플랜에서 최단합격 플랜 및 수강신청 후 오답·승인·학습의 13단계 학습전략</strong>으로
+                따라가면 됩니다. AI가 분석한 <strong>CBT 방식 문제와 오답 분석</strong>으로 합격까지 안내합니다.
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/enroll">지금 수강 신청</Link>
