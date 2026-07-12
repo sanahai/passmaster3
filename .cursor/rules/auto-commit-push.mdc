@@ -1,0 +1,13 @@
+---
+description: Auto commit and push after completing work without asking
+alwaysApply: true
+---
+
+# Auto commit and push
+
+When code changes are complete and verified:
+
+- Commit and push automatically without asking for confirmation.
+- Do not ask "should I commit/push?" — proceed directly.
+- Use concise commit messages focused on why the change was made.
+- Push to the current branch after a successful commit.
