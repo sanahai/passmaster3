@@ -34,20 +34,39 @@ export default async function MockPage({
 
   let questionIds: number[] = [];
   if (mockSession?.questionIds) {
-    questionIds = JSON.parse(mockSession.questionIds);
-  } else {
+    try {
+      const parsed = JSON.parse(mockSession.questionIds) as number[];
+      if (Array.isArray(parsed)) questionIds = parsed;
+    } catch {
+      questionIds = [];
+    }
+  }
+
+  if (questionIds.length === 0) {
     questionIds = await generateMockQuestionIds(course.id, course.slug, m, session.userId);
-    mockSession = await prisma.mockSession.create({
-      data: {
-        userId: session.userId,
-        courseId: course.id,
-        mockNumber: m,
-        difficulty: mockConfig.difficulty,
-        totalQ: questionIds.length,
-        questionIds: JSON.stringify(questionIds),
-        startedAt: new Date(),
-      },
-    });
+    if (mockSession) {
+      await prisma.mockSession.update({
+        where: { id: mockSession.id },
+        data: {
+          questionIds: JSON.stringify(questionIds),
+          totalQ: questionIds.length,
+          difficulty: mockConfig.difficulty,
+          startedAt: mockSession.startedAt ?? new Date(),
+        },
+      });
+    } else {
+      mockSession = await prisma.mockSession.create({
+        data: {
+          userId: session.userId,
+          courseId: course.id,
+          mockNumber: m,
+          difficulty: mockConfig.difficulty,
+          totalQ: questionIds.length,
+          questionIds: JSON.stringify(questionIds),
+          startedAt: new Date(),
+        },
+      });
+    }
   }
 
   const dbQuestions = await prisma.question.findMany({

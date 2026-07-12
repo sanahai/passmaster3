@@ -1,9 +1,9 @@
 import { prisma } from "./prisma";
-import { getCourseConfig, MOCK_CONFIG } from "./courses";
+import { getCourseConfig, MOCK_CONFIG, type SubjectRatio } from "./courses";
 import { quizOrderSeed } from "./quiz";
 import { seededShuffle } from "./shuffle";
 
-type QLite = { id: number; difficulty: string };
+type QLite = { id: number; difficulty: string; subject: string | null };
 
 function difficultyBucket(value: string): "low" | "medium" | "high" {
   const v = value.toLowerCase();
@@ -20,6 +20,21 @@ function pickRandom<T>(arr: T[], n: number): T[] {
     out.push(copy.splice(idx, 1)[0]);
   }
   return out;
+}
+
+/** DB 문제은행 과목 분포로 출제 비율 자동 산출 (lib/courses.ts 미정의 과정용) */
+function subjectRatiosFromPool(pool: QLite[]): SubjectRatio[] {
+  if (pool.length === 0) return [];
+  const counts = new Map<string, number>();
+  for (const q of pool) {
+    const subject = q.subject?.trim() || "기타";
+    counts.set(subject, (counts.get(subject) ?? 0) + 1);
+  }
+  const total = pool.length;
+  return Array.from(counts.entries()).map(([subject, count]) => ({
+    subject,
+    ratio: count / total,
+  }));
 }
 
 /** 이전 회차 모의고사에서 이미 출제된 문제 ID */
@@ -45,7 +60,7 @@ export async function getPriorMockQuestionIds(
 }
 
 function selectFromPool(
-  pool: (QLite & { subject: string | null })[],
+  pool: QLite[],
   subject: string,
   totalQ: number,
   mock: { easy: number; normal: number; hard: number }
@@ -71,6 +86,20 @@ function selectFromPool(
   return chosen;
 }
 
+async function loadMockQuestionPool(courseId: number): Promise<QLite[]> {
+  let rows = await prisma.question.findMany({
+    where: { courseId, isActive: true, isFree: false },
+    select: { id: true, subject: true, difficulty: true },
+  });
+  if (rows.length === 0) {
+    rows = await prisma.question.findMany({
+      where: { courseId, isActive: true },
+      select: { id: true, subject: true, difficulty: true },
+    });
+  }
+  return rows;
+}
+
 // 모의고사 문제 60문항을 과목 비율 + 난이도 비율에 맞게 선정 (이전 회차 출제 ID 제외)
 export async function generateMockQuestionIds(
   courseId: number,
@@ -79,27 +108,31 @@ export async function generateMockQuestionIds(
   userId: number,
   total = 60
 ): Promise<number[]> {
-  const config = getCourseConfig(courseSlug);
   const mock = MOCK_CONFIG[mockNumber];
-  if (!config || !mock) return [];
+  if (!mock) return [];
 
   const excludeIds = await getPriorMockQuestionIds(userId, courseId, mockNumber);
   const excludeSet = new Set(excludeIds);
 
-  const allQuestions = (await prisma.question.findMany({
-    where: { courseId, isActive: true, isFree: false },
-    select: { id: true, subject: true, difficulty: true },
-  })) as (QLite & { subject: string | null })[];
+  const allQuestions = await loadMockQuestionPool(courseId);
+  if (allQuestions.length === 0) return [];
 
   const freshPool = allQuestions.filter((q) => !excludeSet.has(q.id));
+  const poolForPlan = freshPool.length > 0 ? freshPool : allQuestions;
+
+  const config = getCourseConfig(courseSlug);
+  const subjectPlan =
+    config?.subjects?.length ? config.subjects : subjectRatiosFromPool(poolForPlan);
+  if (subjectPlan.length === 0) return [];
+
   const selected: number[] = [];
 
-  for (const { subject, ratio } of config.subjects) {
-    selected.push(...selectFromPool(freshPool, subject, Math.round(total * ratio), mock));
+  for (const { subject, ratio } of subjectPlan) {
+    selected.push(...selectFromPool(poolForPlan, subject, Math.round(total * ratio), mock));
   }
 
   if (selected.length < total) {
-    const remaining = freshPool
+    const remaining = poolForPlan
       .filter((q) => !selected.includes(q.id))
       .map((q) => q.id);
     selected.push(...pickRandom(remaining, total - selected.length));

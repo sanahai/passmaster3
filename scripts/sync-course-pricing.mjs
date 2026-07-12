@@ -13,6 +13,24 @@ async function main() {
     data: { price: PRICE, durationDays: DURATION_DAYS },
   });
   console.log(`[sync-pricing] ${result.count} courses → ${PRICE.toLocaleString()}원 / ${DURATION_DAYS}일`);
+
+  const enrollments = await prisma.enrollment.findMany({
+    where: { status: { in: ["pending", "active"] } },
+    include: { course: true },
+  });
+  let synced = 0;
+  for (const e of enrollments) {
+    if (e.amount !== e.course.price) {
+      await prisma.enrollment.update({
+        where: { id: e.id },
+        data: { amount: e.course.price },
+      });
+      synced++;
+    }
+  }
+  if (synced > 0) {
+    console.log(`[sync-pricing] ${synced} enrollments → amount synced to course price`);
+  }
 }
 
 main()

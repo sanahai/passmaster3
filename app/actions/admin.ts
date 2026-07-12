@@ -32,7 +32,12 @@ export async function approveEnrollmentAction(formData: FormData) {
 
   await prisma.enrollment.update({
     where: { id },
-    data: { status: "active", paidAt: new Date(), expiresAt: expires },
+    data: {
+      status: "active",
+      paidAt: new Date(),
+      expiresAt: expires,
+      amount: enrollment.course.price,
+    },
   });
   revalidatePath("/admin/enrollments");
   revalidatePath("/admin");
@@ -72,6 +77,7 @@ export async function setEnrollmentStatusAction(formData: FormData) {
         status: "active",
         paidAt: enrollment.paidAt ?? new Date(),
         expiresAt: expires,
+        amount: enrollment.course.price,
       },
     });
   } else {

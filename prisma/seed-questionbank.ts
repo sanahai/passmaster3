@@ -123,7 +123,7 @@ async function main() {
       update: { name: c.name, category: c.category },
       create: {
         slug: c.slug, name: c.name, category: c.category,
-        brand: "passmaster", price: 14900, durationDays: 90,
+        brand: "passmaster", price: 9900, durationDays: 30,
       },
     });
 

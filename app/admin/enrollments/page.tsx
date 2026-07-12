@@ -90,13 +90,16 @@ export default async function AdminEnrollmentsPage({
             </tr>
           </thead>
           <tbody>
-            {enrollments.map((e) => (
+            {enrollments.map((e) => {
+              const displayAmount =
+                e.status === "pending" || e.status === "active" ? e.course.price : e.amount;
+              return (
               <tr key={e.id} className="border-b border-gray-50 last:border-0">
                 <td className="px-4 py-3">
                   <ApplicantCell email={e.user.email} info={infoByUser.get(e.userId)!} />
                 </td>
                 <td className="px-4 py-3 text-beauty-neutral">{e.course.name}</td>
-                <td className="px-4 py-3 text-beauty-neutral">{e.amount.toLocaleString()}원</td>
+                <td className="px-4 py-3 text-beauty-neutral">{displayAmount.toLocaleString()}원</td>
                 <td className="px-4 py-3">
                   <EnrollmentStatusSelect id={e.id} status={e.status} />
                 </td>
@@ -104,7 +107,8 @@ export default async function AdminEnrollmentsPage({
                   {e.createdAt.toLocaleDateString("ko-KR")}
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
         {enrollments.length === 0 && (

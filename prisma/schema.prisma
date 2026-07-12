@@ -68,8 +68,8 @@ model Course {
   category     String?  // e.g. '조리', '미용', '기타'
   brand        String   @default("passmaster") // 노출 브랜드 구분(멀티사이트 대비)
   description  String?
-  price        Int      @default(14900)
-  durationDays Int      @default(90)
+  price        Int      @default(9900)
+  durationDays Int      @default(30)
   freeTrialCount Int    @default(100) // 무료체험 문제 수
   isActive     Boolean  @default(true)
   sortOrder    Int      @default(0)   // 목록 정렬 순서

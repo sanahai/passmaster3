@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
       // 누적 매출: 수강·결제 관리의 '결제완료(active)' 건과 동일 기준으로 연동
       prisma.enrollment.findMany({
         where: { status: "active" },
-        select: { amount: true },
+        select: { amount: true, course: { select: { price: true } } },
       }),
       prisma.questionReport.count({ where: { status: "open" } }),
       prisma.academy.count(),
@@ -29,7 +29,7 @@ export default async function AdminDashboard() {
       }),
     ]);
 
-  const revenue = paidEnrolls.reduce((sum, e) => sum + e.amount, 0);
+  const revenue = paidEnrolls.reduce((sum, e) => sum + e.course.price, 0);
 
   // 만료 임박(7일 이내)
   const soon = new Date();
