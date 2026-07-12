@@ -8,7 +8,7 @@ import PassmasterLogo from "@/components/PassmasterLogo";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { redirect?: string };
+  searchParams: { redirect?: string; error?: string };
 }) {
   const session = await getSession();
   if (session) {
