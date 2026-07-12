@@ -6,8 +6,10 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
-const ADMIN_EMAIL = "admin@beautymaster.kr";
-const ADMIN_PASS = "admin1234";
+const ADMIN_EMAIL = "admin@passwave.kr";
+const ADMIN_PASS = "admin2378";
+const STUDENT_EMAIL = "student@test.com";
+const STUDENT_PASS = "test1234";
 const DEFAULT_OWNER_EMAIL = process.env.BOOTSTRAP_OWNER_EMAIL || "sanahai@naver.com";
 const DEFAULT_OWNER_PASS = process.env.BOOTSTRAP_OWNER_PASSWORD || "owner1234";
 
@@ -42,17 +44,18 @@ async function uniqueCode() {
 }
 
 try {
-  const [adminCount, ownerCount, academyCount] = await Promise.all([
-    prisma.user.count({ where: { role: "admin" } }),
+  const [, ownerCount, academyCount] = await Promise.all([
     prisma.user.count({ where: { role: "owner" } }),
     prisma.academy.count(),
   ]);
 
-  if (adminCount === 0) {
+  const adminHash = await bcrypt.hash(ADMIN_PASS, 10);
+  const existingAdmin = await prisma.user.findFirst({ where: { role: "admin" } });
+  if (!existingAdmin) {
     await prisma.user.create({
       data: {
         email: ADMIN_EMAIL,
-        passwordHash: await bcrypt.hash(ADMIN_PASS, 10),
+        passwordHash: adminHash,
         name: "관리자",
         role: "admin",
         emailVerified: true,
@@ -60,7 +63,43 @@ try {
     });
     console.log(`[bootstrap] admin created: ${ADMIN_EMAIL} / ${ADMIN_PASS}`);
   } else {
-    console.log("[bootstrap] admin exists, skip");
+    await prisma.user.update({
+      where: { id: existingAdmin.id },
+      data: {
+        email: ADMIN_EMAIL,
+        passwordHash: adminHash,
+        name: "관리자",
+        role: "admin",
+        emailVerified: true,
+      },
+    });
+    console.log(`[bootstrap] admin synced: ${ADMIN_EMAIL} / ${ADMIN_PASS}`);
+  }
+
+  const studentHash = await bcrypt.hash(STUDENT_PASS, 10);
+  const existingStudent = await prisma.user.findUnique({ where: { email: STUDENT_EMAIL } });
+  if (!existingStudent) {
+    await prisma.user.create({
+      data: {
+        email: STUDENT_EMAIL,
+        passwordHash: studentHash,
+        name: "테스트학생",
+        role: "student",
+        emailVerified: true,
+      },
+    });
+    console.log(`[bootstrap] student created: ${STUDENT_EMAIL} / ${STUDENT_PASS}`);
+  } else {
+    await prisma.user.update({
+      where: { id: existingStudent.id },
+      data: {
+        passwordHash: studentHash,
+        name: "테스트학생",
+        role: "student",
+        emailVerified: true,
+      },
+    });
+    console.log(`[bootstrap] student synced: ${STUDENT_EMAIL} / ${STUDENT_PASS}`);
   }
 
   // 원장 계정 없거나 학원 없으면 기본 학원+원장 생성

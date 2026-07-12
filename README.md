@@ -56,8 +56,8 @@ npx prisma db seed
 
 | 구분   | 이메일                    | 비밀번호   |
 | ------ | ------------------------- | ---------- |
-| 학생   | student@test.com          | test1234   |
-| 관리자 | admin@passmaster.kr     | admin1234  |
+| 학생   | student@test.com   | test1234   |
+| 관리자 | admin@passwave.kr  | admin2378  |
 
 > 학생 계정은 "미용사(일반)" 과정이 활성 상태로 등록되어 바로 학습할 수 있습니다.
 > 새 계정으로 수강신청 시, 결제 안내 화면의 **"데모: 즉시 승인"** 버튼으로 학습을 체험할 수 있습니다.
