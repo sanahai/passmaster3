@@ -28,7 +28,7 @@ export default async function LoginPage({
           : null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-beauty-bg px-4 py-12">
+    <main className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
       <Link href="/" className="mb-8 flex items-center">
         <PassmasterLogo className="h-12 w-auto" priority />
       </Link>

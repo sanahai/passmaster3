@@ -27,7 +27,7 @@ export default function PolicyPage() {
   return (
     <>
       <Header />
-      <main className="bg-beauty-bg">
+      <main>
         {/* 타이틀 */}
         <section className="bg-gradient-to-b from-primary-pale to-beauty-bg">
           <div className="mx-auto max-w-5xl px-4 py-14 text-center">

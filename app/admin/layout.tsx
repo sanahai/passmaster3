@@ -24,7 +24,7 @@ export default async function AdminLayout({
 }) {
   await requireAdmin();
   return (
-    <div className="min-h-screen bg-beauty-bg">
+    <div className="min-h-screen">
       <div className="mx-auto flex max-w-7xl">
         <aside className="sticky top-0 hidden h-screen w-60 shrink-0 border-r border-primary-pale bg-white p-4 md:block">
           <Link href="/" className="mb-6 flex items-center gap-2 px-2">

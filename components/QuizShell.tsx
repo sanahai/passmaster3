@@ -9,8 +9,8 @@ export default function QuizShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-beauty-bg">
-      <header className="sticky top-0 z-30 border-b border-primary-pale bg-white/90 backdrop-blur">
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-30 border-b border-[#ebf0fa] bg-white/[0.94] backdrop-blur">
         <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
           <Link href="/" className="flex items-center">
             <PassmasterLogo className="h-7 w-auto" />

@@ -10,17 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#D81B60",
-          light: "#E91E63",
-          pale: "#FCE4EC",
-          accent: "#FF4081",
+          DEFAULT: "#236BFF",
+          light: "#0F49C2",
+          pale: "#E8F1FF",
+          accent: "#01B3FF",
         },
         beauty: {
-          bg: "#FFF5F8",
+          bg: "#F2F6FF",
           success: "#2E7D32",
           danger: "#C62828",
-          neutral: "#424242",
-          gray: "#757575",
+          neutral: "#14223A",
+          gray: "#5F7092",
         },
         b2b: {
           primary: "#0F172A",
@@ -36,18 +36,18 @@ const config: Config = {
       },
       borderRadius: {
         card: "12px",
-        btn: "8px",
+        btn: "10px",
       },
       boxShadow: {
-        card: "0 4px 20px rgba(216, 27, 96, 0.08)",
-        cardHover: "0 8px 30px rgba(216, 27, 96, 0.15)",
+        card: "0 20px 45px rgba(24, 56, 118, 0.11)",
+        cardHover: "0 8px 30px rgba(24, 56, 118, 0.15)",
       },
       keyframes: {
         "fade-in": {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "pop": {
+        pop: {
           "0%": { transform: "scale(0.96)" },
           "60%": { transform: "scale(1.02)" },
           "100%": { transform: "scale(1)" },
@@ -55,7 +55,7 @@ const config: Config = {
       },
       animation: {
         "fade-in": "fade-in 0.4s ease-out",
-        "pop": "pop 0.25s ease-out",
+        pop: "pop 0.25s ease-out",
       },
     },
   },

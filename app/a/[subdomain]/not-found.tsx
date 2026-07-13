@@ -11,7 +11,7 @@ export default function AcademySubsiteNotFound() {
         입력하신 URL에 해당하는 제휴학원이 없거나, 전용 주소(서브도메인)가 아직 설정되지 않았습니다.
       </p>
       <div className="flex flex-wrap justify-center gap-3">
-        <Link href="/" className="rounded-lg bg-[var(--subsite-primary,#D81B60)] px-5 py-2.5 text-sm font-bold text-white">
+        <Link href="/" className="rounded-lg bg-[var(--subsite-primary,#236BFF)] px-5 py-2.5 text-sm font-bold text-white">
           {brand.name} 홈
         </Link>
         <Link href="/admin/academies" className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-bold text-slate-700">

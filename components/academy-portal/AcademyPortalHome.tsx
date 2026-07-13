@@ -48,7 +48,7 @@ export default function AcademyPortalHome({ academy, subdomain }: Props) {
       >
         <div className="pointer-events-none absolute inset-0 opacity-20" aria-hidden>
           <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-white blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-pink-300 blur-3xl" />
+          <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-blue-300/40 blur-3xl" />
         </div>
         <div className="relative mx-auto max-w-4xl text-center">
           <span className="mb-4 inline-block rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur">

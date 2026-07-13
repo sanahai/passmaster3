@@ -10,7 +10,7 @@ export default function CompanyPage() {
   return (
     <>
       <Header />
-      <main className="bg-beauty-bg">
+      <main>
         {/* 상단 타이틀 */}
         <section className="bg-gradient-to-b from-primary-pale to-beauty-bg">
           <div className="mx-auto max-w-5xl px-4 py-16 text-center">

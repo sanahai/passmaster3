@@ -106,7 +106,7 @@ export default function ConsentModal({ mode = "trial", onAgree, onCancel, submit
                 type="checkbox"
                 checked={allChecked}
                 onChange={toggleAll}
-                className="h-5 w-5 rounded border-gray-300 text-rose-600 focus:ring-rose-500"
+                className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
               />
               <span className="text-sm font-semibold text-gray-900">
                 아래 내용을 모두 확인했습니다
@@ -123,7 +123,7 @@ export default function ConsentModal({ mode = "trial", onAgree, onCancel, submit
                     type="checkbox"
                     checked={!!checked[it.id]}
                     onChange={() => toggle(it.id)}
-                    className="mt-0.5 h-5 w-5 shrink-0 rounded border-gray-300 text-rose-600 focus:ring-rose-500"
+                    className="mt-0.5 h-5 w-5 shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
                   />
                   <span className="text-sm leading-relaxed text-gray-700">
                     {it.label}
@@ -148,7 +148,7 @@ export default function ConsentModal({ mode = "trial", onAgree, onCancel, submit
             disabled={!allChecked || submitting}
             className={`flex-1 rounded-xl px-5 py-3 text-sm font-semibold text-white transition ${
               allChecked && !submitting
-                ? "bg-rose-600 hover:bg-rose-700"
+                ? "bg-primary hover:bg-primary-light"
                 : "cursor-not-allowed bg-gray-300"
             }`}
           >
@@ -169,7 +169,7 @@ function InfoBlock({ icon, title, body, highlight }) {
     <div
       className={`mt-4 rounded-xl p-4 first:mt-0 ${
         highlight
-          ? "border border-rose-200 bg-rose-50"
+          ? "border border-primary/25 bg-primary-pale"
           : "border border-gray-100 bg-white"
       }`}
     >
