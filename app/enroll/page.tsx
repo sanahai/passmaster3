@@ -2,8 +2,6 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
-import { PACKAGE_PRICE, PACKAGE_CATEGORY } from "@/lib/courses";
-
 export default async function EnrollListPage() {
   const session = await requireSession("/enroll");
 
@@ -18,51 +16,12 @@ export default async function EnrollListPage() {
   });
   const statusByCourse = new Map(enrollments.map((e) => [e.courseId, e.status]));
 
-  // 패키지(미용사 4종 전체) 보유 현황: 미용사 과정 모두 active면 보유, 하나라도 pending이면 대기
-  const packageCourses = courses.filter((c) => c.category === PACKAGE_CATEGORY);
-  const allActive =
-    packageCourses.length > 0 &&
-    packageCourses.every((c) => statusByCourse.get(c.id) === "active");
-  const anyPending = packageCourses.some((c) => statusByCourse.get(c.id) === "pending");
-
   return (
     <>
       <Header />
       <main className="mx-auto max-w-5xl px-4 py-10">
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">수강신청</h1>
         <p className="mb-8 text-beauty-gray">학습할 자격증 과정을 선택하세요.</p>
-
-        <div className="mb-8 rounded-card border-2 border-primary bg-primary-pale/40 p-6">
-          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <h2 className="text-lg font-bold text-primary">미용사 패키지 (4종 전체)</h2>
-              <p className="text-sm text-beauty-gray">일반·피부·네일·메이크업 모두 · 1개월</p>
-              <p className="mt-1 text-2xl font-extrabold text-primary">
-                {PACKAGE_PRICE.toLocaleString()}원
-              </p>
-            </div>
-            <div className="w-full sm:w-auto">
-              {allActive ? (
-                <span className="inline-block rounded-btn bg-beauty-success/10 px-5 py-2.5 text-sm font-bold text-beauty-success">
-                  전 과정 수강중
-                </span>
-              ) : anyPending ? (
-                <Link href="/enroll/package/payment" className="btn-outline w-full sm:w-auto">
-                  입금 대기 중 · 결제 안내
-                </Link>
-              ) : (
-                <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-                  <Link href="/trial" className="btn-primary flex-1 text-center">
-                    무료체험하기
-                  </Link>
-                  <Link href="/enroll/package" className="btn-outline flex-1 text-center">
-                    패키지 신청하기
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {courses.map((c) => {
