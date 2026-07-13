@@ -4,13 +4,29 @@ import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { getCourseConfig } from "@/lib/courses";
 
-export default async function TrialSelectPage() {
-  await requireSession("/trial");
+export const dynamic = "force-dynamic";
 
-  const courses = await prisma.course.findMany({
-    where: { isActive: true },
-    orderBy: { id: "asc" },
-  });
+const TRIAL_HIDDEN_STATUSES = new Set(["pending", "paid", "active"]);
+
+export default async function TrialSelectPage() {
+  const session = await requireSession("/trial");
+
+  const [courses, enrollments] = await Promise.all([
+    prisma.course.findMany({
+      where: { isActive: true },
+      orderBy: { id: "asc" },
+    }),
+    prisma.enrollment.findMany({
+      where: { userId: session.userId, userDeleted: false },
+    }),
+  ]);
+
+  const enrolledCourseIds = new Set(
+    enrollments
+      .filter((e) => TRIAL_HIDDEN_STATUSES.has(e.status))
+      .map((e) => e.courseId)
+  );
+  const trialCourses = courses.filter((c) => !enrolledCourseIds.has(c.id));
 
   const freeCounts = await prisma.question.groupBy({
     by: ["courseId"],
@@ -29,7 +45,17 @@ export default async function TrialSelectPage() {
         </p>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {courses.map((c) => {
+          {trialCourses.length === 0 ? (
+            <div className="card col-span-full text-center">
+              <p className="mb-4 text-beauty-gray">
+                신청·수강 중인 과정을 제외하면 체험할 수 있는 과정이 없습니다.
+              </p>
+              <Link href="/enroll" className="btn-primary">
+                수강신청 보기
+              </Link>
+            </div>
+          ) : (
+            trialCourses.map((c) => {
             const cfg = getCourseConfig(c.slug);
             const count = countByCourse.get(c.id) ?? 0;
             const disabled = count === 0;
@@ -61,7 +87,8 @@ export default async function TrialSelectPage() {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
 
         <div className="mt-8 rounded-card bg-primary-pale/40 p-5 text-sm text-beauty-gray">
