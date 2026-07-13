@@ -15,9 +15,7 @@ export default async function LandingHeader() {
       </Link>
       <nav className="nav">
         <Link href="/enroll">수강신청</Link>
-        <a href="/#cert-courses">자격증</a>
-        <a href="/#roadmap-overview">합격 로드맵</a>
-        <a href="/#learning-roadmap">학습로드맵</a>
+        <a href="/#cert-courses">국가자격증</a>
         <Link href={learnHref}>학습 시작</Link>
         <a href="/#reviews">수강후기</a>
         <Link href="/support">고객센터</Link>

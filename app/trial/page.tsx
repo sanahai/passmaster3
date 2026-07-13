@@ -37,13 +37,13 @@ export default async function TrialSelectPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-5xl px-4 py-10">
+      <main className="mx-auto w-full max-w-[1120px] px-4 py-10 sm:px-6 lg:py-12">
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">🎁 무료체험</h1>
         <p className="mb-8 text-beauty-gray">
           체험할 자격증을 선택하세요. 과정당 무료체험은 1회만 가능합니다.
         </p>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="course-card-grid">
           {trialCourses.length === 0 ? (
             <div className="card col-span-full text-center">
               <p className="mb-4 text-beauty-gray">
@@ -69,17 +69,17 @@ export default async function TrialSelectPage() {
                     <li>🎁 무료 체험 문제: {count.toLocaleString()}문제</li>
                     <li>⏱️ 타이머 없이 편하게 풀이</li>
                   </ul>
-                  <div className="mt-auto">
+                  <div className="course-card-actions">
                     {disabled ? (
                       <button
                         type="button"
                         disabled
-                        className="w-full cursor-not-allowed rounded-btn bg-gray-300 px-4 py-2.5 text-sm font-bold text-white"
+                        className="w-full cursor-not-allowed rounded-btn bg-gray-300 px-5 py-3.5 text-[15px] font-bold text-white"
                       >
                         준비 중
                       </button>
                     ) : (
-                      <Link href={`/trial/${c.slug}`} className="btn-primary w-full">
+                      <Link href={`/trial/${c.slug}`} className="btn-primary">
                         이 과정 무료체험 시작
                       </Link>
                     )}

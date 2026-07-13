@@ -2,13 +2,16 @@ import Link from "next/link";
 import "../landing.css";
 import "../subpage.css";
 import LandingHeader from "@/components/landing/LandingHeader";
+import { getSession } from "@/lib/auth";
 
 export const metadata = {
   title: "PASSmaster | 고객센터",
   description: "PASSmaster 고객센터 — FAQ, 결제·환불 안내, 1:1 문의",
 };
 
-export default function SupportPage() {
+export default async function SupportPage() {
+  const session = await getSession();
+
   return (
     <>
       <div className="floating left" />
@@ -34,14 +37,28 @@ export default function SupportPage() {
             </section>
 
             <section className="subpage-card">
-              <h2>1:1 문의 · 로그인 필요</h2>
+              <h2>1:1 문의{session ? "" : " · 로그인 필요"}</h2>
               <p className="legal-detail">
-                문의 접수·내역 확인은 <strong>회원 로그인</strong> 후 이용할 수 있습니다. 아직 계정이 없다면 회원가입을
-                진행해 주세요.
+                {session ? (
+                  <>
+                    문의 접수와 내역 확인은 <strong>문의 내역</strong> 페이지에서 할 수 있습니다.
+                  </>
+                ) : (
+                  <>
+                    문의 접수·내역 확인은 <strong>회원 로그인</strong> 후 이용할 수 있습니다. 아직 계정이 없다면
+                    회원가입을 진행해 주세요.
+                  </>
+                )}
               </p>
               <div className="subpage-cta-row" style={{ margin: 0 }}>
-                <Link className="btn btn-primary" href="/login">로그인</Link>
-                <Link className="btn btn-ghost" href="/signup">회원가입</Link>
+                {session ? (
+                  <Link className="btn btn-primary" href="/support/inquiries">문의 내역</Link>
+                ) : (
+                  <>
+                    <Link className="btn btn-primary" href="/login?redirect=%2Fsupport%2Finquiries">로그인</Link>
+                    <Link className="btn btn-ghost" href="/signup">회원가입</Link>
+                  </>
+                )}
               </div>
             </section>
 

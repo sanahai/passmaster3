@@ -26,7 +26,7 @@ export default async function PaymentPage({
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-2xl px-4 py-10">
+      <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-12">
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">결제 안내 (계좌이체)</h1>
         <p className="mb-8 text-beauty-gray">
           아래 계좌로 입금해 주세요. <strong className="text-beauty-neutral">관리자 입금 확인 후 승인</strong>되면

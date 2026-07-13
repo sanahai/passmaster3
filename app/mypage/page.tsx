@@ -31,11 +31,11 @@ export default async function MyPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <main className="mx-auto w-full max-w-[1120px] px-4 py-10 sm:px-6 lg:py-12">
         <h1 className="mb-8 text-3xl font-bold text-beauty-neutral">마이페이지</h1>
 
         <div className="mb-6 grid gap-6 lg:grid-cols-3">
-          <section className="card p-6 sm:p-8 lg:col-span-2">
+          <section className="card lg:col-span-2">
             <h2 className="mb-1 text-xl font-bold text-beauty-neutral">내 정보</h2>
             <p className="mb-6 text-sm text-beauty-gray">이름과 연락처를 수정할 수 있습니다.</p>
             {user && (
@@ -48,14 +48,14 @@ export default async function MyPage() {
             )}
           </section>
 
-          <section className="card flex flex-col justify-center p-6 text-center">
+          <section className="card flex flex-col justify-center text-center">
             <div className="text-4xl font-extrabold text-primary">{answered.toLocaleString()}</div>
             <div className="mt-2 text-sm font-semibold text-beauty-neutral">누적 푼 문제</div>
             <p className="mt-2 text-xs text-beauty-gray">무료체험·학습·모의고사 포함</p>
           </section>
         </div>
 
-        <section className="card mb-6 p-6 sm:p-8">
+        <section className="card mb-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <h2 className="text-xl font-bold text-beauty-neutral">수강 중 과정</h2>

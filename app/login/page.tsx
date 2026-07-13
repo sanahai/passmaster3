@@ -34,7 +34,7 @@ export default async function LoginPage({
       <Link href="/" className="mb-8 flex items-center">
         <PassmasterLogo className="h-12 w-auto" priority />
       </Link>
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-lg">
         <div className="card w-full">
           <h1 className="mb-1 text-2xl font-bold text-beauty-neutral">로그인</h1>
           <p className="mb-6 text-sm text-beauty-gray">

@@ -51,7 +51,7 @@ export default async function LearnHomePage({
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-10">
+      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:py-12">
         <Link href="/dashboard" className="mb-4 inline-block text-sm text-beauty-gray hover:text-primary">
           ← 대시보드
         </Link>

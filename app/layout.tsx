@@ -41,7 +41,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className="antialiased">
         <div className="flex min-h-screen flex-col">
-          {children}
+          <div className="flex-1">{children}</div>
           <SiteFooter />
         </div>
       </body>

@@ -26,11 +26,11 @@ export default async function EnrollListPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-5xl px-4 py-10">
+      <main className="mx-auto w-full max-w-[1120px] px-4 py-10 sm:px-6 lg:py-12">
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">수강신청</h1>
         <p className="mb-8 text-beauty-gray">학습할 자격증 과정을 선택하세요.</p>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="course-card-grid">
           {courses.map((c) => {
             const status = statusByCourse.get(c.id);
             return (
@@ -42,29 +42,26 @@ export default async function EnrollListPage() {
                   <li>⏱️ 수강기간: {c.durationDays}일</li>
                   <li>💰 가격: {c.price.toLocaleString()}원</li>
                 </ul>
-                <div className="mt-auto">
+                <div className="course-card-actions">
                   {status === "active" ? (
-                    <Link href={`/learn/${c.slug}`} className="btn-primary w-full">
+                    <Link href={`/learn/${c.slug}`} className="btn-primary">
                       학습하기
                     </Link>
                   ) : status === "pending" ? (
-                    <Link href={`/enroll/${c.slug}/payment`} className="btn-outline w-full">
+                    <Link href={`/enroll/${c.slug}/payment`} className="btn-outline">
                       입금 대기 중 · 결제 안내
                     </Link>
                   ) : (
-                    <div className="flex gap-2">
+                    <>
                       {!completedTrialIds.has(c.id) && (
-                        <Link href={`/trial/${c.slug}`} className="btn-primary flex-1 text-center">
+                        <Link href={`/trial/${c.slug}`} className="btn-primary">
                           무료체험하기
                         </Link>
                       )}
-                      <Link
-                        href={`/enroll/${c.slug}`}
-                        className={`btn-outline text-center ${completedTrialIds.has(c.id) ? "w-full" : "flex-1"}`}
-                      >
+                      <Link href={`/enroll/${c.slug}`} className="btn-outline">
                         신청하기
                       </Link>
-                    </div>
+                    </>
                   )}
                 </div>
               </div>

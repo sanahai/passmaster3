@@ -43,6 +43,7 @@ model User {
   reports          QuestionReport[]
   customQuestions  AcademyCustomQuestion[] @relation("QuestionAuthor")
   trialCompletions TrialCompletion[]
+  supportInquiries SupportInquiry[]
 }
 
 model AcademyUserAnswer {
@@ -379,4 +380,21 @@ model VisitReferrerDaily {
 
   @@unique([date, referrerDomain])
   @@index([date])
+}
+
+model SupportInquiry {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  category  String // payment | learning | account | other
+  subject   String
+  content   String
+  status    String    @default("pending") // pending | answered | closed
+  reply     String?
+  repliedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import "../../landing.css";
 import "../../subpage.css";
 import LandingHeader from "@/components/landing/LandingHeader";
+import { getSession } from "@/lib/auth";
 
 export const metadata = {
   title: "PASSmaster | FAQ",
@@ -68,7 +69,8 @@ const FAQ_ITEMS = [
   },
 ];
 
-export default function SupportFaqPage() {
+export default async function SupportFaqPage() {
+  const session = await getSession();
   return (
     <>
       <div className="floating left" />
@@ -96,7 +98,13 @@ export default function SupportFaqPage() {
 
             <div className="subpage-cta-row">
               <Link className="btn btn-ghost" href="/support">고객센터 홈</Link>
-              <Link className="btn btn-primary" href="/login">1:1 문의(로그인 필요)</Link>
+              {session ? (
+                <Link className="btn btn-primary" href="/support/inquiries">1:1 문의 내역</Link>
+              ) : (
+                <Link className="btn btn-primary" href="/login?redirect=%2Fsupport%2Finquiries">
+                  1:1 문의(로그인 필요)
+                </Link>
+              )}
             </div>
           </main>
         </div>

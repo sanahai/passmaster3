@@ -24,7 +24,7 @@ export default async function HistoryPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-10">
+      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:py-12">
         <Link href="/mypage" className="mb-4 inline-block text-sm text-beauty-gray hover:text-primary">
           ← 마이페이지
         </Link>

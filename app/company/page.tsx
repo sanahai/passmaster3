@@ -123,7 +123,7 @@ export default function CompanyPage() {
                       support@passmaster.kr
                     </a>
                   </li>
-                  <li>1:1 문의: 로그인 후 마이페이지에서 접수</li>
+                  <li>1:1 문의: 로그인 후 <Link href="/support/inquiries" className="font-semibold text-primary">문의 내역</Link>에서 접수</li>
                   <li>결제·환불 문의: 이메일로 주문자명과 함께 접수</li>
                 </ul>
               </div>

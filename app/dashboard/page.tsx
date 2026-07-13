@@ -29,7 +29,7 @@ export default async function DashboardPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-5xl px-4 py-10">
+      <main className="mx-auto w-full max-w-[1120px] px-4 py-10 sm:px-6 lg:py-12">
         <h1 className="mb-1 text-3xl font-bold text-beauty-neutral">
           안녕하세요, {session.name}님 👋
         </h1>
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
             <Link href="/enroll" className="btn-primary">과정 둘러보기</Link>
           </div>
         ) : (
-          <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
             {visible.map((e) => {
               const isActive = e.status === "active";
               const prog = progByCourse.get(e.courseId) ?? null;

@@ -18,7 +18,7 @@ export default async function EnrollApplyPage({
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-2xl px-4 py-10">
+      <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-12">
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">수강신청서</h1>
         <p className="mb-8 text-beauty-gray">{course.name}</p>
 

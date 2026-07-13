@@ -35,12 +35,12 @@ const config: Config = {
         kr: ["Pretendard", "system-ui", "sans-serif"],
       },
       borderRadius: {
-        card: "12px",
+        card: "16px",
         btn: "10px",
       },
       boxShadow: {
-        card: "0 20px 45px rgba(24, 56, 118, 0.11)",
-        cardHover: "0 8px 30px rgba(24, 56, 118, 0.15)",
+        card: "0 8px 32px rgba(24, 56, 118, 0.12)",
+        cardHover: "0 12px 40px rgba(24, 56, 118, 0.16)",
       },
       keyframes: {
         "fade-in": {
