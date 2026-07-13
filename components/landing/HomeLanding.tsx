@@ -135,7 +135,6 @@ export default function HomeLanding({ isLoggedIn }: { isLoggedIn: boolean }) {
           ))}
         </div>
         <div className="purpose-showcase">
-          <h3>목적</h3>
           <p className="purpose-lead">
             복잡한 문제를 보다 쉽게 보는 방식으로 따라가고, <strong>핵심 시작·복습·집중학습·계획 합격</strong>으로
             합격하는 학습전략을 안내합니다.
