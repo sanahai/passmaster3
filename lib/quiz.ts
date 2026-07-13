@@ -1,4 +1,5 @@
 import { shuffleOptions, serializeOrder, seededShuffle } from "./shuffle";
+import { normalizeChoiceTexts } from "./choice-text";
 import type { QuizQuestion } from "./types";
 
 type DbQuestion = {
@@ -36,7 +37,7 @@ export function buildQuizQuestions(
 
   return ordered.map((q) => {
     const shuffled = shuffleOptions(
-      [q.option1, q.option2, q.option3, q.option4],
+      normalizeChoiceTexts([q.option1, q.option2, q.option3, q.option4]),
       q.id,
       roundSeed
     );

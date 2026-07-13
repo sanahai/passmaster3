@@ -16,6 +16,7 @@
 import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
+import { stripChoiceNumberPrefix } from "../lib/choice-text";
 
 const prisma = new PrismaClient();
 
@@ -88,10 +89,10 @@ function toQuestionRow(q: any, courseId: number, freeStems: Set<string>) {
     courseId,
     subject: q.subject ?? null,
     content: stem,
-    option1: String(opts[0] ?? ""),
-    option2: String(opts[1] ?? ""),
-    option3: String(opts[2] ?? ""),
-    option4: String(opts[3] ?? ""),
+    option1: stripChoiceNumberPrefix(String(opts[0] ?? "")),
+    option2: stripChoiceNumberPrefix(String(opts[1] ?? "")),
+    option3: stripChoiceNumberPrefix(String(opts[2] ?? "")),
+    option4: stripChoiceNumberPrefix(String(opts[3] ?? "")),
     answer,
     explanation: q.explanation ?? null,
     difficulty,
