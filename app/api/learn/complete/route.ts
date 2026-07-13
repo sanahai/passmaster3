@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { recordTrialCompletion } from "@/lib/trial";
 
 // 단계 완료 처리 → LearningProgress 갱신 (다음 단계 잠금 해제)
 export async function POST(req: NextRequest) {
@@ -11,6 +12,11 @@ export async function POST(req: NextRequest) {
 
   const course = await prisma.course.findUnique({ where: { slug: courseSlug } });
   if (!course) return NextResponse.json({ error: "course not found" }, { status: 404 });
+
+  if (sessionType === "trial") {
+    await recordTrialCompletion(session.userId, course.id);
+    return NextResponse.json({ ok: true });
+  }
 
   const update: Record<string, unknown> = {};
   switch (sessionType) {

@@ -3,30 +3,29 @@ import Header from "@/components/Header";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { getCourseConfig } from "@/lib/courses";
+import { getCompletedTrialCourseIds } from "@/lib/trial";
 
 export const dynamic = "force-dynamic";
-
-const TRIAL_HIDDEN_STATUSES = new Set(["pending", "paid", "active"]);
 
 export default async function TrialSelectPage() {
   const session = await requireSession("/trial");
 
-  const [courses, enrollments] = await Promise.all([
+  const [courses, enrollments, completedTrialIds] = await Promise.all([
     prisma.course.findMany({
       where: { isActive: true },
       orderBy: { id: "asc" },
     }),
     prisma.enrollment.findMany({
-      where: { userId: session.userId, userDeleted: false },
+      where: { userId: session.userId, userDeleted: false, status: "active" },
+      select: { courseId: true },
     }),
+    getCompletedTrialCourseIds(session.userId),
   ]);
 
-  const enrolledCourseIds = new Set(
-    enrollments
-      .filter((e) => TRIAL_HIDDEN_STATUSES.has(e.status))
-      .map((e) => e.courseId)
+  const activeCourseIds = new Set(enrollments.map((e) => e.courseId));
+  const trialCourses = courses.filter(
+    (c) => !activeCourseIds.has(c.id) && !completedTrialIds.has(c.id)
   );
-  const trialCourses = courses.filter((c) => !enrolledCourseIds.has(c.id));
 
   const freeCounts = await prisma.question.groupBy({
     by: ["courseId"],
@@ -41,14 +40,14 @@ export default async function TrialSelectPage() {
       <main className="mx-auto max-w-5xl px-4 py-10">
         <h1 className="mb-2 text-3xl font-bold text-beauty-neutral">🎁 무료체험</h1>
         <p className="mb-8 text-beauty-gray">
-          체험할 자격증을 선택하세요. 선택한 과정의 무료 문제로 실력을 미리 확인할 수 있습니다.
+          체험할 자격증을 선택하세요. 과정당 무료체험은 1회만 가능합니다.
         </p>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {trialCourses.length === 0 ? (
             <div className="card col-span-full text-center">
               <p className="mb-4 text-beauty-gray">
-                신청·수강 중인 과정을 제외하면 체험할 수 있는 과정이 없습니다.
+                수강 중이거나 이미 무료체험을 완료한 과정을 제외하면 체험할 수 있는 과정이 없습니다.
               </p>
               <Link href="/enroll" className="btn-primary">
                 수강신청 보기
@@ -56,44 +55,47 @@ export default async function TrialSelectPage() {
             </div>
           ) : (
             trialCourses.map((c) => {
-            const cfg = getCourseConfig(c.slug);
-            const count = countByCourse.get(c.id) ?? 0;
-            const disabled = count === 0;
-            return (
-              <div key={c.id} className="card flex flex-col">
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="text-3xl">{cfg?.icon ?? "📘"}</span>
-                  <h3 className="text-lg font-bold text-beauty-neutral">{c.name}</h3>
+              const cfg = getCourseConfig(c.slug);
+              const count = countByCourse.get(c.id) ?? 0;
+              const disabled = count === 0;
+              return (
+                <div key={c.id} className="card flex flex-col">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="text-3xl">{cfg?.icon ?? "📘"}</span>
+                    <h3 className="text-lg font-bold text-beauty-neutral">{c.name}</h3>
+                  </div>
+                  <p className="mb-4 text-sm text-beauty-gray">{c.description}</p>
+                  <ul className="mb-5 space-y-1 text-sm text-beauty-gray">
+                    <li>🎁 무료 체험 문제: {count.toLocaleString()}문제</li>
+                    <li>⏱️ 타이머 없이 편하게 풀이</li>
+                  </ul>
+                  <div className="mt-auto">
+                    {disabled ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="w-full cursor-not-allowed rounded-btn bg-gray-300 px-4 py-2.5 text-sm font-bold text-white"
+                      >
+                        준비 중
+                      </button>
+                    ) : (
+                      <Link href={`/trial/${c.slug}`} className="btn-primary w-full">
+                        이 과정 무료체험 시작
+                      </Link>
+                    )}
+                  </div>
                 </div>
-                <p className="mb-4 text-sm text-beauty-gray">{c.description}</p>
-                <ul className="mb-5 space-y-1 text-sm text-beauty-gray">
-                  <li>🎁 무료 체험 문제: {count.toLocaleString()}문제</li>
-                  <li>⏱️ 타이머 없이 편하게 풀이</li>
-                </ul>
-                <div className="mt-auto">
-                  {disabled ? (
-                    <button
-                      type="button"
-                      disabled
-                      className="w-full cursor-not-allowed rounded-btn bg-gray-300 px-4 py-2.5 text-sm font-bold text-white"
-                    >
-                      준비 중
-                    </button>
-                  ) : (
-                    <Link href={`/trial/${c.slug}`} className="btn-primary w-full">
-                      이 과정 무료체험 시작
-                    </Link>
-                  )}
-                </div>
-              </div>
-            );
-          })
+              );
+            })
           )}
         </div>
 
         <div className="mt-8 rounded-card bg-primary-pale/40 p-5 text-sm text-beauty-gray">
-          체험 후 마음에 들면 <Link href="/enroll" className="font-semibold text-primary hover:underline">수강신청</Link>에서
-          정식 과정을 등록할 수 있습니다.
+          체험 후 마음에 들면{" "}
+          <Link href="/enroll" className="font-semibold text-primary hover:underline">
+            수강신청
+          </Link>
+          에서 정식 과정을 등록할 수 있습니다.
         </div>
       </main>
     </>

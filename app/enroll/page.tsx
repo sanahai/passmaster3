@@ -2,6 +2,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
+import { getCompletedTrialCourseIds } from "@/lib/trial";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ export default async function EnrollListPage() {
     where: { userId: session.userId },
   });
   const statusByCourse = new Map(enrollments.map((e) => [e.courseId, e.status]));
+  const completedTrialIds = await getCompletedTrialCourseIds(session.userId);
 
   return (
     <>
@@ -49,10 +51,15 @@ export default async function EnrollListPage() {
                     </Link>
                   ) : (
                     <div className="flex gap-2">
-                      <Link href={`/trial/${c.slug}`} className="btn-primary flex-1 text-center">
-                        무료체험하기
-                      </Link>
-                      <Link href={`/enroll/${c.slug}`} className="btn-outline flex-1 text-center">
+                      {!completedTrialIds.has(c.id) && (
+                        <Link href={`/trial/${c.slug}`} className="btn-primary flex-1 text-center">
+                          무료체험하기
+                        </Link>
+                      )}
+                      <Link
+                        href={`/enroll/${c.slug}`}
+                        className={`btn-outline text-center ${completedTrialIds.has(c.id) ? "w-full" : "flex-1"}`}
+                      >
                         신청하기
                       </Link>
                     </div>
