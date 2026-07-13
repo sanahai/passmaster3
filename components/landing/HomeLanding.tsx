@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import LandingFooter from "@/components/landing/LandingFooter";
 
 const CERTS = [
   { slug: "forklift", title: "지게차운전기능사", img: "/certs/forklift.png" },
@@ -229,8 +228,6 @@ export default function HomeLanding({ isLoggedIn }: { isLoggedIn: boolean }) {
           <p>시험 횟수, 최단기간, 방식, 합격 학습 및 원하는 정보는 큐넷(Q-Net) 또는 해당 자격시험 시행기관에 원하는 정보를 확인하시기 바랍니다.</p>
         </div>
       </section>
-
-      <LandingFooter />
     </>
   );
 }

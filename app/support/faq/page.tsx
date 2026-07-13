@@ -2,7 +2,6 @@ import Link from "next/link";
 import "../../landing.css";
 import "../../subpage.css";
 import LandingHeader from "@/components/landing/LandingHeader";
-import LandingFooter from "@/components/landing/LandingFooter";
 
 export const metadata = {
   title: "PASSmaster | FAQ",
@@ -100,7 +99,6 @@ export default function SupportFaqPage() {
               <Link className="btn btn-primary" href="/login">1:1 문의(로그인 필요)</Link>
             </div>
           </main>
-          <LandingFooter />
         </div>
       </div>
     </>

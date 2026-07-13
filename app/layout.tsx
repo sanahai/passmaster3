@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./footer.css";
+import SiteFooter from "@/components/SiteFooter";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +40,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased">
-        {children}
+        <div className="flex min-h-screen flex-col">
+          {children}
+          <SiteFooter />
+        </div>
       </body>
     </html>
   );

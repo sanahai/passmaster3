@@ -2,7 +2,6 @@ import Link from "next/link";
 import "../landing.css";
 import "../subpage.css";
 import LandingHeader from "@/components/landing/LandingHeader";
-import LandingFooter from "@/components/landing/LandingFooter";
 
 export const metadata = {
   title: "PASSmaster | 회사정보 · 약관 · 개인정보 · 환불",
@@ -384,7 +383,6 @@ export default function LegalPage() {
               <Link className="btn btn-primary" href="/support">고객센터</Link>
             </div>
           </main>
-          <LandingFooter />
         </div>
       </div>
     </>
