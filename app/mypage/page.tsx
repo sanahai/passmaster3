@@ -1,8 +1,12 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import AcademyCodeForm from "@/components/academy/AcademyCodeForm";
+import MyProfileForm from "@/components/mypage/MyProfileForm";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
+import { sortByCourseDisplayOrder } from "@/lib/course-catalog";
+
+export const dynamic = "force-dynamic";
 
 export default async function MyPage() {
   const session = await requireSession("/mypage");
@@ -10,26 +14,97 @@ export default async function MyPage() {
     where: { id: session.userId },
     include: { academy: true },
   });
-  const enrollCount = await prisma.enrollment.count({
-    where: { userId: session.userId, status: "active" },
-  });
-  const answered = await prisma.userAnswer.count({ where: { userId: session.userId } });
+
+  const [activeEnrollments, answered] = await Promise.all([
+    prisma.enrollment.findMany({
+      where: { userId: session.userId, status: "active", userDeleted: false },
+      include: { course: true },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.userAnswer.count({ where: { userId: session.userId } }),
+  ]);
+
+  const sortedActive = sortByCourseDisplayOrder(
+    activeEnrollments.map((e) => ({ ...e, slug: e.course.slug }))
+  );
 
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-10">
+      <main className="mx-auto max-w-4xl px-4 py-10">
         <h1 className="mb-8 text-3xl font-bold text-beauty-neutral">마이페이지</h1>
 
-        <div className="card mb-6">
-          <h2 className="mb-4 text-lg font-bold text-beauty-neutral">내 정보</h2>
-          <dl className="space-y-3 text-sm">
-            <Row label="이름" value={user?.name || "-"} />
-            <Row label="이메일" value={user?.email || "-"} />
-            <Row label="연락처" value={user?.phone || "미등록"} />
-            <Row label="가입일" value={user?.createdAt.toLocaleDateString("ko-KR") || "-"} />
-          </dl>
+        <div className="mb-6 grid gap-6 lg:grid-cols-3">
+          <section className="card p-6 sm:p-8 lg:col-span-2">
+            <h2 className="mb-1 text-xl font-bold text-beauty-neutral">내 정보</h2>
+            <p className="mb-6 text-sm text-beauty-gray">이름과 연락처를 수정할 수 있습니다.</p>
+            {user && (
+              <MyProfileForm
+                name={user.name}
+                email={user.email}
+                phone={user.phone}
+                createdAt={user.createdAt.toLocaleDateString("ko-KR")}
+              />
+            )}
+          </section>
+
+          <section className="card flex flex-col justify-center p-6 text-center">
+            <div className="text-4xl font-extrabold text-primary">{answered.toLocaleString()}</div>
+            <div className="mt-2 text-sm font-semibold text-beauty-neutral">누적 푼 문제</div>
+            <p className="mt-2 text-xs text-beauty-gray">무료체험·학습·모의고사 포함</p>
+          </section>
         </div>
+
+        <section className="card mb-6 p-6 sm:p-8">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-bold text-beauty-neutral">수강 중 과정</h2>
+              <p className="mt-1 text-sm text-beauty-gray">
+                현재 {sortedActive.length}개 과정을 수강하고 있습니다.
+              </p>
+            </div>
+            <Link href="/dashboard" className="text-sm font-semibold text-primary hover:underline">
+              내 학습 →
+            </Link>
+          </div>
+
+          {sortedActive.length === 0 ? (
+            <div className="rounded-card border border-dashed border-gray-200 bg-gray-50 px-4 py-8 text-center text-sm text-beauty-gray">
+              수강 중인 과정이 없습니다.{" "}
+              <Link href="/enroll" className="font-semibold text-primary hover:underline">
+                수강신청
+              </Link>
+              을 진행해 주세요.
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {sortedActive.map((e) => {
+                const daysLeft = e.expiresAt
+                  ? Math.max(0, Math.ceil((e.expiresAt.getTime() - Date.now()) / 86400000))
+                  : null;
+                return (
+                  <li
+                    key={e.id}
+                    className="flex flex-col gap-3 rounded-card border border-gray-100 bg-white px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <p className="font-semibold text-beauty-neutral">{e.course.name}</p>
+                      <p className="mt-1 text-sm text-beauty-gray">
+                        {e.expiresAt
+                          ? `수강 만료 ${e.expiresAt.toLocaleDateString("ko-KR")}`
+                          : "수강 기간 정보 없음"}
+                        {daysLeft !== null && ` · D-${daysLeft}`}
+                      </p>
+                    </div>
+                    <Link href={`/learn/${e.course.slug}`} className="btn-primary shrink-0 px-5 py-2.5 text-sm">
+                      학습하기
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
 
         {user?.role === "student" && (
           <div className="mb-6">
@@ -37,30 +112,10 @@ export default async function MyPage() {
           </div>
         )}
 
-        <div className="mb-6 grid grid-cols-2 gap-4">
-          <div className="card text-center">
-            <div className="text-2xl font-extrabold text-primary">{enrollCount}</div>
-            <div className="mt-1 text-xs text-beauty-gray">수강 중 과정</div>
-          </div>
-          <div className="card text-center">
-            <div className="text-2xl font-extrabold text-primary">{answered.toLocaleString()}</div>
-            <div className="mt-1 text-xs text-beauty-gray">누적 푼 문제</div>
-          </div>
-        </div>
-
         <Link href="/mypage/history" className="btn-outline w-full">
           결제·수강 내역 보기
         </Link>
       </main>
     </>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between border-b border-gray-100 pb-2 last:border-0">
-      <dt className="text-beauty-gray">{label}</dt>
-      <dd className="font-semibold text-beauty-neutral">{value}</dd>
-    </div>
   );
 }
