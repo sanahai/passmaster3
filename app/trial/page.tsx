@@ -4,6 +4,7 @@ import { requireTrialSession } from "@/lib/trial-access";
 import { prisma } from "@/lib/prisma";
 import { getCourseConfig } from "@/lib/courses";
 import { getCompletedTrialCourseIds } from "@/lib/trial";
+import { sortByCourseDisplayOrder } from "@/lib/course-catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,6 @@ export default async function TrialSelectPage() {
   const [courses, enrollments, completedTrialIds] = await Promise.all([
     prisma.course.findMany({
       where: { isActive: true },
-      orderBy: { id: "asc" },
     }),
     prisma.enrollment.findMany({
       where: { userId: session.userId, userDeleted: false, status: "active" },
@@ -23,8 +23,8 @@ export default async function TrialSelectPage() {
   ]);
 
   const activeCourseIds = new Set(enrollments.map((e) => e.courseId));
-  const trialCourses = courses.filter(
-    (c) => !activeCourseIds.has(c.id) && !completedTrialIds.has(c.id)
+  const trialCourses = sortByCourseDisplayOrder(
+    courses.filter((c) => !activeCourseIds.has(c.id) && !completedTrialIds.has(c.id))
   );
 
   const freeCounts = await prisma.question.groupBy({

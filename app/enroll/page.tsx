@@ -3,17 +3,19 @@ import Header from "@/components/Header";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
 import { getCompletedTrialCourseIds } from "@/lib/trial";
+import { sortByCourseDisplayOrder } from "@/lib/course-catalog";
 
 export const dynamic = "force-dynamic";
 
 export default async function EnrollListPage() {
   const session = await requireSession("/enroll");
 
-  const courses = await prisma.course.findMany({
-    where: { isActive: true },
-    orderBy: { id: "asc" },
-    include: { _count: { select: { questions: true } } },
-  });
+  const courses = sortByCourseDisplayOrder(
+    await prisma.course.findMany({
+      where: { isActive: true },
+      include: { _count: { select: { questions: true } } },
+    })
+  );
 
   const enrollments = await prisma.enrollment.findMany({
     where: { userId: session.userId },

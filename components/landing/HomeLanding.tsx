@@ -2,22 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { LANDING_CERTS } from "@/lib/course-catalog";
 
-const CERTS = [
-  { slug: "forklift", title: "지게차운전기능사", img: "/certs/forklift.png" },
-  { slug: "cookkr", title: "한식조리기능사", img: "/certs/cookkr.png" },
-  { slug: "cookwest", title: "양식조리기능사", img: "/certs/cookwest.png" },
-  { slug: "cookjp", title: "일식조리기능사", img: "/certs/cookjp.png" },
-  { slug: "cookcn", title: "중식조리기능사", img: "/certs/cookcn.png" },
-  { slug: "confection", title: "제과기능사", img: "/certs/confection.png" },
-  { slug: "bakery", title: "제빵기능사", img: "/certs/bakery.png" },
-  { slug: "electric", title: "전기기능사", img: "/certs/electric.png" },
-  { slug: "beautician", title: "미용사(일반)", img: "/certs/beautician.png" },
-  { slug: "skin", title: "피부미용사", img: "/certs/skin.png" },
-  { slug: "nail", title: "네일미용사", img: "/certs/nail.png" },
-  { slug: "makeup", title: "메이크업미용사", img: "/certs/makeup.png" },
-  { slug: "barber", title: "이용사", img: "/certs/barber.png" },
-];
+const CERTS = LANDING_CERTS;
 
 const PURPOSE_PILLARS = [
   "실제 자격증 시험과 동일한 방식의 CBT방식으로 운영",

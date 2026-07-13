@@ -8,7 +8,30 @@ const prisma = new PrismaClient();
 const PRICE = 9900;
 const DURATION_DAYS = 30;
 
+/** lib/course-catalog.ts COURSE_DISPLAY_ORDER 와 동일 */
+const COURSE_DISPLAY_ORDER = [
+  "forklift",
+  "electric",
+  "hansik",
+  "jegwa",
+  "jeppang",
+  "beautician",
+  "yangsik",
+  "ilsik",
+  "jungsik",
+  "skin",
+  "nail",
+  "makeup",
+  "baber",
+];
+
 async function main() {
+  for (let i = 0; i < COURSE_DISPLAY_ORDER.length; i++) {
+    const slug = COURSE_DISPLAY_ORDER[i];
+    await prisma.course.updateMany({ where: { slug }, data: { sortOrder: i } });
+  }
+  console.log(`[sync-pricing] course display order synced (${COURSE_DISPLAY_ORDER.length} slugs)`);
+
   const result = await prisma.course.updateMany({
     data: { price: PRICE, durationDays: DURATION_DAYS },
   });

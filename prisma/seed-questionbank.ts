@@ -17,6 +17,7 @@ import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import path from "path";
 import { stripChoiceNumberPrefix } from "../lib/choice-text";
+import { courseDisplayOrderIndex } from "../lib/course-catalog";
 
 const prisma = new PrismaClient();
 
@@ -121,10 +122,19 @@ async function main() {
     // 1) Course upsert
     const course = await prisma.course.upsert({
       where: { slug: c.slug },
-      update: { name: c.name, category: c.category },
+      update: {
+        name: c.name,
+        category: c.category,
+        sortOrder: courseDisplayOrderIndex(c.slug),
+      },
       create: {
-        slug: c.slug, name: c.name, category: c.category,
-        brand: "passmaster", price: 9900, durationDays: 30,
+        slug: c.slug,
+        name: c.name,
+        category: c.category,
+        brand: "passmaster",
+        price: 9900,
+        durationDays: 30,
+        sortOrder: courseDisplayOrderIndex(c.slug),
       },
     });
 
