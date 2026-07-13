@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Header from "@/components/Header";
-import { requireSession } from "@/lib/access";
+import { requireTrialSession } from "@/lib/trial-access";
 import { prisma } from "@/lib/prisma";
 import { getCourseConfig } from "@/lib/courses";
 import { getCompletedTrialCourseIds } from "@/lib/trial";
@@ -8,7 +8,7 @@ import { getCompletedTrialCourseIds } from "@/lib/trial";
 export const dynamic = "force-dynamic";
 
 export default async function TrialSelectPage() {
-  const session = await requireSession("/trial");
+  const session = await requireTrialSession("/trial");
 
   const [courses, enrollments, completedTrialIds] = await Promise.all([
     prisma.course.findMany({

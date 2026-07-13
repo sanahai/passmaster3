@@ -16,13 +16,14 @@ function SubmitButton() {
   );
 }
 
-export default function SignupForm() {
+export default function SignupForm({ redirectTo = "/enroll" }: { redirectTo?: string }) {
   const [state, formAction] = useFormState(signupAction, undefined);
   const searchParams = useSearchParams();
   const presetCode = searchParams.get("academyCode") ?? "";
 
   return (
     <form action={formAction} className="space-y-4">
+      <input type="hidden" name="redirectTo" value={redirectTo} />
       <div>
         <label className="label" htmlFor="name">
           이름
@@ -77,11 +78,14 @@ export default function SignupForm() {
 
       <SubmitButton />
 
-      <SocialLoginButtons redirectTo="/enroll" />
+      <SocialLoginButtons redirectTo={redirectTo} />
 
       <p className="text-center text-sm text-beauty-gray">
         이미 회원이신가요?{" "}
-        <Link href="/login" className="font-semibold text-primary hover:underline">
+        <Link
+          href={`/login?redirect=${encodeURIComponent(redirectTo)}`}
+          className="font-semibold text-primary hover:underline"
+        >
           로그인
         </Link>
       </p>

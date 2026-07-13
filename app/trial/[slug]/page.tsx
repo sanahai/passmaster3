@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { requireSession } from "@/lib/access";
+import { requireTrialSession } from "@/lib/trial-access";
 import { prisma } from "@/lib/prisma";
 import { buildQuizQuestions } from "@/lib/quiz";
 import { hasCompletedTrial } from "@/lib/trial";
@@ -15,7 +15,7 @@ export default async function TrialCoursePage({
 }: {
   params: { slug: string };
 }) {
-  const session = await requireSession(`/trial/${params.slug}`);
+  const session = await requireTrialSession(`/trial/${params.slug}`);
 
   const course = await prisma.course.findUnique({ where: { slug: params.slug } });
   if (!course) redirect("/trial");

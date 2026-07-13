@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { resolvePostLoginRedirect } from "@/lib/post-login-redirect";
+import { isTrialPath } from "@/lib/trial-access";
 import AuthGuideInfo from "@/components/auth/AuthGuideInfo";
 import LoginForm from "@/components/auth/LoginForm";
 import PassmasterLogo from "@/components/PassmasterLogo";
@@ -17,6 +18,7 @@ export default async function LoginPage({
   }
 
   const redirectTo = searchParams.redirect || "/dashboard";
+  const trialFlow = isTrialPath(redirectTo);
   const oauthError = searchParams.error;
   const oauthErrorMsg =
     oauthError === "google_not_configured" || oauthError === "kakao_not_configured"
@@ -36,7 +38,9 @@ export default async function LoginPage({
         <div className="card w-full">
           <h1 className="mb-1 text-2xl font-bold text-beauty-neutral">로그인</h1>
           <p className="mb-6 text-sm text-beauty-gray">
-            이메일 또는 카카오·구글 계정으로 로그인할 수 있습니다.
+            {trialFlow
+              ? "무료체험은 회원 로그인 후 이용할 수 있습니다. 계정이 없다면 회원가입을 먼저 진행해 주세요."
+              : "이메일 또는 카카오·구글 계정으로 로그인할 수 있습니다."}
           </p>
           {oauthErrorMsg && (
             <p className="mb-4 rounded-btn bg-amber-50 px-4 py-2 text-sm text-amber-800">{oauthErrorMsg}</p>

@@ -73,11 +73,16 @@ export async function middleware(req: NextRequest) {
   const needsAuth =
     (pathname.startsWith("/academy") && !pathname.startsWith("/academy/setup")) ||
     pathname.startsWith("/admin") ||
+    pathname.startsWith("/trial") ||
     isSubsiteProtected(pathname);
 
   if (needsAuth && !(await hasSession(req))) {
     const url = req.nextUrl.clone();
-    url.pathname = "/login";
+    if (pathname.startsWith("/trial")) {
+      url.pathname = "/signup";
+    } else {
+      url.pathname = "/login";
+    }
     url.searchParams.set("redirect", pathname);
     return NextResponse.redirect(url);
   }

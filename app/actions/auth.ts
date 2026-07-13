@@ -9,7 +9,7 @@ import {
   createSession,
   destroySession,
 } from "@/lib/auth";
-import { resolvePostLoginRedirect } from "@/lib/post-login-redirect";
+import { resolvePostLoginRedirect, sanitizeRedirect } from "@/lib/post-login-redirect";
 
 export type AuthState = { error?: string } | undefined;
 
@@ -23,6 +23,10 @@ export async function signupAction(
   const passwordConfirm = String(formData.get("passwordConfirm") || "");
   const phone = String(formData.get("phone") || "").trim();
   const academyCode = String(formData.get("academyCode") || "").trim();
+  const redirectTo = sanitizeRedirect(
+    String(formData.get("redirectTo") || ""),
+    "/enroll"
+  );
 
   if (!name || !email || !password) {
     return { error: "이름, 이메일, 비밀번호를 모두 입력해 주세요." };
@@ -73,7 +77,7 @@ export async function signupAction(
     role: user.role,
   });
 
-  redirect("/enroll");
+  redirect(resolvePostLoginRedirect(user.role, redirectTo));
 }
 
 export async function loginAction(

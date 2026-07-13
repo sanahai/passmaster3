@@ -48,7 +48,10 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
 
       <p className="text-center text-sm text-beauty-gray">
         아직 회원이 아니신가요?{" "}
-        <Link href="/signup" className="font-semibold text-primary hover:underline">
+        <Link
+          href={`/signup?redirect=${encodeURIComponent(redirectTo)}`}
+          className="font-semibold text-primary hover:underline"
+        >
           회원가입
         </Link>
       </p>

@@ -1,9 +1,9 @@
 import QuizShell from "@/components/QuizShell";
 import ResultView from "@/components/quiz/ResultView";
-import { requireSession } from "@/lib/access";
+import { requireTrialSession } from "@/lib/trial-access";
 
 export default async function TrialResultPage() {
-  await requireSession();
+  await requireTrialSession("/trial");
   return (
     <QuizShell exitHref="/dashboard">
       <div className="mx-auto max-w-2xl">

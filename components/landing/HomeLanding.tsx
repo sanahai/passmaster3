@@ -73,8 +73,13 @@ const ROADMAP_VISUALS = [
   { src: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80", alt: "CBT 방식 모의고사" },
 ];
 
-export default function HomeLanding() {
+export default function HomeLanding({ isLoggedIn }: { isLoggedIn: boolean }) {
   const fadeRefs = useRef<HTMLElement[]>([]);
+
+  const trialHref = (slug: string) =>
+    isLoggedIn
+      ? `/trial/${slug}`
+      : `/signup?redirect=${encodeURIComponent(`/trial/${slug}`)}`;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -99,7 +104,12 @@ export default function HomeLanding() {
           </p>
           <div className="hero-actions">
             <Link className="btn btn-primary" href="/enroll">지금 수강 신청</Link>
-            <a className="btn btn-ghost" href="#cert-courses">무료체험 바로가기</a>
+            <a
+              className="btn btn-ghost"
+              href={isLoggedIn ? "/trial" : "/signup?redirect=%2Ftrial"}
+            >
+              무료체험 바로가기
+            </a>
           </div>
         </article>
         <aside className="hero-panel">
@@ -147,7 +157,9 @@ export default function HomeLanding() {
               <div className="course-thumb"><img src={c.img} alt={c.title} /></div>
               <h3>{c.title}</h3>
               <div className="course-actions">
-                <Link className="course-btn primary" href={`/trial/${c.slug}`}>무료체험</Link>
+                <Link className="course-btn primary" href={trialHref(c.slug)}>
+                  무료체험
+                </Link>
                 <Link className="course-btn ghost" href={`/enroll?cert=${c.slug}`}>수강신청</Link>
               </div>
             </article>

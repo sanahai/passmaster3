@@ -1,8 +1,11 @@
 import "./landing.css";
+import { getSession } from "@/lib/auth";
 import LandingHeader from "@/components/landing/LandingHeader";
 import HomeLanding from "@/components/landing/HomeLanding";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getSession();
+
   return (
     <>
       <div className="floating left" />
@@ -10,7 +13,7 @@ export default function Home() {
       <div className="container">
         <main className="landing">
           <LandingHeader />
-          <HomeLanding />
+          <HomeLanding isLoggedIn={!!session} />
         </main>
       </div>
     </>
