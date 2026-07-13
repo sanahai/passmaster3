@@ -11,6 +11,7 @@ const NAV = [
   { href: "/admin/free-questions", label: "무료체험 문제 관리", icon: "🎁" },
   { href: "/admin/free-questions/upload", label: "무료체험 일괄 업로드", icon: "🆓" },
   { href: "/admin/reports", label: "오류 신고", icon: "🚩" },
+  { href: "/admin/inquiries", label: "1:1 문의", icon: "💬" },
   { href: "/admin/users", label: "회원 관리", icon: "👥" },
   { href: "/admin/academies", label: "B2B 학원 목록", icon: "🏫" },
   { href: "/admin/academies/new", label: "B2B 학원 등록", icon: "➕" },

@@ -5,7 +5,7 @@ export default async function AdminDashboard() {
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
 
-  const [newUsers, newEnrolls, pending, activeStudents, totalQuestions, paidEnrolls, openReports, academyTotal, academyExpiring] =
+  const [newUsers, newEnrolls, pending, activeStudents, totalQuestions, paidEnrolls, openReports, pendingInquiries, academyTotal, academyExpiring] =
     await Promise.all([
       prisma.user.count({ where: { createdAt: { gte: startOfToday } } }),
       prisma.enrollment.count({ where: { createdAt: { gte: startOfToday } } }),
@@ -18,6 +18,7 @@ export default async function AdminDashboard() {
         select: { amount: true, course: { select: { price: true } } },
       }),
       prisma.questionReport.count({ where: { status: "open" } }),
+      prisma.supportInquiry.count({ where: { status: "pending" } }),
       prisma.academy.count(),
       prisma.academy.count({
         where: {
@@ -114,7 +115,7 @@ export default async function AdminDashboard() {
           <p className="mt-1 text-sm text-beauty-gray">
             수강·결제 관리의 결제완료({activeStudents}건)와 연동
           </p>
-          <div className="mt-4 grid grid-cols-2 gap-2">
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-3">
             <div className="rounded-btn bg-primary-pale/50 p-3 text-sm text-beauty-gray">
               등록 문제 수<br />
               <span className="font-bold text-primary">{totalQuestions.toLocaleString()}개</span>
@@ -125,6 +126,13 @@ export default async function AdminDashboard() {
             >
               미처리 오류 신고<br />
               <span className="font-bold text-beauty-danger">{openReports.toLocaleString()}건</span>
+            </Link>
+            <Link
+              href="/admin/inquiries"
+              className="rounded-btn bg-primary-pale/70 p-3 text-sm text-beauty-gray transition hover:bg-primary-pale"
+            >
+              답변 대기 문의<br />
+              <span className="font-bold text-primary">{pendingInquiries.toLocaleString()}건</span>
             </Link>
           </div>
         </div>

@@ -23,6 +23,8 @@ export default async function EnrollListPage() {
   const statusByCourse = new Map(enrollments.map((e) => [e.courseId, e.status]));
   const completedTrialIds = await getCompletedTrialCourseIds(session.userId);
 
+  const enrollableCourses = courses.filter((c) => statusByCourse.get(c.id) !== "active");
+
   return (
     <>
       <Header />
@@ -31,7 +33,15 @@ export default async function EnrollListPage() {
         <p className="mb-8 text-beauty-gray">학습할 자격증 과정을 선택하세요.</p>
 
         <div className="course-card-grid">
-          {courses.map((c) => {
+          {enrollableCourses.length === 0 ? (
+            <div className="card col-span-full text-center">
+              <p className="mb-4 text-beauty-gray">신청 가능한 새 과정이 없습니다. 수강 중인 과정은 내 학습에서 확인하세요.</p>
+              <Link href="/dashboard" className="btn-primary">
+                내 학습으로 이동
+              </Link>
+            </div>
+          ) : (
+            enrollableCourses.map((c) => {
             const status = statusByCourse.get(c.id);
             return (
               <div key={c.id} className="card flex flex-col">
@@ -43,11 +53,7 @@ export default async function EnrollListPage() {
                   <li>💰 가격: {c.price.toLocaleString()}원</li>
                 </ul>
                 <div className="course-card-actions">
-                  {status === "active" ? (
-                    <Link href={`/learn/${c.slug}`} className="btn-primary">
-                      학습하기
-                    </Link>
-                  ) : status === "pending" ? (
+                  {status === "pending" ? (
                     <Link href={`/enroll/${c.slug}/payment`} className="btn-outline">
                       입금 대기 중 · 결제 안내
                     </Link>
@@ -66,7 +72,8 @@ export default async function EnrollListPage() {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
       </main>
     </>
