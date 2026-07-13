@@ -93,7 +93,7 @@ export default function HomeLanding({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <>
-      <section className="hero fade" ref={addFade}>
+      <section className="hero hero-single fade" ref={addFade}>
         <article className="hero-main">
           <span className="hero-badge">자격 취득의 새로운 패러다임</span>
           <h1>국가자격증 합격,<br />이제 AI를 기반으로 하는 PASSmaster에서 단기간 당신의 합격을 도와 드립니다.</h1>
@@ -111,18 +111,6 @@ export default function HomeLanding({ isLoggedIn }: { isLoggedIn: boolean }) {
             </a>
           </div>
         </article>
-        <aside className="hero-panel">
-          <img className="hero-image" src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" alt="학습 이미지" />
-          <h2>수강 신청 6단계</h2>
-          <ol className="step-list">
-            <li>1. 회원 가입 및 로그인</li>
-            <li>2. 원하는 자격증 무료체험 학습</li>
-            <li>3. 자격증 수강신청 및 수강비 입금</li>
-            <li>4. 관리자 수강 신청내역 및 입금 확인</li>
-            <li>5. 관리자 수강신청 승인</li>
-            <li>6. 학습 시작</li>
-          </ol>
-        </aside>
       </section>
 
       <section className="section fade" id="roadmap-overview" ref={addFade}>
