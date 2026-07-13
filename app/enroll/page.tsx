@@ -2,6 +2,9 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import { requireSession } from "@/lib/access";
 import { prisma } from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
+
 export default async function EnrollListPage() {
   const session = await requireSession("/enroll");
 
