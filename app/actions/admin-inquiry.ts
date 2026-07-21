@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/access";
 
@@ -66,4 +67,9 @@ export async function deleteInquiryAction(formData: FormData) {
   await prisma.supportInquiry.delete({ where: { id } });
   revalidatePath("/admin/inquiries");
   revalidatePath("/support/inquiries");
+
+  const redirectTo = String(formData.get("redirectTo") || "");
+  if (redirectTo.startsWith("/admin/inquiries")) {
+    redirect(redirectTo);
+  }
 }
